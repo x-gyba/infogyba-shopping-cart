@@ -196,8 +196,8 @@ function ready() {
       (item) => item.src
     );
     let quantities = Array.from(
-      document.querySelectorAll(".carrinho-item-qtd")
-    ).map((qtd) => qtd.innerText.trim()); // Coleta todas as quantidades
+      document.querySelectorAll("input.carrinho-item-qtd")
+    ).map((qtd) => qtd.value); // Coleta todas as quantidades
 
     let data = {
       total: total,
