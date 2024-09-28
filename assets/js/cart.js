@@ -47,32 +47,30 @@ function ready() {
 
   /* Atualiza total do carrinho */
   function atualizarTotalCarrinho() {
-    /* seleciona o conteudo do carrinho */
     var carrinhoContainer = document.getElementsByClassName("carrinho")[0];
-    var carrinhoItems = carrinhoContainer.getElementsByClassName(
-      "carrinho-item"
-    );
+    var carrinhoItems =
+      carrinhoContainer.getElementsByClassName("carrinho-item");
     var total = 0;
 
-    /* atualiza o total do carrinho */
     for (var i = 0; i < carrinhoItems.length; i++) {
       var item = carrinhoItems[i];
       var precoElemento = item.getElementsByClassName("carrinho-item-preco")[0];
       var qtdItem = item.getElementsByClassName("carrinho-item-qtd")[0];
 
       if (precoElemento && qtdItem) {
-        /* mostra o símbolo da moeda no carrinho */
         var preco = parseFloat(
-          precoElemento.innerHTML.replace("R$", "").replace(",", ".")
+          precoElemento.innerHTML
+            .replace("R$", "")
+            .replace(".", "")
+            .replace(",", ".")
         );
         var quantity = parseInt(qtdItem.value);
         total += preco * quantity;
       }
     }
 
-    total = Math.round(total * 100) / 100;
     document.getElementsByClassName("carrinho-preco-total")[0].innerHTML =
-      "R$ " + total.toLocaleString("pt-BR", { minimumFractionDigits: 2 });
+      "R$ " + total.toFixed(2).replace(",", ",");
   }
 
   /* aumenta em 1 a quantidade do elemento selecionado */
@@ -116,6 +114,7 @@ function ready() {
     var itemsCarrinho = document.getElementsByClassName("carrinho-items")[0];
 
     /* verifica se o item se encontra no carrinho */
+    /* verifica se o item se encontra no carrinho */
     var nomeItemsCarrinho = itemsCarrinho.getElementsByClassName(
       "carrinho-item-titulo"
     );
@@ -127,20 +126,20 @@ function ready() {
     }
 
     var itemConteudo = `
-      <img src="${imagemSrc}" alt="image" width="80px" />
-      <span class="carrinho-item-titulo">${titulo}</span>
-      <span class="carrinho-item-preco">${preco}</span>
-      <div class="quantity">
-        <button class="plus-btn SomaQtd" type="button" name="button" value="1">
-          <i class="bx bx-plus-circle"></i>
-        </button>
-        <input type="text" class="carrinho-item-qtd" value="1">
-        <button class="minus-btn MenosQtd" type="button" name="button" value="1">
-          <i class="bx bx-minus-circle"></i>
-        </button>
-        <button class="remover-btn"><i class="bx bxs-trash"></i></button>
-      </div>
-    `;
+  <img src="${imagemSrc}" alt="image" width="80px" />
+  <span class="carrinho-item-titulo">${titulo}</span>
+  <span class="carrinho-item-preco">${preco}</span>
+  <div class="quantity">
+    <button class="plus-btn SomaQtd" type="button" name="button" value="1">
+      <i class="bx bx-plus-circle"></i>
+    </button>
+    <input type="text" class="carrinho-item-qtd" value="1">
+    <button class="minus-btn MenosQtd" type="button" name="button" value="1">
+      <i class="bx bx-minus-circle"></i>
+    </button>
+    <button class="remover-btn"><i class="bx bxs-trash"></i></button>
+  </div>
+`;
     item.innerHTML = itemConteudo;
     itemsCarrinho.append(item);
 
@@ -172,31 +171,69 @@ function ready() {
   /* Atualiza quantidade do carrinho */
   function atualizaCarrinhoQtd() {
     var cartItems = document.querySelectorAll(".carrinho-item").length;
-    document.querySelector(
-      "#cart-btn .carrinho-item-qtd"
-    ).innerText = cartItems; // Update quantity in shopping bag icon
+    document.querySelector("#cart-btn .carrinho-item-qtd").innerText =
+      cartItems; // Update quantity in shopping bag icon
   }
 
   /* botão pagar (checkout) */
   function checkout() {
-    var total = parseFloat(
+    let total = parseFloat(
       document
         .querySelector(".carrinho-preco-total")
         .innerText.replace("R$", "")
         .replace(",", ".")
     );
+
     if (total === 0) {
-      alert("SEU CARRINHO ESTÁ VAZIO.");
-      return; // Prevents checkout if cart is empty
+      alert("SEU CARRINHO ESTÁ VAZIO");
+      return; // Previne checkout se o carrinho estiver vazio
     }
 
-    alert(
-      "OBRIGADO PELA SUA COMPRA, VOCÊ SERÁ DIRECIONADO A PÁGINA DE PAGAMENTO."
+    let cartItems = Array.from(document.querySelectorAll(".carrinho-item")).map(
+      (item) => item.innerText.trim()
     );
-    var cartItems = document.querySelector(".carrinho-items");
-    cartItems.innerHTML = ""; // Clear cart items
-    document.querySelector(".carrinho-preco-total").innerHTML = "R$ 0,00"; // Reset total
-    atualizaCarrinhoQtd(); // Update quantity in shopping bag icon
+    let imageSrc = Array.from(document.querySelectorAll(".img-item")).map(
+      (item) => item.src
+    );
+    let quantities = Array.from(
+      document.querySelectorAll(".carrinho-item-qtd")
+    ).map((qtd) => qtd.innerText.trim()); // Coleta todas as quantidades
+
+    let data = {
+      total: total,
+      items: cartItems,
+      images: imageSrc,
+      quantities: quantities, // Mantém como um array
+    };
+
+    console.log("Data being sent:", data); // Linha de depuração
+
+    fetch("assets/php/savecart.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            "Network response was not ok: " + response.statusText
+          );
+        }
+        return response.json();
+      })
+      .then((jsonData) => {
+        if (jsonData.status === "success") {
+          atualizaCarrinhoQtd(); // Atualiza quantidade no ícone do carrinho
+          window.location.href = "assets/php/checkout.php"; // Redireciona para a página de checkout
+        } else {
+          throw new Error(jsonData.message || "unknown error");
+        }
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+      });
   }
 }
 
