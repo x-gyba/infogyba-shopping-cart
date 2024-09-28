@@ -17,6 +17,3 @@ if ($data) {
     // Enviar uma resposta de erro
     echo json_encode(['status' => 'error', 'message' => 'Failed to save data']);
 }
-
-
-?>

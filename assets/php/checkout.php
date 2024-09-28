@@ -29,7 +29,7 @@ if ($total === 0) {
 
         // Build quantity display
         if ($quantity == 1) {
-            $quantityDisplay = "";
+            $quantityDisplay = "x1";
         } else {
             $quantityDisplay = "x" . htmlspecialchars($quantity);
         }
@@ -50,4 +50,3 @@ if ($total === 0) {
 
 // Clear session variables after display
 unset($_SESSION['cart_total'], $_SESSION['cart_items'], $_SESSION['cart_images'], $_SESSION['quantities']);
-?>
