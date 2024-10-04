@@ -1,4 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+
+:root {
+  --black: #191919;
+  --white: #fff;
+  --blue: #0000ff;
+  --red: #d0342c;
+  --bg: rgba(242, 242, 234, 0.8);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -18,14 +27,6 @@ body {
 
 section {
   padding: 2rem 9%;
-}
-
-:root {
-  --black: #191919;
-  --white: #fff;
-  --blue: #0000ff;
-  --red: #d0342c;
-  --bg: rgba(242, 242, 234, 0.8);
 }
 
 a {
@@ -175,6 +176,15 @@ a {
 
   header .icon span {
     display: none;
+  }
+  .login-icon {
+    margin-bottom: -10px;
+    margin-right: 8px;
+    display: inline-block;
+    text-align: center;
+  }
+  .login-container {
+    max-width: 25rem;
   }
 }
 

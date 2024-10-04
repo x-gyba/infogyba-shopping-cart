@@ -16,3 +16,14 @@ let closeCart = document.querySelector(".carrinho-close");
 closeCart.onclick = () => {
   cartForm.classList.remove("active");
 };
+
+/* login */
+let loginForm = document.querySelector(".login-form");
+document.querySelector("#login-btn").onclick = () => {
+  loginForm.classList.toggle("active");
+};
+
+
+
+
+ 

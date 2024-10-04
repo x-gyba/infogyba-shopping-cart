@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 // Receber dados JSON do POST
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);

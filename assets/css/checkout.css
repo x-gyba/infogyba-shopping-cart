@@ -1,0 +1,211 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+
+:root {
+  --black: #191919;
+  --white: #fff;
+  --blue: #0000ff;
+  --red: #d0342c;
+  --bg: rgba(242, 242, 234, 0.8);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+  font-family: "Outfit", sans-serif;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  background-color: var(--bg);
+}
+
+label {
+  font-size: 1.2rem;
+  color: var(--black);
+}
+
+input[type="text"],
+input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  font-size: 1.2rem;
+}
+
+input[type="text"]::placeholder,
+input[type="date"]::placeholder {
+  color: #999; /* Closing bracket added here */
+}
+
+button {
+  padding: 10px 15px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  background-color: rgb(0, 132, 255);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: rgb(0, 100, 200);
+}
+
+.progress-checkout-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5rem;
+  padding: 2rem 0;
+}
+
+.progress-step-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.step-check {
+  width: 25px;
+  height: 25px;
+  border: 2px solid var(--black);
+  border-radius: 50%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+.step-check span {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--black);
+  display: block;
+}
+
+.step-title {
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: var(--black);
+  display: block;
+}
+
+.step-check--checked {
+  width: 25px;
+  height: 25px;
+  border: 2px solid var(--grey);
+  background-color: rgb(0, 132, 255);
+  border-radius: 50%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.step-check--checked span {
+  color: var(--white);
+}
+
+.checkout-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  width: 70%;
+  margin: 20px auto;
+}
+
+.form-checkout {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: var(--white);
+  width: 60%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-title {
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.input-line {
+  width: 100%;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .checkout-container {
+    flex-direction: column; /* Stack on smaller screens */
+    align-items: center; /* Center items */
+    gap: 20px; /* Reduce gap */
+  }
+
+  .form-checkout {
+    padding: 30px;
+  }
+}
+
+/* cart-summary */
+.cart-summary {
+  flex: 0 0 30%; /* Adjust the size of the cart summary */
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 40px;
+  background-color: var(--white);
+}
+
+/* Responsive cart-summary */
+@media (max-width: 768px) {
+  .cart-summary {
+    width: 100%; /* Full width on mobile */
+    margin-top: 20px; /* Add margin on top for spacing */
+  }
+}
+
+.summary-title {
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.total-title {
+  font-size: 1.4rem;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+.qtd-item {
+  font-size: 1.5rem;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.carrinho-vazio {
+  font-size: 1.6rem;
+  font-weight: 400;
+  text-align: center;
+}
+
+.review-container {
+  display: none; /* Hidden by default */
+}
