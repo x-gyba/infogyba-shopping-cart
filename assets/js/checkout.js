@@ -1,32 +1,36 @@
-let currentStep = 0;
-const steps = document.querySelectorAll('.form-checkout > div'); // Select all steps
-const stepIndicators = document.querySelectorAll('.step-check'); // Select all indicators
+$(document).ready(function () {
+  let currentStep = 1;
+  const totalSteps = $(".circle").length;
 
-function showStep(step) {
-    steps.forEach((stepDiv, index) => {
-        stepDiv.style.display = index === step ? 'block' : 'none';
+  // Update the progress bar and active step
+  function updateStep() {
+    // Update active circles
+    $(".circle").removeClass("active").slice(0, currentStep).addClass("active");
+
+    // Calculate the width of the progress bar
+    const progressWidth = ((currentStep - 1) / (totalSteps - 1)) * 100;
+    $(".indicator").css({
+      width: progressWidth + "%",
+      backgroundColor: "#4caf50",
     });
+  }
 
-    // Update step indicators
-    stepIndicators.forEach((indicator, index) => {
-        indicator.classList.toggle('step-check--checked', index < step + 1);
-    });
-}
-
-function nextStep() {
-    if (currentStep < steps.length - 1) {
-        currentStep++;
-        showStep(currentStep);
+  // Next button click
+  $("#next").click(function () {
+    if (currentStep < totalSteps) {
+      currentStep++;
+      updateStep();
     }
-}
+  });
 
-function prevStep() {
-    if (currentStep > 0) {
-        currentStep--;
-        showStep(currentStep);
+  // Previous button click
+  $("#prev").click(function () {
+    if (currentStep > 1) {
+      currentStep--;
+      updateStep();
     }
-}
+  });
 
-// Show the first step initially
-showStep(currentStep);
-
+  // Initialize
+  updateStep();
+});

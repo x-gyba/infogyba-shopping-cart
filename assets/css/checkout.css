@@ -3,9 +3,9 @@
 :root {
   --black: #191919;
   --white: #fff;
-  --blue: #0000ff;
+  --blue: #4070f4;
+  --green: #4caf50;
   --red: #d0342c;
-  --bg: rgba(242, 242, 234, 0.8);
 }
 
 * {
@@ -21,191 +21,98 @@ html {
 }
 
 body {
-  background-color: var(--bg);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  background-color: var(--white);
+  margin-top: 0;
+  padding: 2rem;
 }
 
-label {
-  font-size: 1.2rem;
-  color: var(--black);
-}
-
-input[type="text"],
-input[type="date"] {
+.container-steps {
+  position: relative;
   width: 100%;
-  padding: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
-  font-size: 1.2rem;
-}
-
-input[type="text"]::placeholder,
-input[type="date"]::placeholder {
-  color: #999; /* Closing bracket added here */
-}
-
-button {
-  padding: 10px 15px;
-  font-size: 1.2rem;
-  font-weight: 600;
-  background-color: rgb(0, 132, 255);
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: rgb(0, 100, 200);
-}
-
-.progress-checkout-container {
+  max-width: 600px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  gap: 5rem;
-  padding: 2rem 0;
+  gap: 2.5rem;
 }
 
-.progress-step-container {
+.step {
+  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 1rem;
+  justify-content: space-between;
+  position: relative;
 }
 
-.step-check {
-  width: 25px;
-  height: 25px;
-  border: 2px solid var(--black);
+.step-item {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle {
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  margin: 0 auto;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  background: var(--blue);
+  color: var(--white);
+  font-size: 1.4rem;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s, border 0.3s;
 }
-.step-check span {
+
+.circle.active {
+  background-color: var(--green);
+  border-color: var(--green);
+}
+
+.progress-bar {
+  position: absolute;
+  width: 80%;
+  margin-left: 10%;
+  height: 2px;
+  background: var(--black);
+  z-index: -1;
+  top: 1.25rem;
+}
+
+.indicator {
+  position: absolute;
+  height: 100%;
+  background: var(--black);
+  transition: width 0.3s;
+}
+
+.step-buttons {
+  display: flex;
+  gap: 2rem;
+}
+
+.step-buttons button {
+  padding: 8px 16px;
+  background: var(--blue);
+  border: none;
+  border-radius: 0.5rem;
+  color: var(--white);
   font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--black);
-  display: block;
+  font-weight: 500;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
 }
 
 .step-title {
-  font-size: 1.6rem;
-  font-weight: 500;
-  color: var(--black);
-  display: block;
-}
-
-.step-check--checked {
-  width: 25px;
-  height: 25px;
-  border: 2px solid var(--grey);
-  background-color: rgb(0, 132, 255);
-  border-radius: 50%;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s ease;
-}
-
-.step-check--checked span {
-  color: var(--white);
-}
-
-.checkout-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 40px;
-  width: 70%;
-  margin: 20px auto;
-}
-
-.form-checkout {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  background-color: var(--white);
-  width: 60%;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.form-title {
-  font-size: 2rem;
-  font-weight: 500;
-  margin-bottom: 2rem;
-  display: flex;
-  justify-content: center;
-}
-
-.input-line {
-  width: 100%;
-  margin-bottom: 2rem;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  flex-direction: column;
-}
-
-@media (max-width: 768px) {
-  .checkout-container {
-    flex-direction: column; /* Stack on smaller screens */
-    align-items: center; /* Center items */
-    gap: 20px; /* Reduce gap */
-  }
-
-  .form-checkout {
-    padding: 30px;
-  }
-}
-
-/* cart-summary */
-.cart-summary {
-  flex: 0 0 30%; /* Adjust the size of the cart summary */
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  padding: 40px;
-  background-color: var(--white);
-}
-
-/* Responsive cart-summary */
-@media (max-width: 768px) {
-  .cart-summary {
-    width: 100%; /* Full width on mobile */
-    margin-top: 20px; /* Add margin on top for spacing */
-  }
-}
-
-.summary-title {
-  font-size: 2rem;
-  font-weight: 500;
-  margin-bottom: 10px;
-  text-align: center;
-}
-
-.total-title {
+  margin-top: 4px;
   font-size: 1.4rem;
-  font-weight: 400;
-  margin-bottom: 10px;
-}
-
-.qtd-item {
-  font-size: 1.5rem;
-  font-weight: 400;
-  white-space: nowrap;
-}
-
-.carrinho-vazio {
-  font-size: 1.6rem;
-  font-weight: 400;
+  font-weight: 500;
   text-align: center;
-}
-
-.review-container {
-  display: none; /* Hidden by default */
+  word-break: nowrap;
 }
