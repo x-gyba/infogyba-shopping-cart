@@ -49,7 +49,7 @@
 
                         echo "<div style='display: flex; align-items: center; margin-bottom: 10px;'>";
                         if ($imageSrc) {
-                            echo "<div style='flex: 0 0 auto; margin-right: 8px;'><img src='" . htmlspecialchars($imageSrc) . "' alt='Imagem do Carrinho' style='max-width: 75px; height: auto;' /></div>";
+                            echo "<div style='flex: 0 0 auto; margin-right: 6px;'><img src='" . htmlspecialchars($imageSrc) . "' alt='Imagem do Carrinho' style='max-width: 75px; height: auto;' /></div>";
                         }
                         echo "<div class='qtd-item' style='flex: 1;'>" . nl2br(htmlspecialchars($item)) . " " . $quantityDisplay . "</div>";
                         echo "</div>";

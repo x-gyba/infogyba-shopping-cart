@@ -93,7 +93,7 @@ body {
 }
 
 .progress-bar.active {
-  background: var(--green); /* Cor da barra quando ativa */
+  background: var(--green); 
 }
 
 .indicator {
@@ -130,15 +130,15 @@ body {
 
 /* checkout  */
 .checkout-container {
-  flex: 1; /* Allow this to grow */
+  flex: 1; 
   display: flex;
-  flex-direction: column; /* Stack items */
+  flex-direction: column; 
   gap: 1.5rem;
 }
 .form-container {
   width: 100%;
   padding: 20px;
-  border: 1px solid var(--black);
+  border: 1px solid rgba(0, 0, 0, 0.4);
   border-radius: 8px;
   background-color: var(--white);
 }
@@ -150,22 +150,22 @@ body {
 /* Responsive Styles */
 @media (min-width: 600px) {
   .checkout-container {
-    grid-template-columns: repeat(2, 1fr); /* Two columns on larger screens */
+    grid-template-columns: repeat(2, 1fr); 
   }
 
   .form-container {
-    grid-column: span 2; /* Make form container span two columns */
+    grid-column: span 2; 
   }
 }
 
 /* Checkout Summary Styles */
 .summary-checkout-wrapper {
   display: flex;
-  justify-content: center; /* Center items */
-  align-items: flex-start; /* Align items to the top */
-  gap: 2rem; /* Space between summary and checkout */
+  justify-content: center; 
+  align-items: flex-start; 
+  gap: 2rem; 
   width: 100%;
-  max-width: 1200px; /* Optional: set max width for larger screens */
+  max-width: 1200px; 
 }
 
 .checkout-summary-container {
@@ -173,11 +173,23 @@ body {
 }
 
 .cart-summary {
-  width: 100%; /* Adjust as needed */
+  width: 100%; 
   padding: 20px;
-  border: 1px solid var(--black);
+  border: 1px solid rgba(0, 0, 0, 0.4);
   border-radius: 8px;
   background-color: var(--white);
   text-align: center;
-  z-index: 1; /* Ensure it's on top */
+  z-index: 1; 
+
+.total-title {
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.qtd-item {
+  font-size: 1.3rem;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
 }

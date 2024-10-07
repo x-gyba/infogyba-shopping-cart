@@ -1,55 +1,46 @@
-let currentStep = 0;
-const steps = [
-  $("#checkout-form"),
-  $(".payment-container"),
-  $(".review-container"),
-];
+$(document).ready(function () {
+  let currentStep = 0;
+  const steps = $(
+    ".form-container > form, .payment-container, .review-container"
+  );
 
-function updateStep() {
-  // Ocultar todas as seções
-  steps.forEach((step, index) => {
-    step.hide();
-    // Atualizar a cor dos círculos
-    const circle = $(".step-item").eq(index).find(".circle");
-    if (index <= currentStep) {
-      step.show();
-      circle.addClass("active"); // Adicionar a classe ativa
-    } else {
-      circle.removeClass("active"); // Remover a classe ativa
+  // Show the first step
+  steps.hide().first().show();
+
+  $("#next").on("click", function () {
+    if (currentStep < steps.length - 1) {
+      steps.eq(currentStep).hide();
+      currentStep++;
+      steps.eq(currentStep).show();
+      updateStepIndicator();
+      $("#prev").show();
+      if (currentStep === steps.length - 1) {
+        $("#next").hide(); // Hide next on the last step
+      }
     }
   });
 
-  // Atualizar visibilidade dos botões
-  $("#prev").toggle(currentStep > 0);
-  $("#next").text(currentStep === steps.length - 1 ? "Finalizar" : "Próximo");
+  $("#prev").on("click", function () {
+    if (currentStep > 0) {
+      steps.eq(currentStep).hide();
+      currentStep--;
+      steps.eq(currentStep).show();
+      updateStepIndicator();
+      $("#next").show();
+      if (currentStep === 0) {
+        $("#prev").hide(); // Hide prev on the first step
+      }
+    }
+  });
 
-  // Atualizar a largura da barra de progresso
-  const progressBar = $(".indicator");
-  const progressWidth = (currentStep / (steps.length - 1)) * 100; // Calcula a largura proporcional
-  progressBar.css("width", `${progressWidth}%`); // Define a largura da barra
-
-  // Atualizar a cor da barra de progresso
-  if (currentStep > 0) {
-    progressBar.addClass("active");
-  } else {
-    progressBar.removeClass("active");
-  }
-}
-
-$("#next").click(function () {
-  if (currentStep < steps.length - 1) {
-    currentStep++;
-    updateStep();
-  } else {
-    alert("Obrigado pela sua Compra!");
-  }
-});
-
-$("#prev").click(function () {
-  if (currentStep > 0) {
-    currentStep--;
-    updateStep();
+  function updateStepIndicator() {
+    $(".circle")
+      .removeClass("active")
+      .slice(0, currentStep + 1)
+      .addClass("active");
+    $(".indicator").css(
+      "width",
+      (currentStep / (steps.length - 1)) * 100 + "%"
+    );
   }
 });
-
-updateStep();
