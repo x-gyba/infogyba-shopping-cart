@@ -1,18 +1,18 @@
 <link rel="stylesheet" href="../css/checkout.css" />
-<link rel="stylesheet" href="/css/boxicons.min.css">
+<link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" />
 
 <div class="container-steps">
     <div class="step">
         <div class="step-item">
-            <span class="circle active">1</span>
+            <span class="circle active"><i class='bx bx-male-female'></i></span>
             <h2 class="step-title">Informações Pessoais</h2>
         </div>
         <div class="step-item">
-            <span class="circle">2</span>
+            <span class="circle"><i class='bx bx-dollar'></i></span>
             <h2 class="step-title">Pagamento</h2>
         </div>
         <div class="step-item">
-            <span class="circle">3</span>
+            <span class="circle"><i class='bx bxs-cart-alt'></i></span>
             <h2 class="step-title">Revisão</h2>
         </div>
         <div class="progress-bar">
@@ -130,8 +130,8 @@
                 </div>
             </div>
             <div class="step-buttons">
-                <button id="prev">Anterior</button>
-                <button id="next">Proximo</button>
+                <button id="prev" style="background:#5a4ec5">Anterior</button>
+                <button id="next" style="background:#b8a1e9">Proximo</button>
             </div>
         </div>
     </div>

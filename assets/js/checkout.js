@@ -11,7 +11,7 @@ function updateStep() {
     step.hide();
     // Atualizar a cor dos círculos
     const circle = $(".step-item").eq(index).find(".circle");
-    if (index === currentStep) {
+    if (index <= currentStep) {
       step.show();
       circle.addClass("active"); // Adicionar a classe ativa
     } else {
@@ -27,6 +27,13 @@ function updateStep() {
   const progressBar = $(".indicator");
   const progressWidth = (currentStep / (steps.length - 1)) * 100; // Calcula a largura proporcional
   progressBar.css("width", `${progressWidth}%`); // Define a largura da barra
+
+  // Atualizar a cor da barra de progresso
+  if (currentStep > 0) {
+    progressBar.addClass("active");
+  } else {
+    progressBar.removeClass("active");
+  }
 }
 
 $("#next").click(function () {

@@ -6,6 +6,7 @@
   --blue: #4070f4;
   --green: #4caf50;
   --red: #d0342c;
+  --violet: #5a4ec5;
 }
 
 * {
@@ -48,7 +49,7 @@ body {
 }
 
 .step-item {
-  width: 25%;
+  width: 24%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -56,11 +57,11 @@ body {
 }
 
 .circle {
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   border: 1px solid rgba(0, 0, 0, 0.5);
-  background: var(--blue);
+  background: var(--violet);
   color: var(--white);
   font-size: 1.4rem;
   font-weight: 500;
@@ -75,12 +76,18 @@ body {
   border-color: var(--green);
 }
 
+.circle i {
+  font-size: 2rem;
+  font-weight: 400;
+  display: block;
+}
+
 .progress-bar {
   position: absolute;
   width: 80%;
   margin-left: 10%;
   height: 2px;
-  background: var(--black);
+  background: var(--violet);
   z-index: -1;
   top: 1.25rem;
 }
