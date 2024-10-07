@@ -1,36 +1,48 @@
-$(document).ready(function () {
-  let currentStep = 1;
-  const totalSteps = $(".circle").length;
+let currentStep = 0;
+const steps = [
+  $("#checkout-form"),
+  $(".payment-container"),
+  $(".review-container"),
+];
 
-  // Update the progress bar and active step
-  function updateStep() {
-    // Update active circles
-    $(".circle").removeClass("active").slice(0, currentStep).addClass("active");
+function updateStep() {
+  // Ocultar todas as seções
+  steps.forEach((step, index) => {
+    step.hide();
+    // Atualizar a cor dos círculos
+    const circle = $(".step-item").eq(index).find(".circle");
+    if (index === currentStep) {
+      step.show();
+      circle.addClass("active"); // Adicionar a classe ativa
+    } else {
+      circle.removeClass("active"); // Remover a classe ativa
+    }
+  });
 
-    // Calculate the width of the progress bar
-    const progressWidth = ((currentStep - 1) / (totalSteps - 1)) * 100;
-    $(".indicator").css({
-      width: progressWidth + "%",
-      backgroundColor: "#4caf50",
-    });
+  // Atualizar visibilidade dos botões
+  $("#prev").toggle(currentStep > 0);
+  $("#next").text(currentStep === steps.length - 1 ? "Finalizar" : "Próximo");
+
+  // Atualizar a largura da barra de progresso
+  const progressBar = $(".indicator");
+  const progressWidth = (currentStep / (steps.length - 1)) * 100; // Calcula a largura proporcional
+  progressBar.css("width", `${progressWidth}%`); // Define a largura da barra
+}
+
+$("#next").click(function () {
+  if (currentStep < steps.length - 1) {
+    currentStep++;
+    updateStep();
+  } else {
+    alert("Obrigado pela sua Compra!");
   }
-
-  // Next button click
-  $("#next").click(function () {
-    if (currentStep < totalSteps) {
-      currentStep++;
-      updateStep();
-    }
-  });
-
-  // Previous button click
-  $("#prev").click(function () {
-    if (currentStep > 1) {
-      currentStep--;
-      updateStep();
-    }
-  });
-
-  // Initialize
-  updateStep();
 });
+
+$("#prev").click(function () {
+  if (currentStep > 0) {
+    currentStep--;
+    updateStep();
+  }
+});
+
+updateStep();

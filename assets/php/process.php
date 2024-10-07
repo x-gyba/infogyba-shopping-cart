@@ -27,6 +27,3 @@ if ($conn) {
 
 //  // Exibir os dados usando var_dump
 //  var_dump($nome, $sobrenome, $email, $endereco, $bairro, $cidade, $cep, $cpf, $telefone, $data_nascimento);
-
-?>
-

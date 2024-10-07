@@ -85,10 +85,14 @@ body {
   top: 1.25rem;
 }
 
+.progress-bar.active {
+  background: var(--green); /* Cor da barra quando ativa */
+}
+
 .indicator {
   position: absolute;
   height: 100%;
-  background: var(--black);
+  background: var(--green);
   transition: width 0.3s;
 }
 
@@ -115,4 +119,58 @@ body {
   font-weight: 500;
   text-align: center;
   word-break: nowrap;
+}
+
+/* checkout  */
+.checkout-container {
+  flex: 1; /* Allow this to grow */
+  display: flex;
+  flex-direction: column; /* Stack items */
+  gap: 1.5rem;
+}
+.form-container {
+  width: 100%;
+  padding: 20px;
+  border: 1px solid var(--black);
+  border-radius: 8px;
+  background-color: var(--white);
+}
+.input-line {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsive Styles */
+@media (min-width: 600px) {
+  .checkout-container {
+    grid-template-columns: repeat(2, 1fr); /* Two columns on larger screens */
+  }
+
+  .form-container {
+    grid-column: span 2; /* Make form container span two columns */
+  }
+}
+
+/* Checkout Summary Styles */
+.summary-checkout-wrapper {
+  display: flex;
+  justify-content: center; /* Center items */
+  align-items: flex-start; /* Align items to the top */
+  gap: 2rem; /* Space between summary and checkout */
+  width: 100%;
+  max-width: 1200px; /* Optional: set max width for larger screens */
+}
+
+.checkout-summary-container {
+  flex: 1;
+}
+
+.cart-summary {
+  width: 100%; /* Adjust as needed */
+  padding: 20px;
+  border: 1px solid var(--black);
+  border-radius: 8px;
+  background-color: var(--white);
+  text-align: center;
+  z-index: 1; /* Ensure it's on top */
 }
