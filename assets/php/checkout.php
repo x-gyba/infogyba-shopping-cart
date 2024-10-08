@@ -66,13 +66,15 @@
                         $totalFormatted = number_format((float)$total, 2, ',', '.');
                         $totalAfterDiscountFormatted = number_format(abs((float)$totalAfterDiscount), 2, ',', '.');
 
+                        // Exibir total normal
                         echo "<div class='total-title'><strong>Total:</strong> R$ " . $totalFormatted . "</div>";
 
-                        // Exibir a mensagem de desconto se houver
+                        // Exibir mensagem de desconto se houver
                         if (!empty($discountMessage)) {
                             echo $discountMessage;
                         }
 
+                        // Verificar se o desconto foi aplicado e exibir o total com desconto
                         if ($discountAmount > 0) {
                             echo "<div class='total-discount'><strong>Total com desconto:</strong> R$ " . $totalAfterDiscountFormatted . "</div>";
                         }
@@ -108,7 +110,6 @@
                     }
                 }
                 ?>
-
             </div>
         </div>
         <div class="checkout-container">
@@ -184,5 +185,7 @@
             </div>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="../js/checkout.js"></script>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="../js/checkout.js"></script>
