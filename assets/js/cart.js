@@ -104,53 +104,52 @@ function ready() {
     var preco = item.getElementsByClassName("preco-item")[0].innerHTML;
     var imagemSrc = item.getElementsByClassName("img-item")[0].src;
 
-    /* adiciona um item ao carrinho */
+    // Chama a função para adicionar itens ao carrinho
     adicionarItemsCarrinho(titulo, preco, imagemSrc);
   }
 
   function adicionarItemsCarrinho(titulo, preco, imagemSrc) {
-    var item = document.createElement("div");
-    item.classList.add("carrinho-item");
     var itemsCarrinho = document.getElementsByClassName("carrinho-items")[0];
 
-    /* verifica se o item se encontra no carrinho */
-    /* verifica se o item se encontra no carrinho */
+    // Verifica se o item já está no carrinho
     var nomeItemsCarrinho = itemsCarrinho.getElementsByClassName(
       "carrinho-item-titulo"
     );
     for (var i = 0; i < nomeItemsCarrinho.length; i++) {
       if (nomeItemsCarrinho[i].innerText === titulo) {
         alert("ESTE ITEM JÁ SE ENCONTRA NO CARRINHO.");
-        return;
+        return; // Retorna se o item já está no carrinho
       }
     }
-
+    // Cria o novo item no carrinho
+    var item = document.createElement("div");
+    item.classList.add("carrinho-item");
     var itemConteudo = `
-  <img src="${imagemSrc}" alt="image" width="80px" />
-  <span class="carrinho-item-titulo">${titulo}</span>
-  <span class="carrinho-item-preco">${preco}</span>
-  <div class="quantity">
-    <button class="plus-btn SomaQtd" type="button" name="button" value="1">
-      <i class="bx bx-plus-circle"></i>
-    </button>
-    <input type="text" class="carrinho-item-qtd" value="1">
-    <button class="minus-btn MenosQtd" type="button" name="button" value="1">
-      <i class="bx bx-minus-circle"></i>
-    </button>
-    <button class="remover-btn"><i class="bx bxs-trash"></i></button>
-  </div>
-`;
+     <img src="${imagemSrc}" alt="image" width="80px" />
+     <span class="carrinho-item-titulo">${titulo}</span>
+     <span class="carrinho-item-preco">${preco}</span>
+     <div class="quantity">
+         <button class="plus-btn SomaQtd" type="button" name="button" value="1">
+             <i class="bx bx-plus-circle"></i>
+         </button>
+         <input type="text" class="carrinho-item-qtd" value="1">
+         <button class="minus-btn MenosQtd" type="button" name="button" value="1">
+             <i class="bx bx-minus-circle"></i>
+         </button>
+         <button class="remover-btn"><i class="bx bxs-trash"></i></button>
+     </div>
+ `;
     item.innerHTML = itemConteudo;
     itemsCarrinho.append(item);
 
-    /* adicionar eventos para os botões do novo item */
+    // Adiciona eventos para os botões do novo item
     item
       .querySelector(".remover-btn")
       .addEventListener("click", EliminarItemCarrinho);
     item.querySelector(".SomaQtd").addEventListener("click", somaQtd);
     item.querySelector(".MenosQtd").addEventListener("click", MenosQtd);
 
-    /* atualiza o total do carrinho */
+    // Atualiza o total do carrinho
     atualizarTotalCarrinho();
     atualizaCarrinhoQtd();
     checkCarrinhoVazio();

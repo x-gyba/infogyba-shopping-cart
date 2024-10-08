@@ -44,3 +44,15 @@ $(document).ready(function () {
     );
   }
 });
+
+//limpa o carrinho ao clicar em voltar
+window.addEventListener("pageshow", function (event) {
+  if (event.persisted) {
+      // O usuário voltou para a página
+      fetch("set_clear_cart.php", { method: "POST" });
+  }
+});
+
+
+
+

@@ -25,41 +25,90 @@
                 <?php
                 session_start();
 
-                $total = isset($_SESSION['cart_total']) ? $_SESSION['cart_total'] : 0;
+                // Verifica se a sessão deve ser limpa
+                if (isset($_SESSION['clear_cart']) && $_SESSION['clear_cart'] === true) {
+                    unset($_SESSION['cart_total'], $_SESSION['cart_items'], $_SESSION['cart_images'], $_SESSION['quantities'], $_SESSION['discount_amount']);
+                    $_SESSION['clear_cart'] = false; // Reseta a variável para evitar múltiplas limpezas
+                }
 
+                // Inicializa as variáveis do carrinho
+                $total = isset($_SESSION['cart_total']) ? $_SESSION['cart_total'] : 0;
                 $items = isset($_SESSION['cart_items']) ? $_SESSION['cart_items'] : [];
                 $imageSrcArray = isset($_SESSION['cart_images']) ? $_SESSION['cart_images'] : [];
                 $quantities = isset($_SESSION['quantities']) ? $_SESSION['quantities'] : [];
+                $discountAmount = isset($_SESSION['discount_amount']) ? $_SESSION['discount_amount'] : 0;
+                $discountMessage = ""; // Mensagem de desconto
+
+                // Verifica se o formulário de desconto foi enviado
+                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['discount_code'])) {
+                    $discountCode = $_POST['discount_code'];
+
+                    // Verifica se o código de desconto é válido e se o desconto já foi aplicado
+                    if ($discountCode === 'DESCONTO10') {
+                        if ($discountAmount === 0) {
+                            $discountAmount = $total * 0.10; // 10% de desconto
+                            $_SESSION['discount_amount'] = $discountAmount; // Armazena o desconto na sessão
+                            $discountMessage = "<div class='discount-title'><strong>Você ganhou 10% de desconto!</strong></div>";
+                        } else {
+                            // Mensagem de desconto já aplicado
+                            $discountMessage = "<div class='discount-alert'><strong>Desconto já aplicado!</strong></div>";
+                        }
+                    }
+                }
+
+                // Calcular total após desconto
+                $totalAfterDiscount = $total - $discountAmount;
 
                 if ($total === 0) {
                     echo "<div class='carrinho-vazio'>Carrinho vazio.</div>";
                 } else {
                     if (is_numeric($total)) {
                         $totalFormatted = number_format((float)$total, 2, ',', '.');
+                        $totalAfterDiscountFormatted = number_format(abs((float)$totalAfterDiscount), 2, ',', '.');
+
                         echo "<div class='total-title'><strong>Total:</strong> R$ " . $totalFormatted . "</div>";
+
+                        // Exibir a mensagem de desconto se houver
+                        if (!empty($discountMessage)) {
+                            echo $discountMessage;
+                        }
+
+                        if ($discountAmount > 0) {
+                            echo "<div class='total-discount'><strong>Total com desconto:</strong> R$ " . $totalAfterDiscountFormatted . "</div>";
+                        }
+
+                        echo "<div class='cart-items'>";
+                        foreach ($items as $index => $item) {
+                            $imageSrc = isset($imageSrcArray[$index]) ? $imageSrcArray[$index] : '';
+                            $quantity = isset($quantities[$index]) ? $quantities[$index] : 0;
+
+                            $quantityDisplay = ($quantity == 1) ? "x1" : "x" . htmlspecialchars($quantity);
+
+                            echo "<div style='display: flex; align-items: center; margin-bottom: 10px;'>";
+                            if ($imageSrc) {
+                                echo "<div style='flex: 0 0 auto; margin-right: 6px;'><img src='" . htmlspecialchars($imageSrc) . "' alt='Imagem do Carrinho' style='max-width: 75px; height: auto;' /></div>";
+                            }
+                            echo "<div class='qtd-item' style='flex: 1;'>" . nl2br(htmlspecialchars($item)) . " " . $quantityDisplay . "</div>";
+                            echo "</div>";
+                        }
+                        echo "</div>"; // Fecha a div .cart-items
+
+                        echo '<div class="discount-form-container">';
+                        echo '<form method="POST" class="discount-form">';
+                        echo '<input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required>';
+                        echo '<button class="discount-btn" type="submit">Aplicar</button>';
+                        echo '</form>';
+                        echo '</div>';
+
+                        echo '<div style="font-weight:600;text-align: center; margin-top: 30px;">';
+                        echo '<button id="finalize-button" type="button" style="display:none;">Finalizar Compra</button>';
+                        echo '</div>';
                     } else {
                         echo "<div><strong>Total inválido.</strong></div>";
                     }
-
-                    foreach ($items as $index => $item) {
-                        $imageSrc = isset($imageSrcArray[$index]) ? $imageSrcArray[$index] : '';
-                        $quantity = isset($quantities[$index]) ? $quantities[$index] : 0;
-
-                        $quantityDisplay = ($quantity == 1) ? "x1" : "x" . htmlspecialchars($quantity);
-
-                        echo "<div style='display: flex; align-items: center; margin-bottom: 10px;'>";
-                        if ($imageSrc) {
-                            echo "<div style='flex: 0 0 auto; margin-right: 6px;'><img src='" . htmlspecialchars($imageSrc) . "' alt='Imagem do Carrinho' style='max-width: 75px; height: auto;' /></div>";
-                        }
-                        echo "<div class='qtd-item' style='flex: 1;'>" . nl2br(htmlspecialchars($item)) . " " . $quantityDisplay . "</div>";
-                        echo "</div>";
-                    }
-                    echo '<div style="font-weight:600;text-align: center; margin-top: 30px;">';
-                    echo '<button id="finalize-button" type="button" style="display:none;">Finalizar Compra</button>';
-                    echo '</div>';
                 }
-                unset($_SESSION['cart_total'], $_SESSION['cart_items'], $_SESSION['cart_images'], $_SESSION['quantities']);
                 ?>
+
             </div>
         </div>
         <div class="checkout-container">
@@ -69,31 +118,31 @@
                     <h2 class="form-title">Informações Pessoais</h2>
                     <div class="input-line">
                         <label for="nome">Nome Completo</label>
-                        <input type="text" name="nome" placeholder="Nome" required>
+                        <input type="text" name="nome" placeholder="" required>
                     </div>
                     <div class="input-line">
                         <label for="email">Email</label>
-                        <input type="email" name="email" placeholder="Email" required>
+                        <input type="email" name="email" placeholder="" required>
                     </div>
                     <div class="input-line">
                         <label for="endereco">Endereço</label>
-                        <input type="text" name="endereco" placeholder="Endereço" required>
+                        <input type="text" name="endereco" placeholder="" required>
                     </div>
                     <div class="input-line">
                         <label for="cep">Cep</label>
-                        <input type="text" name="cep" placeholder="Cep" required>
+                        <input type="text" name="cep" placeholder="" required>
                     </div>
                     <div class="input-line">
                         <label for="bairro">Bairro</label>
-                        <input type="text" name="bairro" placeholder="Bairro" required>
+                        <input type="text" name="bairro" placeholder="" required>
                     </div>
                     <div class="input-line">
                         <label for="cidade">Cidade</label>
-                        <input type="text" name="cidade" placeholder="Cidade" required>
+                        <input type="text" name="cidade" placeholder="" required>
                     </div>
                     <div class="input-line">
                         <label for="estado">Estado</label>
-                        <input type="text" name="estado" placeholder="Estado" required>
+                        <input type="text" name="estado" placeholder="" required>
                     </div>
                     <div class="input-line">
                         <label for="cpf">CPF</label>
