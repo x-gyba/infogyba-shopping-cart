@@ -25,16 +25,40 @@ html {
 body {
   height: 100vh;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
   background-color: var(--white);
-  margin-top: 0;
+  margin: 0;
   padding: 2rem;
 }
 
-.container-steps {
-  position: relative;
+label {
+  display: block;
+  font-size: 1.1rem;
+  font-weight:500;
+  margin-bottom: 0.5rem;
+  color: var(--black);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"] {
   width: 100%;
-  max-width: 600px;
+  padding: 0.5rem;
+  border: 1px solid var(--grey);
+  border-radius: 0.5rem;
+  font-size: 1.2rem;
+  transition: border-color 0.3s;
+}
+
+input:focus {
+  border-color: var(--blue);
+  outline: none;
+}
+
+.container-steps {
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,7 +66,7 @@ body {
 }
 
 .step {
-  width: 100%;
+  width: 60%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -107,6 +131,9 @@ body {
 .step-buttons {
   display: flex;
   gap: 2rem;
+  justify-content: center; 
+  margin-bottom: 1rem; 
+  width: 100%; 
 }
 
 .step-buttons button {
@@ -121,153 +148,60 @@ body {
   cursor: pointer;
 }
 
-.step-title {
-  margin-top: 4px;
-  font-size: 1.4rem;
-  font-weight: 500;
-  text-align: center;
-  word-break: nowrap;
-}
-
-/* checkout  */
-.checkout-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-.form-container {
-  width: 100%;
-  padding: 20px;
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  border-radius: 8px;
+/* login */
+.checkout-form {
+  position: relative;
+  width: 300px;
   background-color: var(--white);
-}
-.input-line {
-  display: flex;
-  flex-direction: column;
-}
-
-.input-line label {
-  margin-bottom: 5px;
-  font-size: 1rem;
-  font-weight: 500;
-  display: block;
-}
-
-.input-line input {
-  width: 100%;
-  padding: 2px;
   border: 1px solid var(--grey);
-  border-radius: 8px;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.discount-title {
+.form-title {
+  text-align: center;
+  font-size: 1.6rem;
+  color: var(--black);
+  margin-bottom: 1.2rem;
+}
+
+.input-line {
+  margin-bottom: 1.5rem;
+}
+
+.primary-button {
+  position: relative;
   margin-top: 5px;
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: var(--violet);
-}
-
-.discount-alert {
-  margin-bottom: 5px;
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: var(--red);
-}
-
-.total-discount {
-  margin-top: 4px;
-  font-size: 1.4rem;
-  font-weight: 500;
-}
-
-.discount-form-container {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.discount-form {
-  display: inline-block;
-}
-
-.discount-input {
-  padding: 7px;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  border-radius: 5px;
-  width: 200px;
-  margin-right: 5px;
-  text-align: center;
-}
-
-.discount-btn {
-  margin-top: 10px;
-  padding: 9px 16px;
+  margin-left: 100px;
   background-color: var(--violet);
-  color: white;
+  border-radius: 4px;
   border: none;
-  border-radius: 0.5rem;
+  display: inline-block;
+  cursor: pointer;
+  color: var(--white);
   font-size: 1.2rem;
   font-weight: 500;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
-  cursor: pointer;
-  transition: background-color 0.3s;
+  padding: 6px 12px;
+  text-decoration: none;
 }
 
-.discount-btn:hover {
+.primary-button:hover {
   background-color: var(--green);
+  transform: translateY(-2px);
 }
 
-/* Responsive Styles */
-@media (min-width: 600px) {
-  .checkout-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .form-container {
-    grid-column: span 2;
-  }
-}
-
-/* Checkout Summary Styles */
-.summary-checkout-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 2rem;
+.auth-toggle-btn {
   width: 100%;
-  max-width: 1200px;
-}
-
-.checkout-summary-container {
-  flex: 1;
-}
-
-.cart-summary {
-  width: 100%;
-  padding: 2px;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  border-radius: 8px;
-  background-color: var(--white);
+  font-size: 1.3rem;
+  font-weight: 400;
+  margin-top: 0.5rem;
+  background: none;
+  color: var(--black);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 8px 16px;
+  cursor: pointer;
   text-align: center;
-  z-index: 1;
-
-  .total-title {
-    font-size: 1.4rem;
-    font-weight: 500;
-  }
-
-  .qtd-item {
-    font-size: 1.3rem;
-    font-weight: 400;
-    white-space: nowrap;
-  }
-  .cart-items {
-    margin-top: 8px;
-    padding: 10px;
-    border-radius: 5px;
-  }
-  .discount-form-container {
-    margin-top: 20px;
-  }
+  display: block;
 }
