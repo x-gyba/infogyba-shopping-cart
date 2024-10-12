@@ -1,207 +1,266 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 
 :root {
-  --black: #191919;
-  --white: #fff;
-  --blue: #4070f4;
-  --green: #4caf50;
-  --grey: #bbb;
-  --red: #d0342c;
-  --violet: #5a4ec5;
+    --black: #191919;
+    --white: #fff;
+    --blue: #4070f4;
+    --green: #4caf50;
+    --grey: #bbb;
+    --red: #d0342c;
+    --violet: #5a4ec5;
 }
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  outline: none;
-  font-family: "Outfit", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+    font-family: "Outfit", sans-serif;
 }
 
 html {
-  font-size: 62.5%;
+    font-size: 62.5%;
 }
 
 body {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  background-color: var(--white);
-  margin: 0;
-  padding: 2rem;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    background-color: var(--white);
+    padding: 2rem;
 }
 
 label {
-  display: block;
-  font-size: 1.1rem;
-  font-weight:500;
-  margin-bottom: 0.5rem;
-  color: var(--black);
+    font-size: 1.2rem;
+    color: var(--black);
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="date"] {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid var(--grey);
-  border-radius: 0.5rem;
-  font-size: 1.2rem;
-  transition: border-color 0.3s;
+.main-container {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    max-width: 120rem;
 }
 
-input:focus {
-  border-color: var(--blue);
-  outline: none;
+/* cart summary */
+.cart-summary {
+    position: fixed;
+    left: calc(50% - 60rem);
+    top: 12rem;
+    width: 30rem;
+    background-color: var(--white);
+    border: 1px solid var(--grey);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.cart-summary h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: var(--black);
+}
+
+
+
+/* checkout */
+.checkout-container {
+    flex-grow: 1;
+    max-width: 60rem;
 }
 
 .container-steps {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2.5rem;
+    width: 100%;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: flex-start;
 }
 
 .step {
-  width: 60%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
+    display: flex;
+    justify-content: flex-start; 
+    align-items: center; 
+    position: relative;
+    margin-bottom: 5rem;
+    transform: translateX(-100px);
 }
 
 .step-item {
-  width: 24%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1;
+    margin-right: 10rem; 
 }
 
 .circle {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.5);
-  background: var(--violet);
-  color: var(--white);
-  font-size: 1.4rem;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s, border 0.3s;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background-color: var(--violet);
+    color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.5rem;
 }
 
 .circle.active {
-  background-color: var(--green);
-  border-color: var(--green);
+    background-color: var(--green);  
 }
 
-.circle i {
-  font-size: 2rem;
-  font-weight: 400;
-  display: block;
+.step-title {
+    font-size: 1.5rem;
+    color: var(--black);
 }
 
 .progress-bar {
-  position: absolute;
-  width: 80%;
-  margin-left: 10%;
-  height: 2px;
-  background: var(--violet);
-  z-index: -1;
-  top: 1.25rem;
-}
-
-.progress-bar.active {
-  background: var(--green);
+    position: absolute;
+    top: 30%; 
+    left: 40%; 
+    transform: translate(-50%, -50%); 
+    width: 70%; 
+    height: 2px; 
+    background-color: var(--violet);
 }
 
 .indicator {
-  position: absolute;
-  height: 100%;
-  background: var(--green);
-  transition: width 0.3s;
+    position: absolute;
+    height: 100%;
+    background-color: var(--green);
+    transition: width 0.3s ease;
 }
 
-.step-buttons {
-  display: flex;
-  gap: 2rem;
-  justify-content: center; 
-  margin-bottom: 1rem; 
-  width: 100%; 
+.auth-forms-container,
+.payment-container,
+.review-container {
+    flex-grow: 1;
 }
 
-.step-buttons button {
-  padding: 8px 16px;
-  background: var(--blue);
-  border: none;
-  border-radius: 0.5rem;
-  color: var(--white);
-  font-size: 1.2rem;
-  font-weight: 500;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
-  cursor: pointer;
-}
-
-/* login */
 .checkout-form {
-  position: relative;
-  width: 300px;
-  background-color: var(--white);
-  border: 1px solid var(--grey);
-  border-radius: 1rem;
-  padding: 2rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 60%; 
+    max-width: 600px; 
+    margin: 1rem auto 50px; 
+    margin-left: -100px;
+    padding: 1.5rem; 
+    background-color: var(--white); 
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 1rem; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    transform: translateY(-30px); 
 }
 
 .form-title {
-  text-align: center;
-  font-size: 1.6rem;
-  color: var(--black);
-  margin-bottom: 1.2rem;
+    font-size: 1.6rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
 }
 
 .input-line {
-  margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column; 
+    margin-bottom: 1.5rem; 
+}
+
+.input-line label {
+    font-size: 1rem; 
+    font-weight: bold; 
+    margin-bottom: 0.5rem; 
+    color: var(--black); 
+}
+
+.input-line input {
+    padding: 0.8rem; 
+    border: 1px solid rgba(0, 0, 0, 0.2); 
+    border-radius: 0.5rem; 
+    font-size: 1rem; 
+    color: var(--black);
+    transition: border-color 0.3s, box-shadow 0.3s; 
+}
+
+.input-line input:focus {
+    border-color: var(--blue); 
+    outline: none; 
+    box-shadow: 0 0 5px rgba(64, 112, 244, 0.5); 
+}
+
+.input-line input::placeholder {
+    color: rgba(0, 0, 0, 0.5); 
+    font-style: italic; 
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-start; 
+    width: 100%; 
+    gap: 2rem; 
 }
 
 .primary-button {
-  position: relative;
-  margin-top: 5px;
-  margin-left: 100px;
-  background-color: var(--violet);
-  border-radius: 4px;
-  border: none;
-  display: inline-block;
-  cursor: pointer;
-  color: var(--white);
-  font-size: 1.2rem;
-  font-weight: 500;
-  padding: 6px 12px;
-  text-decoration: none;
+    padding: 0.8rem 1.5rem; 
+    background-color: var(--blue); 
+    color: var(--white); 
+    border: none; 
+    border-radius: 0.5rem; 
+    font-size: 1rem; 
+    cursor: pointer; 
+    transition: background-color 0.3s, transform 0.2s; 
 }
 
 .primary-button:hover {
-  background-color: var(--green);
-  transform: translateY(-2px);
+    background-color: var(--green); 
+    transform: translateY(-2px); 
 }
 
 .auth-toggle-btn {
-  width: 100%;
-  font-size: 1.3rem;
-  font-weight: 400;
-  margin-top: 0.5rem;
-  background: none;
-  color: var(--black);
-  border: none;
-  border-radius: 0.5rem;
-  padding: 8px 16px;
-  cursor: pointer;
-  text-align: center;
-  display: block;
+    background: none; 
+    border: none; 
+    color: var(--blue); 
+    cursor: pointer; 
+    font-size: 1.2rem; 
+    font-weight: 500;
+    color: var(--blue);
+    text-align: left; 
+    transition: color 0.3s; 
 }
+
+.step-buttons {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-top: 1rem; 
+    width: 100%; 
+}
+
+.step-button {
+    margin-top: 0; 
+    background-color: var(--blue); 
+    color: var(--white); 
+    border: none; 
+    border-radius: 0.5rem; 
+    font-size: 1rem; 
+    cursor: pointer; 
+    transition: background-color 0.3s, transform 0.2s; 
+}
+
+#prev,
+#next {
+    margin-bottom: 5rem;
+    padding: 0.8rem 1.2rem; 
+    font-size: 1.2rem;
+    color: var(--white);
+    background-color: var(--violet);
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+/* Responsive Styles */
+
+
+
