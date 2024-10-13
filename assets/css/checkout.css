@@ -1,266 +1,476 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 
 :root {
-    --black: #191919;
-    --white: #fff;
-    --blue: #4070f4;
-    --green: #4caf50;
-    --grey: #bbb;
-    --red: #d0342c;
-    --violet: #5a4ec5;
+  --black: #191919;
+  --white: #fff;
+  --blue: #4070f4;
+  --green: #4caf50;
+  --grey: #bbb;
+  --red: #d0342c;
+  --violet: #5a4ec5;
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    outline: none;
-    font-family: "Outfit", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+  font-family: "Outfit", sans-serif;
 }
 
 html {
-    font-size: 62.5%;
+  font-size: 62.5%;
 }
 
 body {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    background-color: var(--white);
-    padding: 2rem;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background-color: var(--white);
+  padding: 2rem;
 }
 
 label {
-    font-size: 1.2rem;
-    color: var(--black);
+  font-size: 1.2rem;
+  color: var(--black);
 }
 
 .main-container {
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
-    max-width: 120rem;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  max-width: 120rem;
 }
 
 /* cart summary */
 .cart-summary {
-    position: fixed;
-    left: calc(50% - 60rem);
-    top: 12rem;
-    width: 30rem;
-    background-color: var(--white);
-    border: 1px solid var(--grey);
-    border-radius: 1rem;
-    padding: 2rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  left: calc(50% - 60rem);
+  top: 12rem;
+  width: 30rem;
+  background-color: var(--white);
+  border: 1px solid var(--grey);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .cart-summary h2 {
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-    color: var(--black);
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: var(--black);
 }
-
-
 
 /* checkout */
 .checkout-container {
-    flex-grow: 1;
-    max-width: 60rem;
+  flex-grow: 1;
+  max-width: 60rem;
 }
 
 .container-steps {
-    width: 100%;
-    margin-bottom: 2rem;
-    display: flex;
-    justify-content: flex-start;
+  width: 100%;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .step {
-    display: flex;
-    justify-content: flex-start; 
-    align-items: center; 
-    position: relative;
-    margin-bottom: 5rem;
-    transform: translateX(-100px);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+  margin-bottom: 5rem;
+  transform: translateX(-100px);
 }
 
 .step-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    z-index: 1;
-    margin-right: 10rem; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+  margin-right: 10rem;
 }
 
 .circle {
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 50%;
-    background-color: var(--violet);
-    color: var(--white);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 0.5rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background-color: var(--violet);
+  color: var(--white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.5rem;
 }
 
 .circle.active {
-    background-color: var(--green);  
+  background-color: var(--green);
 }
 
 .step-title {
-    font-size: 1.5rem;
-    color: var(--black);
+  font-size: 1.5rem;
+  color: var(--black);
 }
 
 .progress-bar {
-    position: absolute;
-    top: 30%; 
-    left: 40%; 
-    transform: translate(-50%, -50%); 
-    width: 70%; 
-    height: 2px; 
-    background-color: var(--violet);
+  position: absolute;
+  top: 30%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  height: 2px;
+  background-color: var(--violet);
 }
 
 .indicator {
-    position: absolute;
-    height: 100%;
-    background-color: var(--green);
-    transition: width 0.3s ease;
+  position: absolute;
+  height: 100%;
+  background-color: var(--green);
+  transition: width 0.3s ease;
 }
 
 .auth-forms-container,
 .payment-container,
 .review-container {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 .checkout-form {
-    width: 60%; 
-    max-width: 600px; 
-    margin: 1rem auto 50px; 
-    margin-left: -100px;
-    padding: 1.5rem; 
-    background-color: var(--white); 
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 1rem; 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    transform: translateY(-30px); 
+  width: 60%;
+  max-width: 600px;
+  margin: 1rem auto 50px;
+  margin-left: -100px;
+  padding: 1.5rem;
+  background-color: var(--white);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateY(-30px);
 }
 
 .form-title {
-    font-size: 1.6rem;
-    font-weight: 500;
-    margin-bottom: 2rem;
-    display: flex;
-    justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
 }
 
 .input-line {
-    display: flex;
-    flex-direction: column; 
-    margin-bottom: 1.5rem; 
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
 }
 
 .input-line label {
-    font-size: 1rem; 
-    font-weight: bold; 
-    margin-bottom: 0.5rem; 
-    color: var(--black); 
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: var(--black);
 }
 
 .input-line input {
-    padding: 0.8rem; 
-    border: 1px solid rgba(0, 0, 0, 0.2); 
-    border-radius: 0.5rem; 
-    font-size: 1rem; 
-    color: var(--black);
-    transition: border-color 0.3s, box-shadow 0.3s; 
+  padding: 0.8rem;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  color: var(--black);
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .input-line input:focus {
-    border-color: var(--blue); 
-    outline: none; 
-    box-shadow: 0 0 5px rgba(64, 112, 244, 0.5); 
+  border-color: var(--blue);
+  outline: none;
+  box-shadow: 0 0 5px rgba(64, 112, 244, 0.5);
 }
 
 .input-line input::placeholder {
-    color: rgba(0, 0, 0, 0.5); 
-    font-style: italic; 
+  color: rgba(0, 0, 0, 0.5);
+  font-style: italic;
 }
 
 .button-container {
-    display: flex;
-    justify-content: flex-start; 
-    width: 100%; 
-    gap: 2rem; 
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  gap: 2rem;
 }
 
 .primary-button {
-    padding: 0.8rem 1.5rem; 
-    background-color: var(--blue); 
-    color: var(--white); 
-    border: none; 
-    border-radius: 0.5rem; 
-    font-size: 1rem; 
-    cursor: pointer; 
-    transition: background-color 0.3s, transform 0.2s; 
+  padding: 0.8rem 1.5rem;
+  background-color: var(--blue);
+  color: var(--white);
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 .primary-button:hover {
-    background-color: var(--green); 
-    transform: translateY(-2px); 
+  background-color: var(--green);
+  transform: translateY(-2px);
 }
 
 .auth-toggle-btn {
-    background: none; 
-    border: none; 
-    color: var(--blue); 
-    cursor: pointer; 
-    font-size: 1.2rem; 
-    font-weight: 500;
-    color: var(--blue);
-    text-align: left; 
-    transition: color 0.3s; 
+  background: none;
+  border: none;
+  color: var(--blue);
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--blue);
+  text-align: left;
+  transition: color 0.3s;
 }
 
 .step-buttons {
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    margin-top: 1rem; 
-    width: 100%; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  width: 100%;
 }
 
 .step-button {
-    margin-top: 0; 
-    background-color: var(--blue); 
-    color: var(--white); 
-    border: none; 
-    border-radius: 0.5rem; 
-    font-size: 1rem; 
-    cursor: pointer; 
-    transition: background-color 0.3s, transform 0.2s; 
+  margin-top: 0;
+  background-color: var(--blue);
+  color: var(--white);
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 #prev,
 #next {
-    margin-bottom: 5rem;
-    padding: 0.8rem 1.2rem; 
-    font-size: 1.2rem;
-    color: var(--white);
-    background-color: var(--violet);
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
+  margin-bottom: 5rem;
+  padding: 0.8rem 1.2rem;
+  font-size: 1.2rem;
+  color: var(--white);
+  background-color: var(--violet);
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
 }
 
 /* Responsive Styles */
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
+  }
 
+  .main-container {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
 
+  .checkout-container {
+    order: 1;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
 
+  .container-steps {
+    order: 1;
+    margin-left: 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  .cart-summary {
+    order: 2;
+    position: static;
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  .auth-forms-container {
+    order: 3;
+    width: 100%;
+    margin-left: 0;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+
+  .step-buttons {
+    order: 4;
+    position: static;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 0;
+    background-color: transparent;
+    box-shadow: none;
+    margin-top: 1rem;
+  }
+
+  .checkout-form {
+    width: 100%;
+    transform: none;
+    margin-left: 0;
+  }
+
+  .step {
+    transform: none;
+  }
+
+  .step-item {
+    margin-right: 3rem;
+  }
+
+  .circle {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .step-title {
+    font-size: 1.2rem;
+  }
+
+  .progress-bar {
+    left: 40%;
+    width: 70%;
+  }
+
+  .input-line input {
+    width: 100%;
+  }
+
+  .button-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .primary-button,
+  .auth-toggle-btn {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  #prev,
+  #next {
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+    margin: 0;
+    width: 48%;
+  }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
+  }
+
+  .main-container {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .checkout-container {
+    order: 1; /* Primeiro: steps */
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cart-summary {
+    order: 2; /* Segundo: cart summary */
+    position: static;
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  .auth-forms-container {
+    order: 3; /* Terceiro: auth forms */
+    width: 100%;
+    margin-left: 0;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+
+  .payment-container {
+    order: 4; /* Quarto: payment container */
+    width: 100%;
+    margin-bottom: 2rem; /* Adicionei margin-bottom para espaçamento */
+  }
+
+  .review-container {
+    order: 5; /* Quinto: review container */
+    width: 100%;
+    margin-bottom: 2rem; /* Adicionei margin-bottom para espaçamento */
+  }
+
+  .step-buttons {
+    order: 6; /* Botões de passo permanecem onde estão */
+    position: static;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 0;
+    background-color: transparent;
+    box-shadow: none;
+    margin-top: 1rem;
+  }
+
+  .checkout-form {
+    width: 100%;
+    transform: none;
+    margin-left: 0;
+  }
+
+  .step {
+    transform: none;
+  }
+
+  .step-item {
+    margin-right: 3rem;
+  }
+
+  .circle {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .step-title {
+    font-size: 1.2rem;
+  }
+
+  .progress-bar {
+    left: 40%;
+    width: 70%;
+  }
+
+  .input-line input {
+    width: 100%;
+  }
+
+  .button-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .primary-button,
+  .auth-toggle-btn {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  #prev,
+  #next {
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+    margin: 0;
+    width: 48%;
+  }
+}
