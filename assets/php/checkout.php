@@ -170,8 +170,8 @@
             </div>
 
             <div class="step-buttons">
-                <button id="prev" style="background:#5a4ec5">Anterior</button>
-                <button id="next" style="background:#5a4ec5">Próximo</button>
+                <button id="prev" style="width:80px;background:#5a4ec5">Anterior</button>
+                <button id="next" style="width:80px;background:#5a4ec5">Próximo</button>
             </div>
 
 

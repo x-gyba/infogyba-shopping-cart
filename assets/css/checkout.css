@@ -266,131 +266,30 @@ label {
 
   .main-container {
     flex-direction: column;
-    justify-content: flex-start;
+    align-items: center;
   }
-
-  .checkout-container {
-    order: 1;
-    max-width: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .container-steps {
-    order: 1;
-    margin-left: 0;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin-bottom: 2rem;
-  }
-
-  .cart-summary {
-    order: 2;
-    position: static;
-    width: 100%;
-    margin-bottom: 2rem;
-  }
-
-  .auth-forms-container {
-    order: 3;
-    width: 100%;
-    margin-left: 0;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 2rem;
-  }
-
-  .step-buttons {
-    order: 4;
-    position: static;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem 0;
-    background-color: transparent;
-    box-shadow: none;
-    margin-top: 1rem;
-  }
-
-  .checkout-form {
-    width: 100%;
-    transform: none;
-    margin-left: 0;
-  }
-
-  .step {
-    transform: none;
-  }
-
-  .step-item {
-    margin-right: 3rem;
-  }
-
-  .circle {
-    width: 3rem;
-    height: 3rem;
-  }
-
-  .step-title {
-    font-size: 1.2rem;
-  }
-
-  .progress-bar {
-    left: 40%;
-    width: 70%;
-  }
-
-  .input-line input {
-    width: 100%;
-  }
-
-  .button-container {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .primary-button,
-  .auth-toggle-btn {
-    width: 100%;
-    margin-bottom: 1rem;
-  }
-
-  #prev,
-  #next {
-    padding: 0.8rem 1.2rem;
-    font-size: 1rem;
-    margin: 0;
-    width: 48%;
-  }
+.container-steps{
+  margin-bottom: 2rem;
+  margin-left: 3rem;  
 }
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-  body {
-    padding: 1rem;
-  }
-
-  .main-container {
-    flex-direction: column;
-    justify-content: flex-start;
-  }
-
+  
   .checkout-container {
-    order: 1; /* Primeiro: steps */
     max-width: 100%;
-    display: flex;
-    flex-direction: column;
+    margin: 0 1rem; /* Add some margin for better spacing */
+  }
+
+  .step-item i{
+  font-size: 1.5rem;  
   }
 
   .cart-summary {
     order: 2; /* Segundo: cart summary */
     position: static;
     width: 100%;
-    margin-bottom: 2rem;
+    margin-top:2rem;
   }
 
-  .auth-forms-container {
+    .auth-forms-container {
     order: 3; /* Terceiro: auth forms */
     width: 100%;
     margin-left: 0;
@@ -466,10 +365,17 @@ label {
     margin-bottom: 1rem;
   }
 
+  .primary-button {
+    width: 35%;
+    font-size: 1.2rem;
+    font-weight: 500;
+    display: block;
+  }
+
   #prev,
   #next {
     padding: 0.8rem 1.2rem;
-    font-size: 1rem;
+    font-size: 1.25rem;
     margin: 0;
     width: 48%;
   }
