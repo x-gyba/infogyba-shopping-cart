@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -10,9 +14,6 @@
 </head>
 
 <body>
-    <?php
-    session_start();
-    ?>
     <div class="main-container">
         <div class="checkout-container">
             <div class="container-steps">
