@@ -149,6 +149,28 @@ session_start();
                 </div>
                 <div class="payment-container">
                     <h2 class="form-title">Pagamento Cartão de Crédito</h2>
+                    <div class="image">
+                        <i class='bx bxl-visa'></i>
+                        <i class='bx bxl-mastercard'></i>
+                    </div>
+                    <div class="card-container">
+                        <div class="front-card">
+                            <div class="card-number-box">################</div>
+                            <div class="flex-box">
+                                <div class="box">
+                                    <span>titular do cartão</span>
+                                    <div class="card-holder-name">nome completo</div>
+                                </div>
+                                <div class="box">
+                                    <span>validade</span>
+                                    <div class="expiration">
+                                        <span class="exp-month">mm</span>
+                                        <span class="exp-year">yy</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <form class="payment-form">
                         <div class="input-box">
                             <span>Número do Cartão</span>
@@ -207,7 +229,6 @@ session_start();
                     <p>Revise suas informações antes de finalizar:</p>
                     <div id="review-info"></div>
                 </div>
-                
 
                 <div class="step-buttons">
                     <button id="prev" style="width:80px;background:#5a4ec5">Anterior</button>
