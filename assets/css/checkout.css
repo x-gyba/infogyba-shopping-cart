@@ -61,6 +61,25 @@ label {
   color: var(--black);
 }
 
+/* cart summary */
+.cart-summary {
+  position: fixed;
+  left: calc(50% - 60rem);
+  top: 12rem;
+  width: 30rem;
+  background-color: var(--white);
+  border: 1px solid var(--grey);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.cart-summary h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: var(--black);
+}
+
 /* checkout */
 .checkout-container {
   flex-grow: 1;
@@ -229,10 +248,10 @@ label {
 
 .step-buttons {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: flex-start;
   margin-top: 1rem;
   width: 100%;
+  gap: 1rem;
 }
 
 .step-button {
@@ -248,9 +267,10 @@ label {
 
 #prev,
 #next {
-  margin-bottom: 5rem;
-  padding: 0.8rem 1.2rem;
+  margin-bottom: 0.2rem;
+  padding: 0.8rem 1rem;
   font-size: 1.2rem;
+  font-weight: 500;
   color: var(--white);
   background-color: var(--violet);
   border: none;
@@ -258,7 +278,45 @@ label {
   cursor: pointer;
 }
 
-/* Responsive Styles */
+#prev {
+  margin-right: 5rem;
+}
+
+#next {
+  margin-right: 0;
+}
+
+/* Payment */
+.payment-container {
+  width: 80%;
+  max-width: 1200px;
+  min-height: 30rem;
+  margin-right: auto;
+  margin-bottom: 10rem;
+  padding: 0;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  transform: translateX(-10rem);
+}
+
+.payment-container form {
+  background-color: var(--white);
+  border-radius: 5px;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.payment-container .input-box {
+  margin-top: 1.25rem;
+}
+
+/* responsive checkout */
 @media (max-width: 768px) {
   body {
     padding: 1rem;
@@ -267,87 +325,66 @@ label {
   .main-container {
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    padding: 0 1rem;
   }
-.container-steps{
-  margin-bottom: 2rem;
-  margin-left: 3rem;  
-}
-  
+
   .checkout-container {
+    order: 2;
     max-width: 100%;
-    margin: 0 1rem; /* Add some margin for better spacing */
-  }
-
-  .step-item i{
-  font-size: 1.5rem;  
-  }
-
-  .cart-summary {
-    order: 2; /* Segundo: cart summary */
-    position: static;
     width: 100%;
-    margin-top:2rem;
-  }
-
-    .auth-forms-container {
-    order: 3; /* Terceiro: auth forms */
-    width: 100%;
-    margin-left: 0;
-    display: flex;
-    justify-content: center;
+    margin-right: 0;
     margin-bottom: 2rem;
   }
 
-  .payment-container {
-    order: 4; /* Quarto: payment container */
+  .container-steps {
+    order: 1;
     width: 100%;
-    margin-bottom: 2rem; /* Adicionei margin-bottom para espaçamento */
-  }
-
-  .review-container {
-    order: 5; /* Quinto: review container */
-    width: 100%;
-    margin-bottom: 2rem; /* Adicionei margin-bottom para espaçamento */
-  }
-
-  .step-buttons {
-    order: 6; /* Botões de passo permanecem onde estão */
-    position: static;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem 0;
-    background-color: transparent;
-    box-shadow: none;
-    margin-top: 1rem;
-  }
-
-  .checkout-form {
-    width: 100%;
-    transform: none;
-    margin-left: 0;
+    margin-left: 2rem;
+    margin-bottom: 2rem;
+    justify-content: center;
   }
 
   .step {
     transform: none;
+    margin-bottom: 3rem;
   }
 
   .step-item {
     margin-right: 3rem;
   }
 
-  .circle {
-    width: 3rem;
-    height: 3rem;
-  }
-
-  .step-title {
-    font-size: 1.2rem;
-  }
-
   .progress-bar {
     left: 40%;
     width: 70%;
+  }
+
+  .cart-summary {
+    order: 1;
+    position: static;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 2rem;
+    left: auto;
+    top: auto;
+  }
+
+  .auth-forms-container,
+  .payment-container,
+  .review-container {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .checkout-form {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 5rem 0;
+    transform: none;
+  }
+
+  .input-line {
+    width: 100%;
   }
 
   .input-line input {
@@ -365,18 +402,38 @@ label {
     margin-bottom: 1rem;
   }
 
-  .primary-button {
-    width: 35%;
-    font-size: 1.2rem;
-    font-weight: 500;
-    display: block;
+  .step-buttons {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    margin-top: 1rem;
+    width: 100%;
+    gap: 1rem; 
   }
-
+  
   #prev,
   #next {
-    padding: 0.8rem 1.2rem;
-    font-size: 1.25rem;
-    margin: 0;
-    width: 48%;
+    margin-bottom: 0.2rem;
+    padding: 0.6rem 1rem;
+    font-size: 1.1rem;
+    color: var(--white);
+    background-color: var(--violet);
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+  }
+  
+  /* Remover a margem direita do último botão */
+  #next {
+    margin-right: 0;
+  }
+  
+
+  /* Alinhamento e centralização do contêiner de pagamento */
+  .payment-container {
+    width: 90%;
+    max-width: 500px; 
+    margin-left:12rem; 
+    padding: 2rem 1rem; 
   }
 }

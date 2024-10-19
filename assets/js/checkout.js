@@ -8,12 +8,14 @@ const prevBtn = document.getElementById("prev");
 const nextBtn = document.getElementById("next");
 const loginForm = document.getElementById("login-form");
 const registerForm = document.getElementById("register-form");
+const totalSteps = 3;
 
 // Initialize form states
 loginForm.style.display = "block"; // Show login form initially
 registerForm.style.display = "none"; // Hide register form initially
 
 let currentStep = 0;
+
 
 // Function to update steps and form visibility
 function updateSteps() {

@@ -433,9 +433,3 @@ header .btn-checkout i {
   cursor: pointer;
 }
 
-/* responsive */
-@media all and (max-width: 768px) {
-  .info-item {
-    display: none;
-  }
-}

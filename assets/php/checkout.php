@@ -73,110 +73,150 @@ session_start();
                 }
                 ?>
             </div>
+            <div class="form-container">
+                <div class="auth-forms-container">
+                    <form id="login-form" class="checkout-form">
+                        <h2 class="form-title">Login</h2>
+                        <div class="input-line">
+                            <label for="login-email">Email</label>
+                            <input type="email" id="login-email" required placeholder="Digite seu email" />
+                        </div>
+                        <div class="input-line">
+                            <label for="login-password">Senha</label>
+                            <input type="password" id="login-password" required placeholder="Digite sua senha" />
+                        </div>
+                        <div class="button-container">
+                            <button type="submit" class="primary-button">Entrar</button>
+                            <button type="button" class="auth-toggle-btn" onclick="toggleForms()">Não tem uma conta? Registre-se</button>
+                        </div>
+                    </form>
 
-            <div class="auth-forms-container">
-                <form id="login-form" class="checkout-form">
-                    <h2 class="form-title">Login</h2>
-                    <div class="input-line">
-                        <label for="login-email">Email</label>
-                        <input type="email" id="login-email" required placeholder="Digite seu email" />
-                    </div>
-                    <div class="input-line">
-                        <label for="login-password">Senha</label>
-                        <input type="password" id="login-password" required placeholder="Digite sua senha" />
-                    </div>
-                    <div class="button-container">
-                        <button type="submit" class="primary-button">Entrar</button>
-                        <button type="button" class="auth-toggle-btn" onclick="toggleForms()">Não tem uma conta? Registre-se</button>
-                    </div>
-                </form>
-
-                <form id="register-form" class="checkout-form">
-                    <h2 class="form-title">Registro</h2>
-                    <div class="input-line">
-                        <label for="nome">Nome Completo</label>
-                        <input type="text" name="nome" placeholder="" required>
-                    </div>
-                    <div class="input-line">
-                        <label for="email">Email</label>
-                        <input type="email" name="email" placeholder="" required>
-                    </div>
-                    <div class="input-line">
-                        <label for="login-password">Senha</label>
-                        <input type="password" id="login-password" required placeholder="" />
-                    </div>
-                    <div class="input-line">
-                        <label for="confirm-password">Confirme a senha</label>
-                        <input type="password" id="confirm-password" required placeholder="" />
-                    </div>
-                    <div class="input-line">
-                        <label for="endereco">Endereço</label>
-                        <input type="text" name="endereco" placeholder="" required>
-                    </div>
-                    <div class="input-line">
-                        <label for="cep">Cep</label>
-                        <input type="text" name="cep" placeholder="" required>
-                    </div>
-                    <div class="input-line">
-                        <label for="bairro">Bairro</label>
-                        <input type="text" name="bairro" placeholder="" required>
-                    </div>
-                    <div class="input-line">
-                        <label for="cidade">Cidade</label>
-                        <input type="text" name="cidade" placeholder="" required>
-                    </div>
-                    <div class="input-line">
-                        <label for="estado">Estado</label>
-                        <input type="text" name="estado" placeholder="" required>
-                    </div>
-                    <div class="input-line">
-                        <label for="cpf">CPF</label>
-                        <input type="text" name="cpf" placeholder="CPF" required>
-                    </div>
-                    <div class="input-line">
-                        <label for="telefone">Telefone</label>
-                        <input type="text" name="telefone" placeholder="Telefone" required>
-                    </div>
-                    <div class="input-line">
-                        <label for="data_nascimento">Data de Nascimento</label>
-                        <input type="date" name="data_nascimento" required>
-                    </div>
-                    <div class="button-container">
-                        <button type="submit" class="primary-button">Registrar</button>
-                        <button type="button" class="auth-toggle-btn" onclick="toggleForms()">Já tem uma conta? Faça login</button>
-                    </div>
-
-                </form>
-            </div>
-            <div class="payment-container">
-                <h2 class="form-title">Pagamento</h2>
-                <div class="input-line">
-                    <label for="card">Número do Cartão</label>
-                    <input type="text" name="card" placeholder="Número do Cartão" required>
+                    <form id="register-form" class="checkout-form">
+                        <h2 class="form-title">Registro</h2>
+                        <div class="input-line">
+                            <label for="nome">Nome Completo</label>
+                            <input type="text" name="nome" placeholder="" required>
+                        </div>
+                        <div class="input-line">
+                            <label for="email">Email</label>
+                            <input type="email" name="email" placeholder="" required>
+                        </div>
+                        <div class="input-line">
+                            <label for="login-password">Senha</label>
+                            <input type="password" id="login-password" required placeholder="" />
+                        </div>
+                        <div class="input-line">
+                            <label for="confirm-password">Confirme a senha</label>
+                            <input type="password" id="confirm-password" required placeholder="" />
+                        </div>
+                        <div class="input-line">
+                            <label for="endereco">Endereço</label>
+                            <input type="text" name="endereco" placeholder="" required>
+                        </div>
+                        <div class="input-line">
+                            <label for="cep">Cep</label>
+                            <input type="text" name="cep" placeholder="" required>
+                        </div>
+                        <div class="input-line">
+                            <label for="bairro">Bairro</label>
+                            <input type="text" name="bairro" placeholder="" required>
+                        </div>
+                        <div class="input-line">
+                            <label for="cidade">Cidade</label>
+                            <input type="text" name="cidade" placeholder="" required>
+                        </div>
+                        <div class="input-line">
+                            <label for="estado">Estado</label>
+                            <input type="text" name="estado" placeholder="" required>
+                        </div>
+                        <div class="input-line">
+                            <label for="cpf">CPF</label>
+                            <input type="text" name="cpf" placeholder="CPF" required>
+                        </div>
+                        <div class="input-line">
+                            <label for="telefone">Telefone</label>
+                            <input type="text" name="telefone" placeholder="Telefone" required>
+                        </div>
+                        <div class="input-line">
+                            <label for="data_nascimento">Data de Nascimento</label>
+                            <input type="date" name="data_nascimento" required>
+                        </div>
+                        <div class="button-container">
+                            <button type="submit" class="primary-button">Registrar</button>
+                            <button type="button" class="auth-toggle-btn" onclick="toggleForms()">Já tem uma conta? Faça login</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="input-line">
-                    <label for="expiry">Validade</label>
-                    <input type="text" name="expiry" placeholder="MM/AA" required>
+                <div class="payment-container">
+                    <h2 class="form-title">Pagamento Cartão de Crédito</h2>
+                    <form class="payment-form">
+                        <div class="input-box">
+                            <span>Número do Cartão</span>
+                            <input type="text" maxlength="16" class="card-number-input">
+                        </div>
+                        <div class="input-box">
+                            <span>titular do cartão</span>
+                            <input type="text" maxlength="16" class="card-holder-input">
+                        </div>
+                        <div class="flex-box">
+                            <div class="input-box">
+                                <span>Validade mm</span>
+                                <select name="" id="" clas="month-input">
+                                    <option value="Mes" selected disabled>Mês</option>
+                                    <option value="01">01</option>
+                                    <option value="02">02</option>
+                                    <option value="03">03</option>
+                                    <option value="04">04</option>
+                                    <option value="05">05</option>
+                                    <option value="06">06</option>
+                                    <option value="07">07</option>
+                                    <option value="08">08</option>
+                                    <option value="09">09</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                </select>
+                            </div>
+                            <div class="input-box">
+                                <span>Expiração yy</span>
+                                <select name="" id="" clas="year-input">
+                                    <option value="Ano" selected disabled>Ano</option>
+                                    <option value="2021">2021</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2026">2026</option>
+                                    <option value="2027">2027</option>
+                                    <option value="2028">2028</option>
+                                    <option value="2029">2029</option>
+                                    <option value="2030">2030</option>
+                                </select>
+                            </div>
+                            <div class="input-box">
+                                <span>CVV</span>
+                                <input type="text" maxlength="4" class="cvv-input">
+                            </div>
+                        </div>
+                        <input type="submit" value="Enviar" class="submit-btn">
+                    </form>
                 </div>
-                <div class="input-line">
-                    <label for="cvv">CVV</label>
-                    <input type="text" name="cvv" placeholder="CVV" required maxlength="3">
+
+                <div class="review-container">
+                    <h2 class="form-title">Confirmação</h2>
+                    <p>Revise suas informações antes de finalizar:</p>
+                    <div id="review-info"></div>
+                </div>
+                
+
+                <div class="step-buttons">
+                    <button id="prev" style="width:80px;background:#5a4ec5">Anterior</button>
+                    <button id="next" style="width:80px;background:#5a4ec5">Próximo</button>
                 </div>
             </div>
-
-            <div class="review-container">
-                <h2 class="form-title">Confirmação</h2>
-                <p>Revise suas informações antes de finalizar:</p>
-                <div id="review-info"></div>
-            </div>
-
-            <div class="step-buttons">
-                <button id="prev" style="width:80px;background:#5a4ec5">Anterior</button>
-                <button id="next" style="width:80px;background:#5a4ec5">Próximo</button>
-            </div>
-
-
         </div>
+
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script src="../js/checkout.js"></script>
 </body>
