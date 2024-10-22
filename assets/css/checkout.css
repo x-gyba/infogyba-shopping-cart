@@ -227,12 +227,19 @@ label {
   transition: color 0.3s;
 }
 
-.step-buttons {
+..step-buttons {
   display: flex;
   justify-content: flex-start;
-  margin-top: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding: 0 2rem;
   width: 100%;
   gap: 1rem;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
 }
 
 .step-button {
@@ -267,227 +274,217 @@ label {
   margin-right: 0;
 }
 
-/* Payment */
+/* payment */
 .payment-container {
-  width: 80%;
-  max-width: 1200px;
-  min-height: 30rem;
-  transform: translate(-30%, -4rem);
-  padding: 3rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center; 
-  justify-content: center; 
+  width: 400px;
+  padding: 20px;
+  transform: translate(-120px, -30px);
+  border-radius: 8px;
   background-color: var(--white);
-  border-radius: 5px;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.payment-container form {
-  width: 100%;
-  max-width: 50rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 2rem;
 }
 
-.payment-container .input-line {
-  margin-bottom: 1.5rem;
-  width: 100%;
-}
-
-.payment-container .input-box {
-  margin-top: 1.25rem;
-  width: 100%; 
-}
-
-.payment-container .input-box span {
-  color: var(--brown);
-  padding-bottom: 5px;
-  display: block;
-}
-
-.payment-container .input-box input,
-.payment-container .input-box select {
-  width: 100%;
-  padding: 0.625rem;
-  border-radius: 0.625rem;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  color: var(--brown);
-}
-
-.payment-container .flex-box {
-  display: flex;
-  gap: 0.938rem;
-  width: 100%; 
-}
-
-.payment-container .flex-box .input-box {
-  flex: 1 1 9.375rem;
-}
-
-.payment-container .card-number-box,
-.payment-container .box {
-  width: 100%;
-  padding: 0.625rem;
-  border-radius: 0.625rem;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  color: var(--brown);
-  margin-bottom: 1rem;
-}
-
-.payment-container form .submit-btn {
-  width: 20%;
-  background: var(--violet);
-  color: var(--white);
-  border: none;
-  margin: 1.25rem auto 0;
-  padding: 0.625rem;
-  border-radius: 0.625rem;
-  font-size: 1.2rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: 0.2s linear;
-  display: block;
-}
-
-.payment-container form .submit-btn:hover {
-  letter-spacing: 2px;
-}
-
-.payment-container .image {
-  margin-top: 2rem; 
-  font-size: 4rem;
-  word-wrap: break-word;
+.card-preview {
+  margin-bottom: 20px;
   display: flex;
   justify-content: center;
-  align-items: center;
-  width: 100%; 
+  perspective: 1000px;
 }
 
-/* responsive checkout */
-@media (max-width: 768px) {
-  body {
-    padding: 1rem;
-  }
+.card-wrapper {
+  width: 340px;
+  height: 200px;
+  position: relative;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
 
-  .main-container {
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    padding: 0 1rem;
-  }
+.card-wrapper.is-flipped {
+  transform: rotateY(180deg);
+}
 
-  .checkout-container {
-    order: 3;
-    max-width: 100%;
-    width: 100%;
-    margin-right: 0;
-    margin-bottom: 2rem;
-  }
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-  .container-steps {
-    order: 1;
-    width: 100%;
-    margin-left: 2rem;
-    margin-bottom: 2rem;
-    justify-content: center;
-  }
+.card-front {
+  background-color: var(--violet);
+  color: var(--white);
+}
 
-  .step {
-    transform: none;
-    margin-bottom: 3rem;
-  }
+.card-back {
+  background-color: var(--violet);
+  color: var(--white);
+  transform: rotateY(180deg);
+}
 
-  .step-item {
-    margin-right: 3rem;
-  }
+.black-strip {
+  width: 100%;
+  height: 40px;
+  background-color: #000;
+  position: absolute;
+  top: 20px;
+  left: 0;
+}
 
-  .progress-bar {
-    left: 40%;
-    width: 70%;
-  }
+.card-stripe {
+  width: 100%;
+  height: 40px;
+  background-color: #888;
+  position: absolute;
+  top: 70px;
+  left: 0;
+}
 
-  .cart-summary {
-    order: 2;
-    position: static;
-    width: 100%;
-    max-width: 100%;
-    margin-bottom: 2rem;
-    left: auto;
-    top: auto;
-  }
+.cvv {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  background-color: var(--white);
+  color: var(--black);
+  padding: 5px 10px;
+  border-radius: 4px;
+}
 
-  .auth-forms-container,
-  .payment-container,
-  .review-container {
-    width: 100%;
-    margin-left: 0;
-  }
+.card-logo {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
 
-  .checkout-form {
-    width: 100%;
-    max-width: 100%;
-    margin: 0 0 5rem 0;
-    transform: none;
-  }
+.card-number {
+  letter-spacing: 2px;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: center;
+}
 
-  .input-line {
-    width: 100%;
-  }
+.card-details {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: flex-end;
+}
 
-  .input-line input {
-    width: 100%;
-  }
+.card-holder,
+.card-expire {
+  font-size: 1.4rem;
+  font-weight: 400;
+}
 
-  .button-container {
-    flex-direction: column;
-    align-items: stretch;
-  }
+.card-holder {
+  text-align: left;
+}
 
-  .primary-button,
-  .auth-toggle-btn {
-    width: 100%;
-    margin-bottom: 1rem;
-  }
+.card-expire {
+  text-align: right;
+}
+/* Estilos do formulário */
+.payment-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
 
-  .step-buttons {
-    order: 5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 1rem;
-    width: 100%;
-    gap: 1rem;
-  }
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
 
-  #prev,
-  #next {
-    margin-bottom: 0.2rem;
-    padding: 0.6rem 1rem;
-    font-size: 1.1rem;
-    color: var(--white);
-    background-color: var(--violet);
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-  }
+.form-group label {
+  font-weight: 500;
+  color:var(--black);
+  font-size: 0.9rem;
+}
+/* Input and select styles */
+.form-group input,
+.form-group select {
+    padding: 0.75rem;
+    border: 1px solid var(--grey);
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
 
-  #next {
-    margin-right: 0;
-  }
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--violet);
+    box-shadow: 0 0 0 3px rgba(148, 0, 211, 0.25);
 
-  .payment-container {
-    order: 4;
-    width: 100%;
-    max-width: 500px;
-    margin-top: 5rem;
-    margin-left: 10rem;
-    padding: 2rem 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+}
+
+/* Info text styles */
+.info {
+  position: relative;
+  font-size: 1rem;
+  color: var(--red);
+}
+
+.info::after {
+  content: " * *";
+  font-size: 1rem;
+  color: var(--red);
+}
+
+/* Specific field sizes */
+#card-number {
+  width: 100%;
+}
+
+#cvv {
+  width: 100px;
+}
+
+/* Responsive adjustments for smaller screens */
+@media screen and (max-width: 768px) {
+  .payment-form {
+      grid-template-columns: 1fr;
+      padding: 1rem;
+  }
+  
+  .form-group {
+      margin-bottom: 1rem;
   }
 }
+
+/* Month/Year select group specific styles */
+#expiry-month,
+#expiry-year {
+  width: 100%;
+}
+
+/* Validation styles */
+.form-group input:invalid,
+.form-group select:invalid {
+  border-color: var(--violet);
+}
+
+/* Placeholder styles */
+::placeholder {
+  color: var(--grey);
+  opacity: 1;
+}
+
+/* Discount */
+
+
+
