@@ -40,7 +40,7 @@ session_start();
 
       <!-- Cart summary section -->
       <div class="cart-summary">
-        <h2>Resumo do Carrinho</h2>
+        <h2 class="form-title">Resumo do Carrinho</h2>
         <?php
         // Modify the PHP section in checkout.php to remove discount processing
         // Initialize variables
@@ -84,7 +84,7 @@ session_start();
           echo '<button class="discount-btn" onclick="applyDiscount()">Aplicar</button>';
           echo '</form>';
           echo '</div>';
-
+          echo ' <div class="discount-message"></div>';
           echo "</div>";
         }
         ?>
