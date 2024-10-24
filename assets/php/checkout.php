@@ -42,101 +42,50 @@ session_start();
       <div class="cart-summary">
         <h2>Resumo do Carrinho</h2>
         <?php
-        // Verifica se a sessão deve ser limpa
-        if (isset($_SESSION['clear_cart']) && $_SESSION['clear_cart'] === true) {
-          unset($_SESSION['cart_total'], $_SESSION['cart_items'], $_SESSION['cart_images'], $_SESSION['quantities'], $_SESSION['discount_amount']);
-          $_SESSION['clear_cart'] = false; // Reseta a variável para evitar múltiplas limpezas
-        }
+        // Modify the PHP section in checkout.php to remove discount processing
+        // Initialize variables
+        $total = $_SESSION['cart_total'] ?? 0;
+        $items = $_SESSION['cart_items'] ?? [];
+        $imageSrcArray = $_SESSION['cart_images'] ?? [];
+        $quantities = $_SESSION['quantities'] ?? [];
 
-        // Inicializa as variáveis do carrinho
-        $total = isset($_SESSION['cart_total']) ? $_SESSION['cart_total'] : 0;
-        $items = isset($_SESSION['cart_items']) ? $_SESSION['cart_items'] : [];
-        $imageSrcArray = isset($_SESSION['cart_images']) ? $_SESSION['cart_images'] : [];
-        $quantities = isset($_SESSION['quantities']) ? $_SESSION['quantities'] : [];
-        $discountAmount = isset($_SESSION['discount_amount']) ? $_SESSION['discount_amount'] : 0;
-        $discountMessage = ""; // Mensagem de desconto
-
-        // Debugging: Check session variables
-        // echo "<pre>"; print_r($_SESSION); echo "</pre>"; // Uncomment for debugging
-
-        // Verifica se o formulário de desconto foi enviado
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['discount_code'])) {
-          $discountCode = $_POST['discount_code'];
-
-          // Verifica se o código de desconto é válido
-          if ($discountCode === 'DESCONTO10') {
-            // Verifica se o desconto já foi aplicado
-            if (!isset($_SESSION['discount_applied'])) { // Verifica se o desconto não foi aplicado
-              $discountAmount = $total * 0.10; // 10% de desconto
-              $_SESSION['discount_amount'] = $discountAmount; // Armazena o desconto na sessão
-              $_SESSION['discount_applied'] = true; // Marca o desconto como aplicado
-              $discountMessage = "<div class='discount-title'><strong>Você ganhou 10% de desconto!</strong></div>";
-            } else {
-              // Mensagem de desconto já aplicado
-              $discountMessage = "<div class='discount-alert'><strong>Desconto já aplicado!</strong></div>";
-            }
-          } else {
-            // Mensagem para código de desconto inválido
-            $discountMessage = "<div class='discount-alert'><strong>Código de desconto inválido.</strong></div>";
-          }
-        }
-
-        // Calcular total após desconto
-        $totalAfterDiscount = $total - $discountAmount;
-
+        // Display cart summary
         if ($total <= 0) {
           echo "<div class='carrinho-vazio'>Carrinho vazio.</div>";
         } else {
-          if (is_numeric($total)) {
-            echo "<div class='cart-summary-container'>";
+          echo "<div class='cart-summary-container'>";
 
-            // Sempre exibir o total original
-            $totalFormatted = number_format((float)$total, 2, ',', '.');
-            echo "<div class='total-title'><strong>Total:</strong> R$ " . $totalFormatted . "</div>";
+          // Display original total without any discount processing
+          $totalFormatted = number_format($total, 2, ',', '.');
+          echo "<div class='total-title'><strong>Total:</strong> R$ " . $totalFormatted . "</div>";
 
-            // Se houver desconto, exibir a mensagem e o total com desconto
-            if ($discountAmount > 0) {
-              $totalAfterDiscountFormatted = number_format(abs((float)$totalAfterDiscount), 2, ',', '.');
-              echo "<div class='discount-info'>";
-              echo "<div class='discount-amount'><strong>Desconto aplicado:</strong> R$ " . number_format($discountAmount, 2, ',', '.') . "</div>";
-              echo "<div class='total-discount'><strong>Total com desconto:</strong> R$ " . $totalAfterDiscountFormatted . "</div>";
+          // Display cart items
+          echo "<div class='cart-items'>";
+          foreach ($items as $index => $item) {
+            $imageSrc = $imageSrcArray[$index] ?? '';
+            $quantity = $quantities[$index] ?? 0;
+            $quantityDisplay = ($quantity == 1) ? "x1" : "x" . htmlspecialchars($quantity);
+
+            echo "<div style='display: flex; align-items: center; margin-bottom: 10px;'>";
+            if ($imageSrc) {
+              echo "<div style='flex: 0 0 auto; margin-right: 6px;'>";
+              echo "<img src='" . htmlspecialchars($imageSrc) . "' alt='Imagem do Carrinho' style='max-width: 75px; height: auto;' />";
               echo "</div>";
             }
-
-            // Exibir mensagem de desconto se houver
-            if (!empty($discountMessage)) {
-              echo $discountMessage;
-            }
-
-            // Exibir itens do carrinho
-            echo "<div class='cart-items'>";
-            foreach ($items as $index => $item) {
-              $imageSrc = isset($imageSrcArray[$index]) ? $imageSrcArray[$index] : '';
-              $quantity = isset($quantities[$index]) ? $quantities[$index] : 0;
-
-              $quantityDisplay = ($quantity == 1) ? "x1" : "x" . htmlspecialchars($quantity);
-
-              echo "<div style='display: flex; align-items: center; margin-bottom: 10px;'>";
-              if ($imageSrc) {
-                echo "<div style='flex: 0 0 auto; margin-right: 6px;'><img src='" . htmlspecialchars($imageSrc) . "' alt='Imagem do Carrinho' style='max-width: 75px; height: auto;' /></div>";
-              }
-              echo "<div class='qtd-item' style='flex: 1;'>" . nl2br(htmlspecialchars($item)) . " " . $quantityDisplay . "</div>";
-              echo "</div>";
-            }
-            echo "</div>"; // Fecha a div .cart-items
-
-            // Formulário de desconto
-            echo '<div class="discount-form-container">';
-            echo '<form method="POST" class="discount-form">';
-            echo '<input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required>';
-            echo '<button class="discount-btn" type="submit">Aplicar</button>';
-            echo '</form>';
-            echo '</div>';
-
-            echo "</div>"; // Fecha cart-summary-container
-          } else {
-            echo "<div><strong>Total inválido.</strong></div>";
+            echo "<div class='qtd-item' style='flex: 1;'>" . nl2br(htmlspecialchars($item)) . " " . $quantityDisplay . "</div>";
+            echo "</div>";
           }
+          echo "</div>";
+
+          // Discount form
+          echo '<div class="discount-form-container">';
+          echo '<form class="discount-form" onsubmit="return false;">';
+          echo '<input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required>';
+          echo '<button class="discount-btn" onclick="applyDiscount()">Aplicar</button>';
+          echo '</form>';
+          echo '</div>';
+
+          echo "</div>";
         }
         ?>
       </div>
@@ -287,12 +236,35 @@ session_start();
               <label for="cvv"><span class="info">3 dígitos na parte traseira do cartão</span></label>
               <input type="text" id="cvv" placeholder="123" required autocomplete="off">
             </div>
+
+            <!-- Campos adicionais -->
+            <div class="form-group">
+              <label for="cpf">CPF</label>
+              <input type="text" id="cpf" placeholder="000.000.000-00" required autocomplete="off">
+            </div>
+            <div class="form-group">
+              <label for="email">E-mail</label>
+              <input type="email" id="email" placeholder="seuemail@exemplo.com" required autocomplete="off">
+            </div>
+            <div class="form-group">
+              <label for="installments">Parcelas sem Juros</label>
+              <select id="installments" required>
+                <option value="" disabled selected>Selecione o número de parcelas</option>
+                <option value="1">1x sem juros</option>
+                <option value="2">2x sem juros</option>
+                <option value="3">3x sem juros</option>
+                <option value="4">4x sem juros</option>
+                <option value="5">5x sem juros</option>
+                <option value="6">6x sem juros</option>
+              </select>
+            </div>
           </form>
         </div>
 
         <!-- Review container -->
-        <div class="review-container">
-          <!-- review info -->
+        <div class="review-container" id="review-container" style="display:none;">
+          <h3>Revisar Pedido</h3>
+
         </div>
 
         <!-- Navigation buttons -->
@@ -302,8 +274,10 @@ session_start();
         </div>
 
       </div>
+
     </div>
   </div>
+
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="../js/checkout.js"></script>

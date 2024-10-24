@@ -14,14 +14,12 @@ const cardExpireDisplay = document.querySelector(".card-expire");
 const cardCvvDisplay = document.querySelector(".cvv");
 const totalSteps = 3;
 
-// Initialize form states
 let currentStep = 0;
 let isDiscountApplied = false; // Track discount status
 const validDiscountCodes = ["SAVE20", "DISCOUNT10"]; // Example valid discount codes
 
 // Function to update steps and form visibility
 function updateSteps() {
-  // Update step indicators
   steps.forEach((step, idx) => {
     if (idx <= currentStep) {
       step.classList.add("active");
@@ -30,19 +28,16 @@ function updateSteps() {
     }
   });
 
-  // Update progress bar
   indicator.style.width = `${(currentStep / (steps.length - 1)) * 100}%`;
 
-  // Hide all containers first
   authFormsContainer.style.display = "none";
   paymentContainer.style.display = "none";
   reviewContainer.style.display = "none";
 
-  // Show the current container based on step
   switch (currentStep) {
     case 0:
       authFormsContainer.style.display = "block";
-      initializeAuthForms(); // Initialize auth forms state
+      initializeAuthForms();
       break;
     case 1:
       paymentContainer.style.display = "block";
@@ -50,19 +45,16 @@ function updateSteps() {
       break;
     case 2:
       reviewContainer.style.display = "block";
-      // Here you might display the discount summary if applied
-      displayDiscountSummary();
+      displayDiscountSummary(); // Displays discount info if applicable
       break;
   }
 
-  // Update button states
   prevBtn.style.display = currentStep === 0 ? "none" : "inline-block";
-  nextBtn.style.display = "inline-block";
   nextBtn.textContent =
     currentStep === totalSteps - 1 ? "Finalizar" : "Próximo";
 }
 
-// Initialize auth forms state
+// Function to initialize auth forms state
 function initializeAuthForms() {
   loginForm.style.display = "block";
   registerForm.style.display = "none";
@@ -81,23 +73,22 @@ function applyDiscount(discountCode) {
   if (validDiscountCodes.includes(discountCode)) {
     isDiscountApplied = true;
     console.log("Discount applied!");
-    // Update any necessary total calculations here
+    // Add logic to update total price
   } else {
     console.log("Invalid discount code.");
   }
 }
 
-// Function to display discount summary (if needed)
+// Function to display discount summary
 function displayDiscountSummary() {
   if (isDiscountApplied) {
-    // Add logic to show discount information in the review section
-    console.log("Discount is applied on the total.");
+    console.log("Discount applied on the total.");
   } else {
     console.log("No discount applied.");
   }
 }
 
-// Navigation event listeners
+// Navigation buttons
 prevBtn.addEventListener("click", () => {
   if (currentStep > 0) {
     currentStep--;
@@ -111,7 +102,7 @@ nextBtn.addEventListener("click", () => {
     updateSteps();
   } else if (currentStep === totalSteps - 1) {
     console.log("Form submitted!");
-    // Add your submission logic here
+    // Add submission logic here
   }
 });
 
@@ -126,7 +117,7 @@ document.querySelectorAll("form").forEach((form) => {
   });
 });
 
-// Function to update the card information in real-time
+// Update card information
 function updateCardInfo() {
   const nameInput = document.getElementById("name")?.value || "Nome no cartão";
   const cardNumberInput =
@@ -140,7 +131,7 @@ function updateCardInfo() {
   cardExpireDisplay.textContent = `${expiryMonthInput}/${expiryYearInput}`;
 }
 
-// Helper function to format the card number with spaces
+// Format card number
 function formatCardNumber(number) {
   return number.replace(/(\d{4})(?=\d)/g, "$1 ");
 }
@@ -151,7 +142,7 @@ function handleCardFlip() {
   cardWrapper.classList.toggle("is-flipped");
 }
 
-// Event listeners
+// Event listeners for real-time card info update
 document.getElementById("cvv")?.addEventListener("input", (e) => {
   cardCvvDisplay.textContent = e.target.value || "***";
 });
@@ -169,6 +160,7 @@ document
 document.getElementById("cvv")?.addEventListener("focus", handleCardFlip);
 document.getElementById("cvv")?.addEventListener("blur", handleCardFlip);
 
+// Toggle between forms
 document.getElementById("show-register")?.addEventListener("click", (e) => {
   e.preventDefault();
   toggleForms();
@@ -179,12 +171,97 @@ document.getElementById("show-login")?.addEventListener("click", (e) => {
   toggleForms();
 });
 
-// Example of applying a discount (you can trigger this with a button)
+// Apply discount logic
 document.getElementById("apply-discount")?.addEventListener("click", (e) => {
   e.preventDefault();
-  const discountCode = document.getElementById("discount-code").value; // Assuming you have an input for the discount code
+  const discountCode = document.getElementById("discount-code").value;
   applyDiscount(discountCode);
 });
 
-// Initialize form state
+// Initialize the form
 updateSteps();
+
+/* Discount */
+let discountApplied = false;
+
+function applyDiscount() {
+  if (discountApplied) {
+    showMessage("Desconto já aplicado!", "error");
+    return;
+  }
+
+  const discountCode = document.querySelector(".discount-input").value.trim();
+  const totalElement = document.querySelector(".total-title");
+  const currentTotal = parseFloat(
+    totalElement.textContent.replace(/[^\d,]/g, "").replace(",", ".")
+  );
+
+  if (discountCode === "DESCONTO10") {
+    const discountAmount = currentTotal * 0.1;
+    const totalAfterDiscount = currentTotal - discountAmount;
+
+    // Create discount info container
+    const discountInfo = document.createElement("div");
+    discountInfo.className = "discount-info";
+
+    // Add discount success message
+    const discountTitle = document.createElement("div");
+    discountTitle.className = "discount-title";
+    discountTitle.innerHTML = "<strong>Você ganhou 10% de desconto!</strong>";
+
+    // Add discount amount
+    const discountAmountElement = document.createElement("div");
+    discountAmountElement.className = "discount-amount";
+    discountAmountElement.innerHTML = `<strong>Desconto aplicado:</strong> R$ ${discountAmount
+      .toFixed(2)
+      .replace(".", ",")}`;
+
+    // Add new total
+    const newTotalElement = document.createElement("div");
+    newTotalElement.className = "total-discount";
+    newTotalElement.innerHTML = `<strong>Total com desconto:</strong> R$ ${totalAfterDiscount
+      .toFixed(2)
+      .replace(".", ",")}`;
+
+    // Add all elements to discount info container
+    discountInfo.appendChild(discountTitle);
+    discountInfo.appendChild(discountAmountElement);
+    discountInfo.appendChild(newTotalElement);
+
+    // Insert discount info before the form
+    const formContainer = document.querySelector(".discount-form-container");
+    formContainer.parentNode.insertBefore(discountInfo, formContainer);
+
+    // Disable input and button
+    document.querySelector(".discount-input").disabled = true;
+    document.querySelector(".discount-btn").disabled = true;
+
+    discountApplied = true;
+  } else {
+    showMessage("Código de desconto inválido.", "error");
+  }
+}
+
+function showMessage(message, type) {
+  // Remove any existing message
+  const existingMessage = document.querySelector(".discount-message");
+  if (existingMessage) {
+    existingMessage.remove();
+  }
+
+  // Create new message
+  const messageElement = document.createElement("div");
+  messageElement.className = `discount-message ${type}`;
+  messageElement.innerHTML = `<strong>${message}</strong>`;
+
+  // Insert message before the form
+  const formContainer = document.querySelector(".discount-form-container");
+  formContainer.parentNode.insertBefore(messageElement, formContainer);
+
+  // Remove message after 3 seconds
+  setTimeout(() => {
+    messageElement.remove();
+  }, 3000);
+}
+
+/*review */
