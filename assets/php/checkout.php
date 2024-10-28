@@ -1,6 +1,42 @@
 <?php
 session_start();
+
+// Validation functions
+function validateDiscountCode($code)
+{
+  return $code === 'DESCONTO10';
+}
+
+function calculateInstallments($total, $maxInstallments = 6)
+{
+  $installments = [];
+  for ($i = 1; $i <= $maxInstallments; $i++) {
+    $installmentValue = $total / $i;
+    $installments[$i] = number_format($installmentValue, 2, ',', '.');
+  }
+  return $installments;
+}
+
+// Process discount
+$total = $_SESSION['cart_total'] ?? 0;
+$discount = 0;
+$isDiscountApplied = false;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['discount_code'])) {
+  if (validateDiscountCode($_POST['discount_code'])) {
+    $discount = $total * 0.1;
+    $_SESSION['discount'] = $discount;
+    $isDiscountApplied = true;
+  }
+} elseif (isset($_SESSION['discount'])) {
+  $discount = $_SESSION['discount'];
+  $isDiscountApplied = true;
+}
+
+$finalTotal = $total - $discount;
+$installmentValues = calculateInstallments($finalTotal);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -249,13 +285,13 @@ session_start();
             <div class="form-group">
               <label for="installments">Parcelas sem Juros</label>
               <select id="installments" required>
-                <option value="" disabled selected>Selecione o número de parcelas</option>
-                <option value="1">1x sem juros</option>
-                <option value="2">2x sem juros</option>
-                <option value="3">3x sem juros</option>
-                <option value="4">4x sem juros</option>
-                <option value="5">5x sem juros</option>
-                <option value="6">6x sem juros</option>
+                <?php foreach ($installmentValues as $numInstallments => $installmentValue) {
+                  if ($isDiscountApplied) {
+                    echo "<option value='$numInstallments'>$numInstallments x R$ $installmentValue (com desconto)</option>";
+                  } else {
+                    echo "<option value='$numInstallments'>$numInstallments x R$ $installmentValue</option>";
+                  }
+                } ?>
               </select>
             </div>
           </form>
