@@ -102,7 +102,8 @@ a {
 .icon {
   font-size: 2.3rem;
   color: var(--black);
-  margin-right: 12px;
+  margin-right: 25px;
+  margin-left: auto;
   cursor: pointer;
 }
 
@@ -115,7 +116,7 @@ a {
   font-weight: bold;
   padding: 2px 5px;
   top: 12px;
-  right: 3px;
+  right: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -432,4 +433,3 @@ header .btn-checkout i {
   display: inline-block;
   cursor: pointer;
 }
-

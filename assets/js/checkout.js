@@ -50,7 +50,6 @@ function initializeAuthForms() {
   loginForm.style.display = "block";
   registerForm.style.display = "none";
 }
-
 // Update card information
 function updateCardInfo() {
   const nameInput = document.getElementById("name")?.value || "Nome no cartão";
@@ -68,6 +67,12 @@ function updateCardInfo() {
 // Format card number
 function formatCardNumber(number) {
   return number.replace(/(\d{4})(?=\d)/g, "$1 ");
+}
+
+// Card flip animation
+function handleCardFlip() {
+  const cardWrapper = document.querySelector(".card-wrapper");
+  cardWrapper.classList.toggle("is-flipped");
 }
 
 // Function to apply discount
@@ -94,14 +99,14 @@ function applyDiscount(discountCode) {
     const discountAmount = currentTotal * 0.1;
     const totalAfterDiscount = currentTotal - discountAmount;
 
-    totalElement.innerHTML = `<strong>Total com desconto:</strong> R$ ${totalAfterDiscount
+    totalElement.innerHTML = `<strong>Total com desconto:&nbsp;</strong> R$ ${totalAfterDiscount
       .toFixed(2)
       .replace(".", ",")}`;
     insertDiscountInfo(createDiscountInfo(discountAmount));
     disableDiscountInputAndButton();
 
     isDiscountApplied = true;
-    updateInstallments(totalAfterDiscount); // Atualizar parcelas com o total após desconto
+    updateInstallments(totalAfterDiscount);
   } else {
     clearExistingDiscountInfo();
     showMessage(messages.invalidDiscountCode, "error");
@@ -109,6 +114,7 @@ function applyDiscount(discountCode) {
   }
 }
 
+// Create discount information element
 function createDiscountInfo(discountAmount) {
   const discountInfo = document.createElement("div");
   discountInfo.className = "discount-info discount-success";
@@ -122,6 +128,7 @@ function createDiscountInfo(discountAmount) {
   return discountInfo;
 }
 
+// Insert discount info into the DOM
 function insertDiscountInfo(discountInfo) {
   const formContainer = document.querySelector(".discount-form-container");
   if (formContainer) {
@@ -130,6 +137,7 @@ function insertDiscountInfo(discountInfo) {
   }
 }
 
+// Clear existing discount info
 function clearExistingDiscountInfo() {
   const existingDiscountInfo = document.querySelector(".discount-info");
   if (existingDiscountInfo) {
@@ -137,6 +145,7 @@ function clearExistingDiscountInfo() {
   }
 }
 
+// Disable discount input and button
 function disableDiscountInputAndButton() {
   const discountInput = document.querySelector(".discount-input");
   const discountBtn = document.querySelector(".discount-btn");
@@ -144,6 +153,7 @@ function disableDiscountInputAndButton() {
   if (discountBtn) discountBtn.disabled = true;
 }
 
+// Reset discount input field
 function resetDiscountInput() {
   const discountInput = document.querySelector(".discount-input");
   if (discountInput) {
@@ -155,6 +165,7 @@ function resetDiscountInput() {
   }
 }
 
+// Show message to the user
 function showMessage(message, type) {
   clearExistingMessage();
   const messageElement = document.createElement("div");
@@ -172,6 +183,7 @@ function showMessage(message, type) {
   }
 }
 
+// Clear existing messages
 function clearExistingMessage() {
   const existingMessage = document.querySelector(".discount-message");
   if (existingMessage) {
@@ -212,6 +224,7 @@ document.querySelectorAll("form").forEach((form) => {
 document.getElementById("cvv")?.addEventListener("input", (e) => {
   cardCvvDisplay.textContent = e.target.value || "***";
 });
+
 document.getElementById("name")?.addEventListener("input", updateCardInfo);
 document
   .getElementById("card-number")
@@ -222,12 +235,15 @@ document
 document
   .getElementById("expiry-year")
   ?.addEventListener("change", updateCardInfo);
+document.getElementById("cvv")?.addEventListener("focus", handleCardFlip);
+document.getElementById("cvv")?.addEventListener("blur", handleCardFlip);
 
 // Form toggle event listeners
 document.getElementById("show-register")?.addEventListener("click", (e) => {
   e.preventDefault();
   toggleForms();
 });
+
 document.getElementById("show-login")?.addEventListener("click", (e) => {
   e.preventDefault();
   toggleForms();
@@ -242,6 +258,11 @@ document.getElementById("apply-discount")?.addEventListener("click", (e) => {
   }
 });
 
+// Card flip button event listener
+document.getElementById("flip-button")?.addEventListener("click", () => {
+  document.getElementById("card").classList.toggle("flipped");
+});
+
 // Initialize the form
 updateSteps();
 
@@ -254,13 +275,13 @@ function updateInstallments(totalAfterDiscount) {
   const currentTotal = parseFloat(
     totalElement.textContent.replace(/[^\d,]/g, "").replace(",", ".")
   );
-  const totalToConsider = isDiscountApplied ? totalAfterDiscount : currentTotal; // Usar total após desconto se aplicado
+  const totalToConsider = isDiscountApplied ? totalAfterDiscount : currentTotal;
 
   const installmentValues = {
     1: totalToConsider.toFixed(2).replace(".", ","),
     2: (totalToConsider / 2).toFixed(2).replace(".", ","),
     3: (totalToConsider / 3).toFixed(2).replace(".", ","),
-    // Adicione mais parcelas conforme necessário
+    // Add more installments as needed
   };
 
   for (const [numInstallments, installmentValue] of Object.entries(
@@ -274,4 +295,11 @@ function updateInstallments(totalAfterDiscount) {
     option.textContent = optionText;
     installmentsSelect.appendChild(option);
   }
+}
+
+// Function to toggle between login and register forms
+function toggleForms() {
+  const isLoginVisible = loginForm.style.display === "block";
+  loginForm.style.display = isLoginVisible ? "none" : "block";
+  registerForm.style.display = isLoginVisible ? "block" : "none";
 }

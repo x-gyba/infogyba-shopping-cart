@@ -584,24 +584,38 @@ strong {
 }
 
 .discount-input.error {
-  border-color:var(--blue);
+  border-color: var(--blue);
   background-color: #fff8f8;
   animation: shake 0.5s ease-in-out;
 }
 
 /* Animação de shake para feedback de erro */
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-  20%, 40%, 60%, 80% { transform: translateX(5px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-5px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(5px);
+  }
 }
 
 /* Estilos para input e botão quando desativados */
 .discount-input:disabled,
 .discount-btn:disabled {
   cursor: not-allowed;
-  opacity: 0; 
-  transition: opacity 0.5s ease; 
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
 /* Hover estado no botão */
@@ -612,5 +626,5 @@ strong {
 /* Para garantir a transição suave quando for aplicado o desconto */
 .discount-input,
 .discount-btn {
-  transition: opacity 0.5s ease; 
+  transition: opacity 0.5s ease;
 }
