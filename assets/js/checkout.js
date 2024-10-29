@@ -1,4 +1,4 @@
-// Select all required elements
+//Seleciona todos os elementos necessários
 const steps = document.querySelectorAll(".circle");
 const indicator = document.querySelector(".indicator");
 const authFormsContainer = document.querySelector(".auth-forms-container");
@@ -23,7 +23,7 @@ const messages = {
   invalidDiscountCode: "Código de desconto inválido.",
 };
 
-// Function to update steps and form visibility
+//Função para atualizar etapas e visibilidade do formulário
 function updateSteps() {
   steps.forEach((step, idx) => {
     step.classList.toggle("active", idx <= currentStep);
@@ -38,6 +38,9 @@ function updateSteps() {
   nextBtn.textContent =
     currentStep === totalSteps - 1 ? "Finalizar" : "Próximo";
 
+  nextBtn.removeEventListener("click", handleNextClick);
+  nextBtn.addEventListener("click", handleNextClick);
+
   if (currentStep === 0) {
     initializeAuthForms();
   } else if (currentStep === 1) {
@@ -45,12 +48,34 @@ function updateSteps() {
   }
 }
 
-// Function to initialize auth forms state
+// Lida com o próximo clique do botão
+function handleNextClick() {
+  if (currentStep === totalSteps - 1) {
+    // Redireciona para payment.php ao clicar em Finalizar
+    window.location.href = "../php/payment.php";
+  } else {
+    currentStep++;
+    updateSteps();
+  }
+}
+
+// Event Listeners
+prevBtn.addEventListener("click", () => {
+  if (currentStep > 0) {
+    currentStep--;
+    updateSteps();
+  }
+});
+
+// Inicializa o formulário
+updateSteps();
+
+//Função para inicializar o estado dos formulários de autenticação
 function initializeAuthForms() {
   loginForm.style.display = "block";
   registerForm.style.display = "none";
 }
-// Update card information
+//Atualiza as informações do cartão
 function updateCardInfo() {
   const nameInput = document.getElementById("name")?.value || "Nome no cartão";
   const cardNumberInput =
@@ -64,18 +89,18 @@ function updateCardInfo() {
   cardExpireDisplay.textContent = `${expiryMonthInput}/${expiryYearInput}`;
 }
 
-// Format card number
+//Formate o número do cartão
 function formatCardNumber(number) {
   return number.replace(/(\d{4})(?=\d)/g, "$1 ");
 }
 
-// Card flip animation
+// Animação de virada de cartão
 function handleCardFlip() {
   const cardWrapper = document.querySelector(".card-wrapper");
   cardWrapper.classList.toggle("is-flipped");
 }
 
-// Function to apply discount
+//Função para aplicar desconto
 function applyDiscount(discountCode) {
   if (isDiscountApplied) {
     showMessage(messages.discountAlreadyApplied, "error");
@@ -114,7 +139,7 @@ function applyDiscount(discountCode) {
   }
 }
 
-// Create discount information element
+// Cria elemento de informação de desconto
 function createDiscountInfo(discountAmount) {
   const discountInfo = document.createElement("div");
   discountInfo.className = "discount-info discount-success";
@@ -128,7 +153,7 @@ function createDiscountInfo(discountAmount) {
   return discountInfo;
 }
 
-// Insert discount info into the DOM
+//Insere informações de desconto no DOM
 function insertDiscountInfo(discountInfo) {
   const formContainer = document.querySelector(".discount-form-container");
   if (formContainer) {
@@ -137,7 +162,7 @@ function insertDiscountInfo(discountInfo) {
   }
 }
 
-// Clear existing discount info
+// Limpa informações de desconto existentes
 function clearExistingDiscountInfo() {
   const existingDiscountInfo = document.querySelector(".discount-info");
   if (existingDiscountInfo) {
@@ -145,7 +170,7 @@ function clearExistingDiscountInfo() {
   }
 }
 
-// Disable discount input and button
+//Desativa entrada e botão de desconto
 function disableDiscountInputAndButton() {
   const discountInput = document.querySelector(".discount-input");
   const discountBtn = document.querySelector(".discount-btn");
@@ -153,7 +178,7 @@ function disableDiscountInputAndButton() {
   if (discountBtn) discountBtn.disabled = true;
 }
 
-// Reset discount input field
+//Redefinir campo de entrada de desconto
 function resetDiscountInput() {
   const discountInput = document.querySelector(".discount-input");
   if (discountInput) {
@@ -165,7 +190,7 @@ function resetDiscountInput() {
   }
 }
 
-// Show message to the user
+//Mostra mensagem para o usuário
 function showMessage(message, type) {
   clearExistingMessage();
   const messageElement = document.createElement("div");
@@ -183,7 +208,7 @@ function showMessage(message, type) {
   }
 }
 
-// Clear existing messages
+//Limpa mensagens existentes
 function clearExistingMessage() {
   const existingMessage = document.querySelector(".discount-message");
   if (existingMessage) {
@@ -205,11 +230,10 @@ nextBtn.addEventListener("click", () => {
     updateSteps();
   } else if (currentStep === totalSteps - 1) {
     console.log("Form submitted!");
-    // Add submission logic here
   }
 });
 
-// Prevent form submission refresh
+// Impede a atualização do envio do formulário
 document.querySelectorAll("form").forEach((form) => {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -220,7 +244,6 @@ document.querySelectorAll("form").forEach((form) => {
   });
 });
 
-// Card info event listeners
 document.getElementById("cvv")?.addEventListener("input", (e) => {
   cardCvvDisplay.textContent = e.target.value || "***";
 });
@@ -238,7 +261,7 @@ document
 document.getElementById("cvv")?.addEventListener("focus", handleCardFlip);
 document.getElementById("cvv")?.addEventListener("blur", handleCardFlip);
 
-// Form toggle event listeners
+// Formulário alterna event listeners
 document.getElementById("show-register")?.addEventListener("click", (e) => {
   e.preventDefault();
   toggleForms();
@@ -249,7 +272,7 @@ document.getElementById("show-login")?.addEventListener("click", (e) => {
   toggleForms();
 });
 
-// Discount button event listener
+//Botão de desconto event listener
 document.getElementById("apply-discount")?.addEventListener("click", (e) => {
   e.preventDefault();
   const discountCode = document.getElementById("discount-code")?.value;
@@ -258,15 +281,15 @@ document.getElementById("apply-discount")?.addEventListener("click", (e) => {
   }
 });
 
-// Card flip button event listener
+//Botão para virar o cartão event listener
 document.getElementById("flip-button")?.addEventListener("click", () => {
   document.getElementById("card").classList.toggle("flipped");
 });
 
-// Initialize the form
+// Inicializa o formulário
 updateSteps();
 
-// Function to update installments display
+//Função para atualizar installments display
 function updateInstallments(totalAfterDiscount) {
   const installmentsSelect = document.getElementById("installments");
   installmentsSelect.innerHTML = ""; // Clear existing options
@@ -297,7 +320,7 @@ function updateInstallments(totalAfterDiscount) {
   }
 }
 
-// Function to toggle between login and register forms
+//Função para alternar entre formulário de login e cadastro
 function toggleForms() {
   const isLoginVisible = loginForm.style.display === "block";
   loginForm.style.display = isLoginVisible ? "none" : "block";

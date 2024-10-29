@@ -298,8 +298,13 @@ $installmentValues = calculateInstallments($finalTotal);
         </div>
 
         <!-- Review container -->
+
+        <!-- Review container -->
         <div class="review-container" id="review-container" style="display:none;">
           <h3>Revisar Pedido</h3>
+
+
+
 
         </div>
 

@@ -9,6 +9,7 @@
   --brown: #444;
   --red: #d0342c;
   --violet: #5a4ec5;
+  --bg: #f5f4ef;
 }
 
 * {
@@ -27,7 +28,7 @@ body {
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  background-color: var(--white);
+  background-color: var(--bg);
   padding: 2rem;
 }
 
