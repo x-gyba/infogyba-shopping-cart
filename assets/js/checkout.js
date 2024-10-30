@@ -326,3 +326,56 @@ function toggleForms() {
   loginForm.style.display = isLoginVisible ? "none" : "block";
   registerForm.style.display = isLoginVisible ? "block" : "none";
 }
+
+//Autocompletar o endereço pelo CEP
+async function buscarEndereco() {
+  const cep = document
+    .querySelector('input[name="cep"]')
+    .value.replace(/\D/g, "");
+  if (cep.length === 8) {
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await response.json();
+      if (!data.erro) {
+        document.querySelector('input[name="endereco"]').value =
+          data.logradouro;
+        document.querySelector('input[name="bairro"]').value = data.bairro;
+        document.querySelector('input[name="cidade"]').value = data.localidade;
+        document.querySelector('input[name="estado"]').value = data.uf;
+      } else {
+        alert("CEP não encontrado.");
+      }
+    } catch (error) {
+      alert("Erro ao buscar endereço. Tente novamente.");
+    }
+  } else {
+    alert("CEP inválido.");
+  }
+}
+//Máscaras para o formulário
+function mascaraCEP(cep) {
+  cep.value = cep.value.replace(/(\d{5})(\d)/, "$1-$2");
+}
+
+function mascaraCPF(cpf) {
+  cpf.value = cpf.value.replace(/(\d{3})(\d)/, "$1.$2");
+  cpf.value = cpf.value.replace(/(\d{3})(\d)/, "$1.$2");
+  cpf.value = cpf.value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+}
+
+function mascaraTelefone(telefone) {
+  telefone.value = telefone.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+  if (telefone.value.length <= 10) {
+    telefone.value = telefone.value.replace(/(\d{2})(\d)/, "($1) $2");
+    telefone.value = telefone.value.replace(
+      /(\(\d{2}\)) (\d)(\d{3})(\d)/,
+      "$1 $2$3-$4"
+    );
+  } else {
+    telefone.value = telefone.value.replace(/(\d{2})(\d)/, "($1) $2");
+    telefone.value = telefone.value.replace(
+      /(\(\d{2}\)) (\d{5})(\d)/,
+      "$1 $2-$3"
+    );
+  }
+}
