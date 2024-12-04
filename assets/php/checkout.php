@@ -1,7 +1,10 @@
 <?php
-session_start();
+// Iniciar a sessão
+if (session_status() == PHP_SESSION_NONE) {
+  session_start();
+}
 
-// Validation functions
+// Validation functions (only defined once)
 function validateDiscountCode($code)
 {
   return $code === 'DESCONTO10';
@@ -35,8 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['discount_code'])) {
 
 $finalTotal = $total - $discount;
 $installmentValues = calculateInstallments($finalTotal);
-?>
 
+// Verificar se o usuário está logado antes de exibir o login
+$isLoggedIn = isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0;
+?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -53,49 +58,27 @@ $installmentValues = calculateInstallments($finalTotal);
   <div class="main-container">
     <div class="checkout-container">
 
-      <!-- Steps section -->
-      <div class="container-steps">
-        <div class="step">
-          <div class="step-item">
-            <span class="circle active"><i class='bx bx-male-female'></i></span>
-            <h2 class="step-title">Login</h2>
-          </div>
-          <div class="step-item">
-            <span class="circle"><i class='bx bx-dollar'></i></span>
-            <h2 class="step-title">Pagamento</h2>
-          </div>
-          <div class="step-item">
-            <span class="circle"><i class='bx bxs-cart-alt'></i></span>
-            <h2 class="step-title">Revisão</h2>
-          </div>
-          <div class="progress-bar">
-            <span class="indicator"></span>
-          </div>
-        </div>
-      </div>
-
       <!-- Cart summary section -->
       <div class="cart-summary">
         <h2 class="form-title">Resumo do Carrinho</h2>
         <?php
-        // Modify the PHP section in checkout.php to remove discount processing
-        // Initialize variables
+        // Inicializa as variáveis
         $total = $_SESSION['cart_total'] ?? 0;
         $items = $_SESSION['cart_items'] ?? [];
         $imageSrcArray = $_SESSION['cart_images'] ?? [];
         $quantities = $_SESSION['quantities'] ?? [];
 
-        // Display cart summary
+        // Exibe o resumo do carrinho
         if ($total <= 0) {
           echo "<div class='carrinho-vazio'>Carrinho vazio.</div>";
         } else {
           echo "<div class='cart-summary-container'>";
 
-          // Display original total without any discount processing
+          // Exibe o total original sem processar descontos
           $totalFormatted = number_format($total, 2, ',', '.');
           echo "<div class='total-title'><strong>Total:</strong> R$ " . $totalFormatted . "</div>";
 
-          // Display cart items
+          // Exibe os itens do carrinho
           echo "<div class='cart-items'>";
           foreach ($items as $index => $item) {
             $imageSrc = $imageSrcArray[$index] ?? '';
@@ -113,7 +96,7 @@ $installmentValues = calculateInstallments($finalTotal);
           }
           echo "</div>";
 
-          // Discount form
+          // Formulário de desconto
           echo '<div class="discount-form-container">';
           echo '<form class="discount-form" onsubmit="return false;">';
           echo '<input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required>';
@@ -126,196 +109,44 @@ $installmentValues = calculateInstallments($finalTotal);
         ?>
       </div>
 
-      <!-- Form container -->
-      <div class="form-container">
-
-        <!-- Authentication forms -->
-        <div class="auth-forms-container">
-          <form id="login-form" class="checkout-form">
-            <h2 class="form-title">Login</h2>
-            <div class="input-line">
-              <label for="login-email">Email</label>
-              <input type="email" id="login-email" required placeholder="Digite seu email" autocomplete="off" />
-            </div>
-            <div class="input-line">
-              <label for="login-password">Senha</label>
-              <input type="password" id="login-password" required placeholder="Digite sua senha" autocomplete="off" />
-            </div>
-            <div class="button-container">
-              <button type="submit" class="primary-button">Entrar</button>
-              <button type="button" class="auth-toggle-btn" onclick="toggleForms()">Não tem uma conta? Registre-se</button>
-            </div>
-          </form>
-
-          <form id="register-form" class="checkout-form">
-            <h2 class="form-title">Registro</h2>
-            <div class="input-line">
-              <label for="nome">Nome Completo</label>
-              <input type="text" name="nome" required autocomplete="off">
-            </div>
-            <div class="input-line">
-              <label for="email">Email</label>
-              <input type="email" name="email" required autocomplete="off">
-            </div>
-            <div class="input-line">
-              <label for="register-password">Senha</label>
-              <input type="password" id="register-password" required placeholder="" autocomplete="off" />
-            </div>
-            <div class="input-line">
-              <label for="confirm-password">Confirme a senha</label>
-              <input type="password" id="confirm-password" required placeholder="" autocomplete="off" />
-            </div>
-            <div class="input-line">
-              <label for="cep">Cep</label>
-              <input type="text" name="cep" id="cep" required autocomplete="off">
-            </div>
-            <div class="input-line">
-              <label for="endereco">Endereço</label>
-              <input type="text" name="endereco" required autocomplete="off">
-            </div>
-            <div class="checkbox-line">
-              <input type="checkbox" id="same-address" name="same-address">
-              <label for="same-address">Mesmo endereço para entrega</label>
-            </div>
-            <div class="input-line">
-              <label for="bairro">Bairro</label>
-              <input type="text" name="bairro" required autocomplete="off">
-            </div>
-            <div class="input-line">
-              <label for="cidade">Cidade</label>
-              <input type="text" name="cidade" required autocomplete="off">
-            </div>
-            <div class="input-line">
-              <label for="estado">Estado</label>
-              <input type="text" name="estado" required autocomplete="off">
-            </div>
-            <div class="input-line">
-              <label for="cpf">CPF</label>
-              <input type="text" name="cpf" id="cpf" required autocomplete="off">
-            </div>
-            <div class="input-line">
-              <label for="telefone">Telefone</label>
-              <input type="text" name="telefone" id="telefone" required autocomplete="off">
-            </div>
-            <div class="input-line">
-              <label for="data_nascimento">Data de Nascimento</label>
-              <input type="date" name="data_nascimento" required autocomplete="off">
-            </div>
-            <div class="button-container">
-              <button type="submit" class="primary-button">Registrar</button>
-              <button type="button" class="auth-toggle-btn" onclick="toggleForms()">Já tem uma conta? Faça login</button>
-            </div>
-          </form>
-        </div>
-
-        <!-- Payment form -->
-        <div class="payment-container">
-          <h2 class="form-title">Pagamento Cartão de Crédito</h2>
-          <div class="card-preview">
-            <div class="card-wrapper">
-              <div class="card-front">
-                <div class="card-logo">
-                  <img src="../images/chip.png" alt="chip">
-                </div>
-                <div class="card-number">**** **** **** 1234</div>
-                <div class="card-details">
-                  <span class="card-holder">NOME DO TITULAR</span>
-                  <span class="card-expire">MM/AA</span>
-                </div>
-              </div>
-              <div class="card-back">
-                <div class="black-strip"></div>
-                <div class="card-stripe"></div>
-                <div class="cvv">123</div>
-              </div>
-            </div>
+      <!-- Steps section -->
+      <div class="container-steps">
+        <div class="step">
+          <div class="step-item">
+            <span class="circle active" id="step1-icon"><i class='bx bx-male-female'></i></span>
+            <h2 class="step-title">Login</h2>
           </div>
-
-          <form action="" class="payment-form">
-            <div class="form-group">
-              <label for="name">Nome Completo</label>
-              <input type="text" id="name" placeholder="Informe seu nome completo" required autocomplete="off">
-            </div>
-            <div class="form-group">
-              <label for="card-number">Número Cartão</label>
-              <span class="info">Informe os 16 dígitos do cartão</span>
-              <input type="text" id="card-number" placeholder="1234 5678 9012 3456" required autocomplete="off">
-            </div>
-            <div class="form-group">
-              <label for="expiry-month">Mês de Validade</label>
-              <select id="expiry-month" required autocomplete="off">
-                <option value="" disabled selected>MM</option>
-                <option value="01">01</option>
-                <option value="02">02</option>
-                <option value="03">03</option>
-                <option value="04">04</option>
-                <option value="05">05</option>
-                <option value="06">06</option>
-                <option value="07">07</option>
-                <option value="08">08</option>
-                <option value="09">09</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="expiry-year">Ano de Validade</label>
-              <select id="expiry-year" required autocomplete="off">
-                <option value="" disabled selected>YY</option>
-                <option value="24">2024</option>
-                <option value="25">2025</option>
-                <option value="26">2026</option>
-                <option value="27">2027</option>
-                <option value="28">2028</option>
-                <!-- Adicione mais anos conforme necessário -->
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="cvv"><span class="info">3 dígitos na parte traseira do cartão</span></label>
-              <input type="text" id="cvv" placeholder="123" required autocomplete="off">
-            </div>
-
-            <!-- Campos adicionais -->
-            <div class="form-group">
-              <label for="cpf">CPF</label>
-              <input type="text" id="cpf" placeholder="000.000.000-00" required autocomplete="off">
-            </div>
-            <div class="form-group">
-              <label for="email">E-mail</label>
-              <input type="email" id="email" placeholder="seuemail@exemplo.com" required autocomplete="off">
-            </div>
-            <div class="form-group">
-              <label for="installments">Parcelas sem Juros</label>
-              <select id="installments" required>
-                <?php foreach ($installmentValues as $numInstallments => $installmentValue) {
-                  if ($isDiscountApplied) {
-                    echo "<option value='$numInstallments'>$numInstallments x R$ $installmentValue (com desconto)</option>";
-                  } else {
-                    echo "<option value='$numInstallments'>$numInstallments x R$ $installmentValue</option>";
-                  }
-                } ?>
-              </select>
-            </div>
-          </form>
+          <div class="step-item">
+            <span class="circle" id="step2-icon"><i class='bx bx-dollar'></i></span>
+            <h2 class="step-title">Pagamento</h2>
+          </div>
+          <div class="step-item">
+            <span class="circle" id="step3-icon"><i class='bx bxs-cart-alt'></i></span>
+            <h2 class="step-title">Revisão</h2>
+          </div>
+          <div class="progress-bar">
+            <span class="indicator" id="progress-indicator"></span>
+          </div>
         </div>
+      </div>
 
-        <!-- Review container -->
-        <div class="review-container" id="review-container" style="display:none;">
-          <h3>Revisar Pedido</h3>
-        </div>
+      <!-- Step 1: Login Form -->
+      <div id="step1" class="step-content">
+        <?php include 'login.php'; ?> <!-- Formulário de login incluído aqui -->
+      </div>
 
-        <!-- Navigation buttons -->
-        <div class="step-buttons">
-          <button id="prev" style="width:80px;background:#5a4ec5">Anterior</button>
-          <button id="next" style="width:80px;background:#5a4ec5">Próximo</button>
-        </div>
+      <!-- Navigation buttons -->
+      <div class="step-buttons">
+        <button id="prev" style="width:80px;background:#5a4ec5" onclick="prevStep()">Anterior</button>
+        <button id="next" style="width:80px;background:#5a4ec5" onclick="nextStep()">Próximo</button>
+      </div>
 
+    </div>
+  </div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
-        <script src="../js/checkout.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
+  <script src="../js/checkout.js"></script>
 </body>
 
 </html>
