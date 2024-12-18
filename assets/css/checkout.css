@@ -101,7 +101,7 @@ strong {
   justify-content: flex-start;
   align-items: center;
   position: relative;
-  margin-bottom: 5rem;
+  margin-bottom: 3rem;
   transform: translateX(-100px);
 }
 
@@ -151,8 +151,6 @@ strong {
   transition: width 0.3s ease;
 }
 
-
-
 .step-buttons {
   display: flex;
   justify-content: flex-start;
@@ -168,6 +166,136 @@ strong {
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
+}
+
+/* Formulário de Login */
+.container {
+  position: relative;
+  width: 100%;
+  top: 8%;
+  right: 20%;
+  transform: translateY(-10%);
+  max-width: 430px;
+  background: var(--white);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--grey);
+  border-radius: 10px;
+  padding: 30px 40px;
+}
+
+form {
+  margin: 0 2rem;
+}
+
+input {
+  width: 100%;
+  color: inherit;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid var(--grey);
+  padding-left: 1.5rem;
+  font-size: 15px;
+}
+
+input:focus {
+  background-color: transparent;
+  outline: transparent;
+  border-bottom: 2px solid hsl(268, 80%, 57%);
+}
+
+input::placeholder {
+  color: transparent;
+}
+
+label {
+  position: relative;
+  color: var(--grey);
+  left: 2rem;
+  top: -2rem;
+  cursor: auto;
+  transition: 0.3s ease all;
+}
+
+input:focus ~ label,
+input:not(:placeholder-shown) ~ label {
+  top: -3rem;
+  color: hsl(268, 80%, 57%);
+}
+
+.auth-buttons {
+  color: hsl(268, 83%, 34%);
+  background-color: transparent;
+  border: none;
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.auth-buttons:hover {
+  color: var(--blue);
+  text-decoration: underline;
+}
+
+.box-title {
+  position: relative;
+  font-size: 1.8rem;
+  top: -1rem;
+  color: var(--black);
+}
+
+.input-group {
+  position: relative;
+  padding: 1% 0;
+}
+
+.input-group i {
+  position: absolute;
+  font-size: 1.5rem;
+  color: var(--black);
+}
+
+.recover {
+  font-size: 1.3rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+  text-align: right;
+}
+
+.recover a {
+  text-decoration: none;
+  color: hsl(268, 83%, 34%);
+}
+
+.recover a:hover {
+  color: var(--blue);
+  text-decoration: underline;
+}
+
+.auth-btn {
+  width: 100%;
+  font-size: 1.3rem;
+  font-weight: 500;
+  padding: 8px 0;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+  background: var(--blue);
+  color: var(--white);
+  cursor: pointer;
+  transition: 0.9s;
+}
+
+.auth-btn:hover {
+  background: hsl(135, 83%, 34%);
+  color: var(--white);
+}
+
+.links {
+  display: flex;
+  justify-content: space-around;
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  margin-top: 0.9rem;
+  font-weight: 500;
 }
 
 #prev,
@@ -504,9 +632,9 @@ strong {
 
 .discount-btn {
   background-color: #007bff;
-  color: white;
-  font-size: 1rem;
-  font-weight: 500;
+  color: var(--white);
+  font-size: 1.2rem;
+  font-weight: 600;
   padding: 0 1rem;
   border: none;
   border-radius: 0 4px 4px 0;
@@ -516,6 +644,10 @@ strong {
   white-space: nowrap;
   flex-shrink: 0;
   margin-left: -1px;
+}
+
+.discount-btn:hover {
+  color: var(--white);
 }
 
 .discount-title {

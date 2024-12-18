@@ -1,13 +1,14 @@
 // Select all required elements
 const steps = document.querySelectorAll(".circle");
 const indicator = document.querySelector(".indicator");
-const authFormsContainer = document.querySelector(".auth-forms-container");
 const paymentContainer = document.querySelector(".payment-container");
 const reviewContainer = document.querySelector(".review-container");
 const prevBtn = document.getElementById("prev");
 const nextBtn = document.getElementById("next");
-const loginForm = document.getElementById("login-form");
-const registerForm = document.getElementById("register-form");
+const signupBtn = document.getElementById("signup-btn");
+const signinBtn = document.getElementById("sign-btn");
+const signinForm = document.getElementById("signin");
+const signupForm = document.getElementById("signup");
 const cardNumberDisplay = document.querySelector(".card-number");
 const cardHolderDisplay = document.querySelector(".card-holder");
 const cardExpireDisplay = document.querySelector(".card-expire");
@@ -30,7 +31,7 @@ function updateSteps() {
   });
   indicator.style.width = `${(currentStep / (steps.length - 1)) * 100}%`;
 
-  authFormsContainer.style.display = currentStep === 0 ? "block" : "none";
+  // Show/hide different containers based on current step
   paymentContainer.style.display = currentStep === 1 ? "block" : "none";
   reviewContainer.style.display = currentStep === 2 ? "block" : "none";
 
@@ -45,11 +46,17 @@ function updateSteps() {
   }
 }
 
-// Initialize auth forms state
-function initializeAuthForms() {
-  loginForm.style.display = "block";
-  registerForm.style.display = "none";
-}
+// Event listener to show the signup form and hide the signin form
+signupBtn.addEventListener("click", function () {
+  signinForm.style.display = "none"; // Hide login form
+  signupForm.style.display = "block"; // Show signup form
+});
+
+// Event listener to show the signin form and hide the signup form
+signinBtn.addEventListener("click", function () {
+  signupForm.style.display = "none"; // Hide signup form
+  signinForm.style.display = "block"; // Show login form
+});
 
 // Update card information
 function updateCardInfo() {
@@ -236,17 +243,6 @@ document
 document.getElementById("cvv")?.addEventListener("focus", handleCardFlip);
 document.getElementById("cvv")?.addEventListener("blur", handleCardFlip);
 
-// Form toggle event listeners
-document.getElementById("show-register")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  toggleForms();
-});
-
-document.getElementById("show-login")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  toggleForms();
-});
-
 // Discount button event listener
 document.getElementById("apply-discount")?.addEventListener("click", (e) => {
   e.preventDefault();
@@ -281,162 +277,10 @@ function updateInstallments(totalAfterDiscount) {
     3: (totalToConsider / 3).toFixed(2).replace(".", ","),
   };
 
-  for (const [numInstallments, installmentValue] of Object.entries(
-    installmentValues
-  )) {
-    const optionText = isDiscountApplied
-      ? `${numInstallments} x R$ ${installmentValue} (com desconto)`
-      : `${numInstallments} x R$ ${installmentValue}`;
+  for (const [num, value] of Object.entries(installmentValues)) {
     const option = document.createElement("option");
-    option.value = numInstallments;
-    option.textContent = optionText;
+    option.value = num;
+    option.textContent = `${num}x de R$ ${value}`;
     installmentsSelect.appendChild(option);
   }
 }
-
-// Function to toggle between login and register forms
-function toggleForms() {
-  const isLoginVisible = loginForm.style.display === "block";
-  loginForm.style.display = isLoginVisible ? "none" : "block";
-  registerForm.style.display = isLoginVisible ? "block" : "none";
-}
-
-//Form Validation and CEP Handler
-$(document).ready(function () {
-  // Masking
-  $("#cpf").inputmask("999.999.999-99"); // CPF
-  $("#telefone").inputmask("(99) 99999-9999"); // Telefone
-  $("#card-number").inputmask("9999 9999 9999 9999"); // Cartão de Crédito
-  $("#cvv").inputmask("999"); // CVV
-  $("#cep").inputmask("99999-999"); // CEP
-
-  // CEP autocomplete
-  $("#cep").on("input", function () {
-    // Get the raw value without mask
-    const cep = $(this).val().replace(/\D/g, "");
-
-    // Only proceed if we have 8 digits
-    if (cep.length === 8) {
-      // Show loading indicator (optional)
-      $(this).addClass("loading");
-
-      fetch(`https://viacep.com.br/ws/${cep}/json/`)
-        .then((response) => response.json())
-        .then((data) => {
-          if (!data.erro) {
-            // Fill the form fields
-            $('input[name="endereco"]').val(data.logradouro);
-            $('input[name="bairro"]').val(data.bairro);
-            $('input[name="cidade"]').val(data.localidade);
-            $('input[name="estado"]').val(data.uf);
-          } else {
-            alert("CEP não encontrado.");
-            clearAddressFields();
-          }
-        })
-        .catch((error) => {
-          console.error("Erro ao buscar CEP:", error);
-          alert("Erro ao buscar CEP. Tente novamente.");
-          clearAddressFields();
-        })
-        .finally(() => {
-          // Remove loading indicator (optional)
-          $(this).removeClass("loading");
-        });
-    }
-  });
-
-  // Function to clear address fields
-  function clearAddressFields() {
-    $(
-      'input[name="endereco"], input[name="bairro"], input[name="cidade"], input[name="estado"]'
-    ).val("");
-  }
-
-  // Copy address when checking box
-  $("#same-address").on("change", function () {
-    const isChecked = $(this).prop("checked");
-
-    if (isChecked) {
-      // Copy billing address to shipping address
-      $('input[name="shipping-endereco"]').val(
-        $('input[name="endereco"]').val()
-      );
-      $('input[name="shipping-bairro"]').val($('input[name="bairro"]').val());
-      $('input[name="shipping-cidade"]').val($('input[name="cidade"]').val());
-      $('input[name="shipping-estado"]').val($('input[name="estado"]').val());
-    } else {
-      // Clear shipping address fields
-      $(
-        'input[name="shipping-endereco"], input[name="shipping-bairro"], input[name="shipping-cidade"], input[name="shipping-estado"]'
-      ).val("");
-    }
-  });
-
-  // Form validation
-  $("#login-form").on("submit", function (event) {
-    event.preventDefault();
-    const email = $("#login-email").val();
-    const password = $("#login-password").val();
-
-    if (validateEmail(email) && validatePassword(password)) {
-      console.log("Login form is valid");
-      // Proceed with submission logic
-    } else {
-      alert("Por favor, preencha todos os campos corretamente.");
-    }
-  });
-
-  $("#register-form").on("submit", function (event) {
-    event.preventDefault();
-    const email = $('input[name="email"]').val();
-    const password = $("#register-password").val();
-    const confirmPassword = $("#confirm-password").val();
-    const cpf = $("#cpf").val();
-    const telefone = $("#telefone").val();
-    const cep = $("#cep").val();
-
-    if (
-      validateEmail(email) &&
-      validatePasswords(password, confirmPassword) &&
-      validateCPF(cpf) &&
-      validateTelefone(telefone) &&
-      validateCEP(cep)
-    ) {
-      console.log("Registration form is valid");
-      // Proceed with submission logic
-    } else {
-      alert("Por favor, preencha todos os campos corretamente.");
-    }
-  });
-
-  // Improved validation functions
-  function validateEmail(email) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  }
-
-  function validatePassword(password) {
-    return password.length >= 6; // Example: at least 6 characters
-  }
-
-  function validatePasswords(password, confirmPassword) {
-    return password === confirmPassword && password.length >= 6;
-  }
-
-  function validateCPF(cpf) {
-    const cleanCPF = cpf.replace(/\D/g, "");
-    return cleanCPF.length === 11;
-  }
-
-  function validateTelefone(telefone) {
-    const cleanPhone = telefone.replace(/\D/g, "");
-    return cleanPhone.length >= 10 && cleanPhone.length <= 11;
-  }
-
-  function validateCEP(cep) {
-    const cleanCEP = cep.replace(/\D/g, "");
-    return cleanCEP.length === 8;
-  }
-});
-

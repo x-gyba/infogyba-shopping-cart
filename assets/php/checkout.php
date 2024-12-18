@@ -39,8 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['discount_code'])) {
 $finalTotal = $total - $discount;
 $installmentValues = calculateInstallments($finalTotal);
 
-// Verificar se o usuário está logado antes de exibir o login
-$isLoggedIn = isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0;
+
 ?>
 
 <!DOCTYPE html>
@@ -50,7 +49,7 @@ $isLoggedIn = isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0;
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Checkout</title>
-  <link rel="stylesheet" href="../css/checkout.css" />
+  <link rel="stylesheet" href="/css/checkout.css" />
   <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" />
 </head>
 
@@ -99,7 +98,7 @@ $isLoggedIn = isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0;
           // Formulário de desconto
           echo '<div class="discount-form-container">';
           echo '<form class="discount-form" onsubmit="return false;">';
-          echo '<input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required>';
+          echo '<input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required autocomplete="off">';
           echo '<button class="discount-btn" onclick="applyDiscount()">Aplicar</button>';
           echo '</form>';
           echo '</div>';
@@ -132,7 +131,7 @@ $isLoggedIn = isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0;
 
       <!-- Step 1: Login Form -->
       <div id="step1" class="step-content">
-        <?php include 'login.php'; ?> <!-- Formulário de login incluído aqui -->
+        <?php include 'auth.php'; ?> <!-- Formulário de login/registro incluído aqui -->
       </div>
 
       <!-- Navigation buttons -->
