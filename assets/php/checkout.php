@@ -99,7 +99,7 @@ $isLoggedIn = isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0;
           // Formulário de desconto
           echo '<div class="discount-form-container">';
           echo '<form class="discount-form" onsubmit="return false;">';
-          echo '<input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required>';
+          echo '<input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required autocomplete="off">';
           echo '<button class="discount-btn" onclick="applyDiscount()">Aplicar</button>';
           echo '</form>';
           echo '</div>';

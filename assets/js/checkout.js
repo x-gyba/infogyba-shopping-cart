@@ -21,23 +21,24 @@ const messages = {
   invalidDiscountCode: "Código de desconto inválido.",
 };
 
-// Função para atualizar os passos e a visibilidade do formulário
+// Function to update the steps and visibility of the form
 function updateSteps() {
   steps.forEach((step, idx) => {
     step.classList.toggle("active", idx <= currentStep);
   });
   indicator.style.width = `${(currentStep / (steps.length - 1)) * 100}%`;
 
-  // Exibir/ocultar os formulários
+  // Show/hide forms
   authFormsContainer.style.display = currentStep === 0 ? "block" : "none";
   paymentContainer.style.display = currentStep === 1 ? "block" : "none";
   reviewContainer.style.display = currentStep === 2 ? "block" : "none";
 
   prevBtn.style.display = currentStep === 0 ? "none" : "inline-block";
-  nextBtn.textContent = currentStep === totalSteps - 1 ? "Finalizar" : "Próximo";
+  nextBtn.textContent =
+    currentStep === totalSteps - 1 ? "Finalizar" : "Próximo";
 }
 
-// Função para alternar entre os formulários de Login e Registro
+// Function to switch between Login and Registration forms
 function toggleForms() {
   if (signinForm.style.display === "none") {
     signinForm.style.display = "block";
@@ -48,7 +49,7 @@ function toggleForms() {
   }
 }
 
-// Event listeners para alternar entre login e registro
+// Event listeners to switch between login and registration
 signupBtn.addEventListener("click", (e) => {
   e.preventDefault();
   toggleForms();
@@ -59,11 +60,11 @@ signBtn.addEventListener("click", (e) => {
   toggleForms();
 });
 
-// Inicializa a página com o formulário de login visível
+// Initialize the page with the login form visible
 signinForm.style.display = "block";
 signupForm.style.display = "none";
 
-// Event listeners para os botões de navegação entre etapas
+// Event listeners for navigation buttons between steps
 prevBtn.addEventListener("click", () => {
   if (currentStep > 0) {
     currentStep--;
@@ -76,8 +77,7 @@ nextBtn.addEventListener("click", () => {
     currentStep++;
     updateSteps();
   } else if (currentStep === totalSteps - 1) {
-    console.log("Formulário finalizado!");
-    // Adicione a lógica de envio do formulário aqui
+    alert("Pedido finalizado com sucesso!");
   }
 });
 
@@ -99,7 +99,8 @@ function applyDiscount(discountCode) {
     return;
   }
 
-  const code = discountCode || document.querySelector(".discount-input")?.value.trim();
+  const code =
+    discountCode || document.querySelector(".discount-input")?.value.trim();
   const totalElement = document.querySelector(".total-title");
 
   if (!totalElement) {
@@ -135,7 +136,9 @@ function createDiscountInfo(discountAmount) {
   const discountInfo = document.createElement("div");
   discountInfo.className = "discount-info discount-success";
   discountInfo.innerHTML = `
-    <div class="discount-title success-message"><strong>${messages.discountApplied}</strong></div>
+    <div class="discount-title success-message"><strong>${
+      messages.discountApplied
+    }</strong></div>
     <div class="discount-amount"><strong>Desconto aplicado:&nbsp;</strong> R$ ${discountAmount
       .toFixed(2)
       .replace(".", ",")}</div>`;
@@ -234,22 +237,3 @@ function updateInstallments(totalAfterDiscount) {
     installmentsSelect.appendChild(option);
   }
 }
-
-// Alternar entre o formulário de login e registro (com jQuery)
-$(document).ready(function () {
-  // Mostrar o formulário de login e ocultar o de registro
-  $("#signup-btn").click(function () {
-    $("#signin").show();
-    $("#signup").hide();
-  });
-
-  // Mostrar o formulário de registro e ocultar o de login
-  $("#sign-btn").click(function () {
-    $("#signup").show();
-    $("#signin").hide();
-  });
-
-  // Inicialmente, exibe o formulário de login
-  $("#signin").show();
-  $("#signup").hide();
-});
