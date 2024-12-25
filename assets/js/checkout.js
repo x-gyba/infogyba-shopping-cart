@@ -1,18 +1,15 @@
 // Select all required elements
 const steps = document.querySelectorAll(".circle");
 const indicator = document.querySelector(".indicator");
+const authFormsContainer = document.querySelector(".auth-forms-container");
 const paymentContainer = document.querySelector(".payment-container");
 const reviewContainer = document.querySelector(".review-container");
 const prevBtn = document.getElementById("prev");
 const nextBtn = document.getElementById("next");
-const signupBtn = document.getElementById("signup-btn");
-const signinBtn = document.getElementById("sign-btn");
-const signinForm = document.getElementById("signin");
 const signupForm = document.getElementById("signup");
-const cardNumberDisplay = document.querySelector(".card-number");
-const cardHolderDisplay = document.querySelector(".card-holder");
-const cardExpireDisplay = document.querySelector(".card-expire");
-const cardCvvDisplay = document.querySelector(".cvv");
+const signinForm = document.getElementById("signin");
+const signupBtn = document.getElementById("signup-btn");
+const signBtn = document.getElementById("sign-btn");
 const totalSteps = 3;
 
 let currentStep = 0;
@@ -24,64 +21,76 @@ const messages = {
   invalidDiscountCode: "Código de desconto inválido.",
 };
 
-// Function to update steps and form visibility
+// Função para atualizar os passos e a visibilidade do formulário
 function updateSteps() {
   steps.forEach((step, idx) => {
     step.classList.toggle("active", idx <= currentStep);
   });
   indicator.style.width = `${(currentStep / (steps.length - 1)) * 100}%`;
 
-  // Show/hide different containers based on current step
+  // Exibir/ocultar os formulários
+  authFormsContainer.style.display = currentStep === 0 ? "block" : "none";
   paymentContainer.style.display = currentStep === 1 ? "block" : "none";
   reviewContainer.style.display = currentStep === 2 ? "block" : "none";
 
   prevBtn.style.display = currentStep === 0 ? "none" : "inline-block";
-  nextBtn.textContent =
-    currentStep === totalSteps - 1 ? "Finalizar" : "Próximo";
+  nextBtn.textContent = currentStep === totalSteps - 1 ? "Finalizar" : "Próximo";
+}
 
-  if (currentStep === 0) {
-    initializeAuthForms();
-  } else if (currentStep === 1) {
-    updateCardInfo();
+// Função para alternar entre os formulários de Login e Registro
+function toggleForms() {
+  if (signinForm.style.display === "none") {
+    signinForm.style.display = "block";
+    signupForm.style.display = "none";
+  } else {
+    signinForm.style.display = "none";
+    signupForm.style.display = "block";
   }
 }
 
-// Event listener to show the signup form and hide the signin form
-signupBtn.addEventListener("click", function () {
-  signinForm.style.display = "none"; // Hide login form
-  signupForm.style.display = "block"; // Show signup form
+// Event listeners para alternar entre login e registro
+signupBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  toggleForms();
 });
 
-// Event listener to show the signin form and hide the signup form
-signinBtn.addEventListener("click", function () {
-  signupForm.style.display = "none"; // Hide signup form
-  signinForm.style.display = "block"; // Show login form
+signBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  toggleForms();
 });
 
-// Update card information
-function updateCardInfo() {
-  const nameInput = document.getElementById("name")?.value || "Nome no cartão";
-  const cardNumberInput =
-    document.getElementById("card-number")?.value || "#### #### #### ####";
-  const expiryMonthInput =
-    document.getElementById("expiry-month")?.value || "MM";
-  const expiryYearInput = document.getElementById("expiry-year")?.value || "AA";
+// Inicializa a página com o formulário de login visível
+signinForm.style.display = "block";
+signupForm.style.display = "none";
 
-  cardHolderDisplay.textContent = nameInput;
-  cardNumberDisplay.textContent = formatCardNumber(cardNumberInput);
-  cardExpireDisplay.textContent = `${expiryMonthInput}/${expiryYearInput}`;
-}
+// Event listeners para os botões de navegação entre etapas
+prevBtn.addEventListener("click", () => {
+  if (currentStep > 0) {
+    currentStep--;
+    updateSteps();
+  }
+});
 
-// Format card number
-function formatCardNumber(number) {
-  return number.replace(/(\d{4})(?=\d)/g, "$1 ");
-}
+nextBtn.addEventListener("click", () => {
+  if (currentStep < totalSteps - 1) {
+    currentStep++;
+    updateSteps();
+  } else if (currentStep === totalSteps - 1) {
+    console.log("Formulário finalizado!");
+    // Adicione a lógica de envio do formulário aqui
+  }
+});
 
-// Card flip animation
-function handleCardFlip() {
-  const cardWrapper = document.querySelector(".card-wrapper");
-  cardWrapper.classList.toggle("is-flipped");
-}
+// Prevent form submission refresh
+document.querySelectorAll("form").forEach((form) => {
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (currentStep < totalSteps - 1) {
+      currentStep++;
+      updateSteps();
+    }
+  });
+});
 
 // Apply discount
 function applyDiscount(discountCode) {
@@ -90,8 +99,7 @@ function applyDiscount(discountCode) {
     return;
   }
 
-  const code =
-    discountCode || document.querySelector(".discount-input")?.value.trim();
+  const code = discountCode || document.querySelector(".discount-input")?.value.trim();
   const totalElement = document.querySelector(".total-title");
 
   if (!totalElement) {
@@ -127,9 +135,7 @@ function createDiscountInfo(discountAmount) {
   const discountInfo = document.createElement("div");
   discountInfo.className = "discount-info discount-success";
   discountInfo.innerHTML = `
-    <div class="discount-title success-message"><strong>${
-      messages.discountApplied
-    }</strong></div>
+    <div class="discount-title success-message"><strong>${messages.discountApplied}</strong></div>
     <div class="discount-amount"><strong>Desconto aplicado:&nbsp;</strong> R$ ${discountAmount
       .toFixed(2)
       .replace(".", ",")}</div>`;
@@ -196,67 +202,6 @@ function clearExistingMessage() {
   }
 }
 
-// Event Listeners
-prevBtn.addEventListener("click", () => {
-  if (currentStep > 0) {
-    currentStep--;
-    updateSteps();
-  }
-});
-
-nextBtn.addEventListener("click", () => {
-  if (currentStep < totalSteps - 1) {
-    currentStep++;
-    updateSteps();
-  } else if (currentStep === totalSteps - 1) {
-    console.log("Form submitted!");
-    // Add submission logic here
-  }
-});
-
-// Prevent form submission refresh
-document.querySelectorAll("form").forEach((form) => {
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    if (currentStep < totalSteps - 1) {
-      currentStep++;
-      updateSteps();
-    }
-  });
-});
-
-// Card info event listeners
-document.getElementById("cvv")?.addEventListener("input", (e) => {
-  cardCvvDisplay.textContent = e.target.value || "***";
-});
-
-document.getElementById("name")?.addEventListener("input", updateCardInfo);
-document
-  .getElementById("card-number")
-  ?.addEventListener("input", updateCardInfo);
-document
-  .getElementById("expiry-month")
-  ?.addEventListener("change", updateCardInfo);
-document
-  .getElementById("expiry-year")
-  ?.addEventListener("change", updateCardInfo);
-document.getElementById("cvv")?.addEventListener("focus", handleCardFlip);
-document.getElementById("cvv")?.addEventListener("blur", handleCardFlip);
-
-// Discount button event listener
-document.getElementById("apply-discount")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  const discountCode = document.getElementById("discount-code")?.value;
-  if (discountCode) {
-    applyDiscount(discountCode);
-  }
-});
-
-// Card flip button event listener
-document.getElementById("flip-button")?.addEventListener("click", () => {
-  document.getElementById("card").classList.toggle("flipped");
-});
-
 // Initialize the form
 updateSteps();
 
@@ -277,10 +222,34 @@ function updateInstallments(totalAfterDiscount) {
     3: (totalToConsider / 3).toFixed(2).replace(".", ","),
   };
 
-  for (const [num, value] of Object.entries(installmentValues)) {
+  for (const [numInstallments, installmentValue] of Object.entries(
+    installmentValues
+  )) {
+    const optionText = isDiscountApplied
+      ? `${numInstallments} x R$ ${installmentValue} (com desconto)`
+      : `${numInstallments} x R$ ${installmentValue}`;
     const option = document.createElement("option");
-    option.value = num;
-    option.textContent = `${num}x de R$ ${value}`;
+    option.value = numInstallments;
+    option.textContent = optionText;
     installmentsSelect.appendChild(option);
   }
 }
+
+// Alternar entre o formulário de login e registro (com jQuery)
+$(document).ready(function () {
+  // Mostrar o formulário de login e ocultar o de registro
+  $("#signup-btn").click(function () {
+    $("#signin").show();
+    $("#signup").hide();
+  });
+
+  // Mostrar o formulário de registro e ocultar o de login
+  $("#sign-btn").click(function () {
+    $("#signup").show();
+    $("#signin").hide();
+  });
+
+  // Inicialmente, exibe o formulário de login
+  $("#signin").show();
+  $("#signup").hide();
+});

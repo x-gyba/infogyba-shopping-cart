@@ -39,7 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['discount_code'])) {
 $finalTotal = $total - $discount;
 $installmentValues = calculateInstallments($finalTotal);
 
-
+// Verificar se o usuário está logado antes de exibir o login
+$isLoggedIn = isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0;
 ?>
 
 <!DOCTYPE html>
@@ -98,7 +99,7 @@ $installmentValues = calculateInstallments($finalTotal);
           // Formulário de desconto
           echo '<div class="discount-form-container">';
           echo '<form class="discount-form" onsubmit="return false;">';
-          echo '<input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required autocomplete="off">';
+          echo '<input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required>';
           echo '<button class="discount-btn" onclick="applyDiscount()">Aplicar</button>';
           echo '</form>';
           echo '</div>';
@@ -131,7 +132,7 @@ $installmentValues = calculateInstallments($finalTotal);
 
       <!-- Step 1: Login Form -->
       <div id="step1" class="step-content">
-        <?php include 'auth.php'; ?> <!-- Formulário de login/registro incluído aqui -->
+        <?php include 'login.php'; ?> <!-- Formulário de login incluído aqui -->
       </div>
 
       <!-- Navigation buttons -->

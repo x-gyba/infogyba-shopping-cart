@@ -219,7 +219,7 @@ label {
 input:focus ~ label,
 input:not(:placeholder-shown) ~ label {
   top: -3rem;
-  color: hsl(268, 80%, 57%);
+  color:transparent;
 }
 
 .auth-buttons {
