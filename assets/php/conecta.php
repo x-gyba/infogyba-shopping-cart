@@ -4,7 +4,7 @@ function conecta() {
      define('HOST', 'localhost');
   }
   if (!defined("BD")) {
-     define('BD', 'login');
+     define('BD', 'loja');
   }
   if (!defined("USER")) {
      define('USER', 'root');
