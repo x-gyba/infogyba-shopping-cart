@@ -30,11 +30,4 @@ function conecta() {
   }
 }
 
-// Check if the connection is successful and display a message
-$conn = conecta();
-if ($conn) {
-    echo "<script>alert('Conectado ao banco de dados com sucesso!');</script>";
-} else {
-    echo "<script>alert('Falha na conexão com o banco de dados!');</script>";
-}
 ?>
