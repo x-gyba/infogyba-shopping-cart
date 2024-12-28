@@ -3,6 +3,11 @@
 include('conecta.php');
 $conn = conecta();
 
+// Função para validar o email
+function validaEmail($email) {
+    return filter_var($email, FILTER_VALIDATE_EMAIL);
+}
+
 // Verificar se o formulário de registro foi enviado
 if (isset($_POST['signup'])) {
     $nome = $_POST['fname'];
@@ -11,8 +16,12 @@ if (isset($_POST['signup'])) {
     $senha = $_POST['senha'];
     $confirmaSenha = $_POST['confirma-senha'];
 
-    // Verificar se as senhas coincidem
-    if ($senha === $confirmaSenha) {
+    // Verificar se o email é válido
+    if (!validaEmail($email)) {
+        echo "<script>alert('Por favor, insira um email válido!');</script>";
+    } elseif ($senha !== $confirmaSenha) {
+        echo "<script>alert('As senhas não coincidem!');</script>";
+    } else {
         // Criptografar a senha
         $senhaCriptografada = password_hash($senha, PASSWORD_DEFAULT);
 
@@ -20,9 +29,9 @@ if (isset($_POST['signup'])) {
             // Verificar se o email já está cadastrado
             $sql = "SELECT * FROM login WHERE email = :email";
             $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
             $stmt->execute();
-            
+
             if ($stmt->rowCount() > 0) {
                 echo "<script>alert('Email já cadastrado!');</script>";
             } else {
@@ -30,10 +39,10 @@ if (isset($_POST['signup'])) {
                 $nomeCompleto = $nome . ' ' . $sobrenome;
                 $sql = "INSERT INTO login (usuario, email, senha) VALUES (:nome, :email, :senha)";
                 $stmt = $conn->prepare($sql);
-                $stmt->bindParam(':nome', $nomeCompleto);
-                $stmt->bindParam(':email', $email);
-                $stmt->bindParam(':senha', $senhaCriptografada);
-                
+                $stmt->bindParam(':nome', $nomeCompleto, PDO::PARAM_STR);
+                $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+                $stmt->bindParam(':senha', $senhaCriptografada, PDO::PARAM_STR);
+
                 if ($stmt->execute()) {
                     echo "<script>alert('Cadastro realizado com sucesso!'); window.location.href='#';</script>";
                 } else {
@@ -41,10 +50,8 @@ if (isset($_POST['signup'])) {
                 }
             }
         } catch (PDOException $e) {
-            echo "<script>alert('Erro no banco de dados: " . str_replace("'", "\\'", $e->getMessage()) . "');</script>";
+            echo "<script>alert('Erro no banco de dados: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8') . "');</script>";
         }
-    } else {
-        echo "<script>alert('As senhas não coincidem!');</script>";
     }
 }
 
@@ -53,37 +60,47 @@ if (isset($_POST['signin'])) {
     $email = $_POST['email'];
     $senha = $_POST['senha'];
 
-    try {
-        // Buscar usuário no banco de dados
-        $sql = "SELECT * FROM login WHERE email = :email";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':email', $email);
-        $stmt->execute();
+    // Verificar se os campos de email ou senha estão vazios
+    if (empty($email) || empty($senha)) {
+        echo "<script>alert('Por favor, preencha todos os campos de login!');</script>";
+    } elseif (!validaEmail($email)) {
+        echo "<script>alert('Por favor, insira um email válido!');</script>";
+    } else {
+        try {
+            // Buscar usuário no banco de dados
+            $sql = "SELECT * FROM login WHERE email = :email";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
 
-        if ($stmt->rowCount() > 0) {
-            $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($stmt->rowCount() > 0) {
+                $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Verificar se a senha está correta
-            if (password_verify($senha, $usuario['senha'])) {
-                // Iniciar a sessão e armazenar dados do usuário
-                session_start();
-                $_SESSION['user_id'] = $usuario['id'];
-                $_SESSION['user_name'] = $usuario['usuario'];
+                // Verificar se a senha está correta
+                if (password_verify($senha, $usuario['senha'])) {
+                    // Iniciar a sessão e armazenar dados do usuário
+                    if (session_status() == PHP_SESSION_NONE) {
+                        session_start();
+                    }
+                    $_SESSION['user_id'] = $usuario['id'];
+                    $_SESSION['user_name'] = $usuario['usuario'];
 
-                // Redirecionar para a página de pagamento
-                echo "<script>window.location.href='#';</script>";
-                exit;
+                    // Redirecionar para a página de pagamento ou outra página
+                    echo "<script>window.location.href='#';</script>";
+                    exit;
+                } else {
+                    echo "<script>alert('Senha incorreta!');</script>";
+                }
             } else {
-                echo "<script>alert('Senha incorreta!');</script>";
+                echo "<script>alert('Email não encontrado!');</script>";
             }
-        } else {
-            echo "<script>alert('Email não encontrado!');</script>";
+        } catch (PDOException $e) {
+            echo "<script>alert('Erro no banco de dados: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8') . "');</script>";
         }
-    } catch (PDOException $e) {
-        echo "<script>alert('Erro no banco de dados: " . str_replace("'", "\\'", $e->getMessage()) . "');</script>";
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -144,22 +161,21 @@ if (isset($_POST['signin'])) {
             <label for="signin-email">Email</label>
         </div>
         <div class="input-group">
-    <i class='bx bxs-lock-alt'></i>
-    <input type="password" name="senha" id="signin-senha" placeholder="Insira sua senha." required autocomplete="off">
-    <label for="signin-senha">Senha</label>
-    </div>
+            <i class='bx bxs-lock-alt'></i>
+            <input type="password" name="senha" id="signin-senha" placeholder="Insira sua senha." required autocomplete="off">
+            <label for="signin-senha">Senha</label>
+        </div>
         <p class="recover"><a href="#">Esqueci minha senha.</a></p>
         <input type="submit" class="auth-btn" value="Entrar" name="signin">
-     <div class="links">
+        <div class="links">
             <p>Não tenho uma conta.</p>
             <button type="button" class="auth-buttons" id="signup-btn">Cadastre-se</button>    
         </div>    
     </form>  
-</div>   
+</div>
+   
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="../js/checkout.js"></script>
 </body>
 </html>
-
-
