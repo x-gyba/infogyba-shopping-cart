@@ -149,8 +149,8 @@ if (isset($_POST['signin'])) {
     <label for="signin-senha">Senha</label>
     </div>
         <p class="recover"><a href="#">Esqueci minha senha.</a></p>
-        <input type="submit" class="auth-btn" value="Entrar" name="signin"> 
-        <div class="links">
+        <input type="submit" class="auth-btn" value="Entrar" name="signin">
+     <div class="links">
             <p>Não tenho uma conta.</p>
             <button type="button" class="auth-buttons" id="signup-btn">Cadastre-se</button>    
         </div>    

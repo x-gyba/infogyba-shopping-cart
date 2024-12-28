@@ -43,7 +43,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
             echo "<div style='display: flex; align-items: center; margin-bottom: 10px;'>";
             if ($imageSrc) {
-              echo "<div style='flex: 0 0 auto; margin-right: 6px;'>";
+              echo "<div style='flex: 0 0 auto; margin-right: 4px;margin-top: 2px;'>";
               echo "<img src='" . htmlspecialchars($imageSrc) . "' alt='Imagem do Carrinho' style='max-width: 75px; height: auto;' />";
               echo "</div>";
             }

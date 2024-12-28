@@ -279,8 +279,8 @@ header .carrinho {
   background: var(--white);
   display: block;
   z-index: 1000;
-  overflow-y: auto; /* Make it scrollable */
-  max-height: 80vh; /* Limit the height for scrolling */
+  overflow-y: auto; 
+  max-height: 80vh; 
 }
 
 header .carrinho.active {

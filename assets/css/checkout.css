@@ -11,6 +11,7 @@
   --red: #d0342c;
   --violet: #5a4ec5;
   --silver: #ccc;
+  --bg: rgba(242, 242, 234, 0.8);
 }
 
 * {
@@ -29,7 +30,7 @@ body {
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  background-color: var(--white);
+  background-color: var(--bg);
   padding: 2rem;
 }
 
@@ -64,17 +65,20 @@ label {
   border-radius: 1rem;
   padding: 2rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  z-index: 2; 
+  z-index: 2;
 }
 
-.cart-summary h2 {
+.cart-summary .form-title {
   font-size: 1.8rem;
-  margin-bottom: 1.5rem;
+  font-weight:500;
+  margin-bottom: 1.2rem;
+  padding:0.5rem;
   color: var(--black);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 }
 
 .qtd-item {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   font-weight: 400;
   white-space: nowrap;
   display: flex;
@@ -82,10 +86,10 @@ label {
 }
 
 .total-title {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   font-weight: 500;
-  padding-bottom: 0.5rem;
-  margin-top: 0.2rem;
+  margin-bottom:0.5rem;
+  
   display: flex;
   justify-content: center;
 }
@@ -94,7 +98,7 @@ label {
 .discount-form-container {
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
+  margin-top: 3rem;
   padding: 0 1rem;
 }
 
@@ -184,7 +188,7 @@ label {
 
 .discount-input.error {
   border-color: var(--blue);
-  background-color: var(--red);
+  background-color: #fff8f8;
   animation: shake 0.5s ease-in-out;
 }
 
@@ -231,18 +235,17 @@ label {
 /* Etapas de navegação */
 .master-container {
   position: fixed;
-  top: 0;
+  top: 0rem;
   left: 0;
   width: 100%;
   height: 100vh;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
-  padding: 20px;
+  padding: 30px;
   box-sizing: border-box;
-  z-index: 1; 
+  z-index: 1;
 }
-
 
 .container-steps {
   width: 100%;
@@ -253,7 +256,7 @@ label {
   font-family: Arial, sans-serif;
   position: absolute;
   top: 0;
-  left: 50%;
+  left: 60%;
   transform: translateX(-50%);
 }
 
@@ -272,6 +275,10 @@ label {
   align-items: center;
   z-index: 1;
   margin-right: 10rem;
+}
+.step-item i {
+  font-size: 1.6rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .circle {
@@ -312,8 +319,8 @@ label {
 
 .step-buttons {
   position: fixed;
-  bottom: 35rem;
-  left: 50%;
+  bottom: 15rem;
+  left: 60%;
   transform: translateX(-50%);
   display: flex;
   justify-content: space-between;
@@ -344,8 +351,131 @@ label {
   background-color: var(--white);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   position: relative;
-  margin-left: 50rem;
-  margin-top: 8rem;
+  margin-left: 62rem;
+  margin-top: 10rem;
   max-width: 430px;
   width: 100%;
+}
+
+.container form{
+margin: 0 2rem;  
+}
+
+.container input {
+  width: 100%;
+  color: inherit;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid var(--grey);
+  padding-left: 1.5rem;
+  font-size: 15px;
+}
+
+.container input:focus {
+  background-color: transparent;
+  outline: transparent;
+  border-bottom: 3px solid hsl(268, 80%, 57%);
+}
+
+.container input::placeholder {
+  color: transparent;
+}
+
+.container label {
+  position: relative;
+  color: var(--grey);
+  left: 2rem;
+  top: -2rem;
+  cursor: auto;
+  transition: 0.3s ease all;
+}
+
+.container input:focus ~ label,
+input:not(:placeholder-shown) ~ label {
+top: -3rem;
+color:transparent;
+}
+
+.auth-buttons {
+color:hsl(246, 51%, 54%);
+background-color: transparent;
+border: none;
+margin-top:0.5rem;
+font-size: 1.3rem;
+font-weight: 500;
+}
+
+.auth-buttons:hover {
+color: var(--blue);
+text-decoration: underline;
+}
+
+.box-title {
+position: relative;
+font-size: 1.8rem;
+font-weight:500;
+top: -1rem;
+color: var(--black);
+}
+
+.input-group {
+position: relative;
+padding: 1% 0;
+}
+
+.input-group i {
+position: absolute;
+font-size: 1.6rem;
+color: var(--black);
+}
+
+.recover {
+font-size: 1.3rem;
+font-weight: 500;
+margin-bottom: 1rem;
+text-align: right;
+}
+
+.recover a {
+text-decoration: none;
+color:hsl(246, 51%, 54%);
+}
+
+.recover a:hover {
+color: var(--blue);
+text-decoration: underline;
+}
+
+input[type="submit"].auth-btn {
+width: 100%;
+font-size: 1.3rem;
+font-weight: 500;
+padding: 8px 0;
+border-radius: 5px;
+outline: none;
+border: none;
+background: #4070f4; 
+color: #ffffff; 
+cursor: pointer;
+transition: background 0.3s ease, transform 0.2s ease;
+text-align: center;
+}
+input[type="submit"].auth-btn:hover {
+background: hsl(135, 83%, 34%);
+transform: scale(1.05);
+}
+
+input[type="submit"].auth-btn:active {
+transform: scale(0.98);
+background: hsl(135, 83%, 30%);
+}
+
+.links{
+position:relative;
+margin-top:1rem;
+}
+
+.links p{
+font-size:1.25rem;
+font-weight:400;  
 }
