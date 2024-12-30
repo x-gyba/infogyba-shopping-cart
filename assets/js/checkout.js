@@ -243,3 +243,59 @@ function togglePasswordVisibility(formType, passwordFieldId) {
     eyeIconHide.style.display = "none"; // Oculta o ícone de esconder
   }
 }
+
+// Função para validar se o email é válido
+function validaEmail(email) {
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  return emailRegex.test(email);
+}
+
+// Validação do formulário de Login
+document.getElementById('signin-form').addEventListener('submit', function(event) {
+  const email = document.getElementById('signin-email').value;
+  const senha = document.getElementById('signin-senha').value;
+
+  // Verificar se o campo de email ou senha estão vazios
+  if (!email || !senha) {
+      event.preventDefault();
+      alert("Por favor, preencha todos os campos de login.");
+      return false;
+  }
+
+  // Verificar se o email é válido
+  if (!validaEmail(email)) {
+      event.preventDefault();
+      alert("Por favor, insira um email válido.");
+      return false;
+  }
+});
+
+// Validação do formulário de Registro
+document.getElementById('signup-form').addEventListener('submit', function(event) {
+  const nome = document.getElementById('fname').value;
+  const sobrenome = document.getElementById('lname').value;
+  const email = document.getElementById('signup-email').value;
+  const senha = document.getElementById('senha').value;
+  const confirmaSenha = document.getElementById('confirma-senha').value;
+
+  // Verificar se algum campo está vazio
+  if (!nome || !sobrenome || !email || !senha || !confirmaSenha) {
+      event.preventDefault();
+      alert("Por favor, preencha todos os campos.");
+      return false;
+  }
+
+  // Verificar se o email é válido
+  if (!validaEmail(email)) {
+      event.preventDefault();
+      alert("Por favor, insira um email válido.");
+      return false;
+  }
+
+  // Verificar se as senhas coincidem
+  if (senha !== confirmaSenha) {
+      event.preventDefault();
+      alert("As senhas não coincidem.");
+      return false;
+  }
+});

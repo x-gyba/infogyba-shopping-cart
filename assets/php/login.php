@@ -165,12 +165,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <form method="POST" action="" id="signin-form">
         <div class="input-group">
             <i class='bx bx-envelope'></i>
-            <input type="email" name="email" id="signin-email" placeholder="Insira seu email." required autocomplete="off">
+            <input type="email" name="email" id="signin-email" placeholder="Insira seu email." autocomplete="off">
             <label for="signin-email">Email</label>
         </div>
         <div class="input-group password-container">
             <i class='bx bxs-lock-alt'></i>
-            <input type="password" name="senha" id="signin-senha" placeholder="Insira sua senha." required autocomplete="off">
+            <input type="password" name="senha" id="signin-senha" placeholder="Insira sua senha." autocomplete="off">
             <label for="signin-senha">Senha</label>
             <i class='bx bx-show' id="eyeicon-show-login" onclick="togglePasswordVisibility('login', 'signin-senha')"></i>
             <i class='bx bx-hide' id="eyeicon-hide-login" onclick="togglePasswordVisibility('login', 'signin-senha')" style="display: none;"></i>
