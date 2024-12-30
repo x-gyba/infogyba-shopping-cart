@@ -62,44 +62,55 @@ if (session_status() == PHP_SESSION_NONE) {
           echo "</div>";
         }
         ?>
+        <form method="POST" action="#">
+        <button type="submit" class="checkout-btn">Finalizar Compra</button>
+        </form> 
        </div>
+       
        <div class="master-container">
-       <div class="container-steps">
-    <div class="step">
-    <div class="step-item">
-      <span class="circle active" id="step1-icon"><i class='bx bx-male-female'></i></span>
-      <h2 class="step-title">Login</h2>
-    </div>
-    <div class="step-item">
-      <span class="circle" id="step2-icon"><i class='bx bx-dollar'></i></span>
-      <h2 class="step-title">Pagamento</h2>
-    </div>
-    <div class="step-item">
-      <span class="circle" id="step3-icon"><i class='bx bxs-cart-alt'></i></span>
-      <h2 class="step-title">Revisão</h2>
-    </div>
-    <div class="progress-bar">
-      <span class="indicator" id="progress-indicator"></span>
-    </div>
-  </div>
-</div>
-<!-- Step 1: Login Form -->
-<div id="step1" class="step-content">
-  <?php include 'login.php'; ?> <!-- Formulário de login incluído aqui -->
-</div>
-<!-- Step 2: Payment Form --> 
-<div id="step2" class="step-content">
-  
-</div>
-<!-- Step 2: Payment Form --> 
-<div id="step3" class="step-content">
-  
-</div>
-<!-- Botões de navegação -->
-<div class="step-buttons">
-  <button id="prev" class="step-btn" disabled>Anterior</button>
-  <button id="next" class="step-btn">Próximo</button>
-</div>
+         <div class="container-steps">
+           <div class="step">
+             <div class="step-item">
+               <span class="circle active" id="step1-icon"><i class='bx bx-male-female'></i></span>
+               <h2 class="step-title">Login</h2>
+             </div>
+             <div class="step-item">
+               <span class="circle" id="step2-icon"><i class='bx bx-dollar'></i></span>
+               <h2 class="step-title">Pagamento</h2>
+             </div>
+             <div class="step-item">
+               <span class="circle" id="step3-icon"><i class='bx bxs-cart-alt'></i></span>
+               <h2 class="step-title">Revisão</h2>
+             </div>
+             <div class="progress-bar">
+               <span class="indicator" id="progress-indicator"></span>
+             </div>
+           </div>
+         </div>
+         
+         <!-- Step 1: Login Form -->
+         <div id="step1" class="step-content">
+           <?php include 'login.php'; ?> <!-- Formulário de login incluído aqui -->
+         </div>
+
+         <!-- Step 2: Payment Form -->
+         <div id="step2" class="step-content" style="display:none;">
+         <?php include 'payment.php'; ?> <!-- Formulário de pagamento incluído aqui -->
+         </div>
+
+         <!-- Step 3: Review Form -->
+         <div id="step3" class="step-content" style="display:none;">
+         <?php include 'review.php'; ?> <!-- Formulário de revisão incluído aqui -->
+         </div>
+
+         <!-- Botões de navegação -->
+         <div class="step-buttons">
+           <button id="prev" class="step-btn" disabled>Anterior</button>
+           <button id="next" class="step-btn">Próximo</button>
+         </div>
+       </div>
+
+   </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="../js/checkout.js"></script>

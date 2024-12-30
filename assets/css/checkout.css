@@ -70,9 +70,9 @@ label {
 
 .cart-summary .form-title {
   font-size: 1.8rem;
-  font-weight:500;
+  font-weight: 500;
   margin-bottom: 1.2rem;
-  padding:0.5rem;
+  padding: 0.5rem;
   color: var(--black);
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 }
@@ -88,8 +88,8 @@ label {
 .total-title {
   font-size: 1.5rem;
   font-weight: 500;
-  margin-bottom:0.5rem;
-  
+  margin-bottom: 0.5rem;
+
   display: flex;
   justify-content: center;
 }
@@ -367,7 +367,7 @@ label {
   background-color: transparent;
   border: none;
   border-bottom: 1px solid var(--grey);
-  padding-left: 1.5rem;
+  padding-left: 3rem;
   font-size: 15px;
 }
 
@@ -487,39 +487,37 @@ input[type="submit"].auth-btn:active {
 }
 
 .password-container input {
-  padding-right: 40px;  /* Espaço para os ícones */
+  padding-right: 40px; /* Espaço para os ícones */
 }
 
-/* Ícones de exibir/ocultar senha - Geral */
-.password-container #eyeicon-show,
-.password-container #eyeicon-hide,
+/* Ícones de exibir/ocultar senha - Login */
+.password-container #eyeicon-show-login,
+.password-container #eyeicon-hide-login,
 .password-container #eyeicon-show-signup,
 .password-container #eyeicon-hide-signup,
 .password-container #eyeicon-show-confirm,
 .password-container #eyeicon-hide-confirm {
   position: absolute;
-  right: 5px;
-  top: 30%;
+  right: 5px; /* Ajusta a distância da borda direita */
+  top: 35%; /* Posiciona verticalmente no meio do campo de entrada */
   transform: translateY(-50%);
-  font-size: 20px;
+  font-size: 20px; /* Tamanho do ícone */
   cursor: pointer;
-  color:var(--black);
+  color: var(--black);
 }
 
-/* Mudando a cor do ícone ao passar o mouse */
-.password-container #eyeicon-show:hover,
-.password-container #eyeicon-hide:hover,
+.password-container #eyeicon-show-login:hover,
+.password-container #eyeicon-hide-login:hover,
 .password-container #eyeicon-show-signup:hover,
 .password-container #eyeicon-hide-signup:hover,
 .password-container #eyeicon-show-confirm:hover,
 .password-container #eyeicon-hide-confirm:hover {
-  color: #333;
+  color: var(--blue2); /* Cor ao passar o mouse */
 }
 
-/* Inicialmente, o ícone de "ocultar" deve estar escondido */
-#eyeicon-hide,
+/* Inicialmente, os ícones de "ocultar" devem estar escondidos */
+#eyeicon-hide-login,
 #eyeicon-hide-signup,
 #eyeicon-hide-confirm {
   display: none;
 }
-

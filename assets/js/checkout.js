@@ -1,14 +1,11 @@
 // Seletor para os elementos das etapas
 const steps = document.querySelectorAll(".circle");
 const indicator = document.querySelector(".indicator");
-const authFormsContainer = document.querySelector(".auth-forms-container");
 const prevBtn = document.getElementById("prev");
 const nextBtn = document.getElementById("next");
-const signupForm = document.getElementById("signup");
 const signinForm = document.getElementById("signin");
-const signupBtn = document.getElementById("signup-btn");
-const signBtn = document.getElementById("sign-btn");
-const totalSteps = 3;  // Atualizado para 3 etapas: Login, Pagamento, Revisão
+const signupForm = document.getElementById("signup");
+const totalSteps = 3; // Atualizado para 3 etapas: Login, Pagamento, Revisão
 
 let currentStep = 0;
 let isDiscountApplied = false;
@@ -25,18 +22,19 @@ function updateSteps() {
   steps.forEach((step, idx) => {
     step.classList.toggle("active", idx <= currentStep); // Marca as etapas anteriores como ativas
   });
-  
+
   // Atualiza a largura da barra de progresso
   indicator.style.width = `${(currentStep / (totalSteps - 1)) * 100}%`;
 
-  // Exibe/esconde as etapas
+  // Atualiza a visibilidade das etapas
   document.querySelectorAll(".step-content").forEach((content, idx) => {
     content.style.display = idx === currentStep ? "block" : "none";
   });
 
   // Ajusta a visibilidade dos botões de navegação
   prevBtn.style.display = currentStep === 0 ? "none" : "inline-block";
-  nextBtn.textContent = currentStep === totalSteps - 1 ? "Finalizar" : "Próximo";
+  nextBtn.textContent =
+    currentStep === totalSteps - 1 ? "Finalizar" : "Próximo";
 }
 
 // Função para alternar entre os formulários de login e registro
@@ -51,12 +49,12 @@ function toggleForms() {
 }
 
 // Event listeners para alternar entre login e registro
-signupBtn.addEventListener("click", (e) => {
+document.getElementById("signup-btn").addEventListener("click", (e) => {
   e.preventDefault();
   toggleForms();
 });
 
-signBtn.addEventListener("click", (e) => {
+document.getElementById("sign-btn").addEventListener("click", (e) => {
   e.preventDefault();
   toggleForms();
 });
@@ -158,24 +156,14 @@ function clearExistingMessage() {
   }
 }
 
-// Inicializa as etapas
-updateSteps();
-
-// Função para simular o redirecionamento para a etapa de pagamento
-document.getElementById("signin").addEventListener("submit", function (e) {
-  e.preventDefault();
-
-  // Suponha que o login foi bem-sucedido, simule mover para a etapa de finalização
-  currentStep = 1; // Avançar para a etapa de pagamento
-  updateSteps();
-});
-
 // Funções de manipulação do desconto
 function createDiscountInfo(discountAmount) {
   const discountInfo = document.createElement("div");
   discountInfo.className = "discount-info discount-success";
   discountInfo.innerHTML = `
-    <div class="discount-title success-message"><strong>${messages.discountApplied}</strong></div>
+    <div class="discount-title success-message"><strong>${
+      messages.discountApplied
+    }</strong></div>
     <div class="discount-amount"><strong>Desconto aplicado:&nbsp;</strong> R$ ${discountAmount
       .toFixed(2)
       .replace(".", ",")}</div>`;
@@ -220,63 +208,38 @@ function resetDiscountInput() {
 // Função para atualizar as parcelas com base no desconto
 function updateInstallments(totalAfterDiscount) {
   const installmentsSelect = document.getElementById("installments");
-  installmentsSelect.innerHTML = ""; // Limpa as opções existentes
-
-  const totalElement = document.querySelector(".total-title");
-  const currentTotal = parseFloat(
-    totalElement.textContent.replace(/[^\d,]/g, "").replace(",", ".")
-  );
-  const totalToConsider = isDiscountApplied ? totalAfterDiscount : currentTotal;
-
   const installmentValues = {
-    1: totalToConsider.toFixed(2).replace(".", ","),
-    2: (totalToConsider / 2).toFixed(2).replace(".", ","),
-    3: (totalToConsider / 3).toFixed(2).replace(".", ","),
+    1: (totalAfterDiscount / 1).toFixed(2).replace(".", ","),
+    2: (totalAfterDiscount / 2).toFixed(2).replace(".", ","),
+    3: (totalAfterDiscount / 3).toFixed(2).replace(".", ","),
+    4: (totalAfterDiscount / 4).toFixed(2).replace(".", ","),
+    5: (totalAfterDiscount / 5).toFixed(2).replace(".", ","),
+    6: (totalAfterDiscount / 6).toFixed(2).replace(".", ","),
   };
 
-  for (const [numInstallments, installmentValue] of Object.entries(
-    installmentValues
-  )) {
-    const optionText = isDiscountApplied
-      ? `${numInstallments} x R$ ${installmentValue} (com desconto)`
-      : `${numInstallments} x R$ ${installmentValue}`;
+  Object.keys(installmentValues).forEach((installment) => {
     const option = document.createElement("option");
-    option.value = numInstallments;
-    option.textContent = optionText;
+    option.value = installmentValues[installment];
+    option.textContent = `${installment}x de R$ ${installmentValues[installment]}`;
     installmentsSelect.appendChild(option);
-  }
+  });
 }
 
- // Função para mostrar e esconder a senha
-function togglePasswordVisibility(formType, isShow) {
-  let passwordInput, eyeIconShow, eyeIconHide;
+function togglePasswordVisibility(formType, passwordFieldId) {
+  var passwordField = document.getElementById(passwordFieldId);
+  var eyeIconShow = document.getElementById("eyeicon-show-" + formType);
+  var eyeIconHide = document.getElementById("eyeicon-hide-" + formType);
 
-  if (formType === 'signup') {
-      // Para o formulário de registro (senha)
-      passwordInput = document.getElementById('senha');
-      eyeIconShow = document.getElementById('eyeicon-show-signup');
-      eyeIconHide = document.getElementById('eyeicon-hide-signup');
-  } else if (formType === 'confirm') {
-      // Para o campo de confirmação de senha
-      passwordInput = document.getElementById('confirma-senha');
-      eyeIconShow = document.getElementById('eyeicon-show-confirm');
-      eyeIconHide = document.getElementById('eyeicon-hide-confirm');
+  // Verifica se a senha está visível ou oculta
+  if (passwordField.type === "password") {
+    // Se a senha estiver oculta, exibe ela
+    passwordField.type = "text";
+    eyeIconShow.style.display = "none"; // Oculta o ícone de mostrar
+    eyeIconHide.style.display = "block"; // Exibe o ícone de esconder
   } else {
-      // Para o formulário de login (senha)
-      passwordInput = document.getElementById('signin-senha');
-      eyeIconShow = document.getElementById('eyeicon-show');
-      eyeIconHide = document.getElementById('eyeicon-hide');
-  }
-
-  if (isShow) {
-      // Exibe a senha e mostra o ícone de ocultar
-      passwordInput.type = "text";
-      eyeIconShow.style.display = "none"; // Esconde o ícone de mostrar
-      eyeIconHide.style.display = "inline-block"; // Mostra o ícone de esconder
-  } else {
-      // Oculta a senha e mostra o ícone de exibir
-      passwordInput.type = "password";
-      eyeIconShow.style.display = "inline-block"; // Mostra o ícone de mostrar
-      eyeIconHide.style.display = "none"; // Esconde o ícone de esconder
+    // Se a senha estiver visível, oculta ela
+    passwordField.type = "password";
+    eyeIconShow.style.display = "block"; // Exibe o ícone de mostrar
+    eyeIconHide.style.display = "none"; // Oculta o ícone de esconder
   }
 }
