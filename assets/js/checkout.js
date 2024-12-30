@@ -246,3 +246,37 @@ function updateInstallments(totalAfterDiscount) {
     installmentsSelect.appendChild(option);
   }
 }
+
+ // Função para mostrar e esconder a senha
+function togglePasswordVisibility(formType, isShow) {
+  let passwordInput, eyeIconShow, eyeIconHide;
+
+  if (formType === 'signup') {
+      // Para o formulário de registro (senha)
+      passwordInput = document.getElementById('senha');
+      eyeIconShow = document.getElementById('eyeicon-show-signup');
+      eyeIconHide = document.getElementById('eyeicon-hide-signup');
+  } else if (formType === 'confirm') {
+      // Para o campo de confirmação de senha
+      passwordInput = document.getElementById('confirma-senha');
+      eyeIconShow = document.getElementById('eyeicon-show-confirm');
+      eyeIconHide = document.getElementById('eyeicon-hide-confirm');
+  } else {
+      // Para o formulário de login (senha)
+      passwordInput = document.getElementById('signin-senha');
+      eyeIconShow = document.getElementById('eyeicon-show');
+      eyeIconHide = document.getElementById('eyeicon-hide');
+  }
+
+  if (isShow) {
+      // Exibe a senha e mostra o ícone de ocultar
+      passwordInput.type = "text";
+      eyeIconShow.style.display = "none"; // Esconde o ícone de mostrar
+      eyeIconHide.style.display = "inline-block"; // Mostra o ícone de esconder
+  } else {
+      // Oculta a senha e mostra o ícone de exibir
+      passwordInput.type = "password";
+      eyeIconShow.style.display = "inline-block"; // Mostra o ícone de mostrar
+      eyeIconHide.style.display = "none"; // Esconde o ícone de esconder
+  }
+}

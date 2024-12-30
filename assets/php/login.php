@@ -133,15 +133,21 @@ if (isset($_POST['signin'])) {
             <input type="email" name="email" id="signup-email" placeholder="Insira seu email." required>
             <label for="signup-email">Email</label>   
         </div>
-        <div class="input-group">
+        <div class="input-group password-container">
             <i class='bx bxs-lock-alt'></i>
             <input type="password" name="senha" id="senha" placeholder="Insira sua senha." required>
-            <label for="senha">Senha</label>   
+            <label for="senha">Senha</label>
+            <!-- Ícones de mostrar/ocultar senha -->
+            <i class='bx bx-show' id="eyeicon-show-signup" onclick="togglePasswordVisibility('signup', true)"></i>
+            <i class='bx bx-hide' id="eyeicon-hide-signup" onclick="togglePasswordVisibility('signup', false)" style="display: none;"></i>
         </div>
-        <div class="input-group">
+        <div class="input-group password-container">
             <i class='bx bxs-lock-alt'></i>
             <input type="password" name="confirma-senha" id="confirma-senha" placeholder="Confirme sua senha." required>
-            <label for="confirma-senha">Confirmar Senha</label>   
+            <label for="confirma-senha">Confirmar Senha</label>
+            <!-- Ícones de mostrar/ocultar senha -->
+            <i class='bx bx-show' id="eyeicon-show-confirm" onclick="togglePasswordVisibility('confirm', true)"></i>
+            <i class='bx bx-hide' id="eyeicon-hide-confirm" onclick="togglePasswordVisibility('confirm', false)" style="display: none;"></i>
         </div>
         <input type="submit" class="auth-btn" value="Cadastre-se" name="signup">        
     </form>    
@@ -160,10 +166,14 @@ if (isset($_POST['signin'])) {
             <input type="email" name="email" id="signin-email" placeholder="Insira seu email." required autocomplete="off">
             <label for="signin-email">Email</label>
         </div>
-        <div class="input-group">
+        <div class="input-group password-container">
             <i class='bx bxs-lock-alt'></i>
             <input type="password" name="senha" id="signin-senha" placeholder="Insira sua senha." required autocomplete="off">
             <label for="signin-senha">Senha</label>
+            <!-- Ícone de mostrar senha -->
+            <i class='bx bx-show' id="eyeicon-show" onclick="togglePasswordVisibility('login', true)"></i>
+            <!-- Ícone de ocultar senha -->
+            <i class='bx bx-hide' id="eyeicon-hide" onclick="togglePasswordVisibility('login', false)" style="display: none;"></i>
         </div>
         <p class="recover"><a href="#">Esqueci minha senha.</a></p>
         <input type="submit" class="auth-btn" value="Entrar" name="signin">
@@ -173,7 +183,7 @@ if (isset($_POST['signin'])) {
         </div>    
     </form>  
 </div>
-   
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="../js/checkout.js"></script>

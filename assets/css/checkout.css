@@ -357,8 +357,8 @@ label {
   width: 100%;
 }
 
-.container form{
-margin: 0 2rem;  
+.container form {
+  margin: 0 2rem;
 }
 
 .container input {
@@ -392,90 +392,134 @@ margin: 0 2rem;
 
 .container input:focus ~ label,
 input:not(:placeholder-shown) ~ label {
-top: -3rem;
-color:transparent;
+  top: -3rem;
+  color: transparent;
 }
 
 .auth-buttons {
-color:hsl(246, 51%, 54%);
-background-color: transparent;
-border: none;
-margin-top:0.5rem;
-font-size: 1.3rem;
-font-weight: 500;
+  color: hsl(246, 51%, 54%);
+  background-color: transparent;
+  border: none;
+  margin-top: 0.5rem;
+  font-size: 1.3rem;
+  font-weight: 500;
 }
 
 .auth-buttons:hover {
-color: var(--blue);
-text-decoration: underline;
+  color: var(--blue);
+  text-decoration: underline;
 }
 
 .box-title {
-position: relative;
-font-size: 1.8rem;
-font-weight:500;
-top: -1rem;
-color: var(--black);
+  position: relative;
+  font-size: 1.8rem;
+  font-weight: 500;
+  top: -1rem;
+  color: var(--black);
 }
 
 .input-group {
-position: relative;
-padding: 1% 0;
+  position: relative;
+  padding: 1% 0;
 }
 
 .input-group i {
-position: absolute;
-font-size: 1.6rem;
-color: var(--black);
+  position: absolute;
+  font-size: 1.6rem;
+  color: var(--black);
 }
 
 .recover {
-font-size: 1.3rem;
-font-weight: 500;
-margin-bottom: 1rem;
-text-align: right;
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  text-align: right;
 }
 
 .recover a {
-text-decoration: none;
-color:hsl(246, 51%, 54%);
+  text-decoration: none;
+  color: hsl(246, 51%, 54%);
 }
 
 .recover a:hover {
-color: var(--blue);
-text-decoration: underline;
+  color: var(--blue);
+  text-decoration: underline;
 }
 
 input[type="submit"].auth-btn {
-width: 100%;
-font-size: 1.3rem;
-font-weight: 500;
-padding: 8px 0;
-border-radius: 5px;
-outline: none;
-border: none;
-background: #4070f4; 
-color: #ffffff; 
-cursor: pointer;
-transition: background 0.3s ease, transform 0.2s ease;
-text-align: center;
+  width: 100%;
+  font-size: 1.3rem;
+  font-weight: 500;
+  padding: 8px 0;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+  background: #4070f4;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  text-align: center;
 }
+
 input[type="submit"].auth-btn:hover {
-background: hsl(135, 83%, 34%);
-transform: scale(1.05);
+  background: hsl(135, 83%, 34%);
+  transform: scale(1.05);
 }
 
 input[type="submit"].auth-btn:active {
-transform: scale(0.98);
-background: hsl(135, 83%, 30%);
+  transform: scale(0.98);
+  background: hsl(135, 83%, 30%);
 }
 
-.links{
-position:relative;
-margin-top:1rem;
+.links {
+  position: relative;
+  margin-top: 1rem;
 }
 
-.links p{
-font-size:1.25rem;
-font-weight:400;  
+.links p {
+  font-size: 1.25rem;
+  font-weight: 400;
 }
+
+/* Estilos para os ícones de exibir/ocultar a senha */
+.password-container {
+  position: relative;
+}
+
+.password-container input {
+  padding-right: 40px;  /* Espaço para os ícones */
+}
+
+/* Ícones de exibir/ocultar senha - Geral */
+.password-container #eyeicon-show,
+.password-container #eyeicon-hide,
+.password-container #eyeicon-show-signup,
+.password-container #eyeicon-hide-signup,
+.password-container #eyeicon-show-confirm,
+.password-container #eyeicon-hide-confirm {
+  position: absolute;
+  right: 5px;
+  top: 30%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  cursor: pointer;
+  color:var(--black);
+}
+
+/* Mudando a cor do ícone ao passar o mouse */
+.password-container #eyeicon-show:hover,
+.password-container #eyeicon-hide:hover,
+.password-container #eyeicon-show-signup:hover,
+.password-container #eyeicon-hide-signup:hover,
+.password-container #eyeicon-show-confirm:hover,
+.password-container #eyeicon-hide-confirm:hover {
+  color: #333;
+}
+
+/* Inicialmente, o ícone de "ocultar" deve estar escondido */
+#eyeicon-hide,
+#eyeicon-hide-signup,
+#eyeicon-hide-confirm {
+  display: none;
+}
+
