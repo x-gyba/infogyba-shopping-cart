@@ -1,22 +1,111 @@
 <?php
-// Verifica se a sessão já foi iniciada antes de chamar session_start()
+// Iniciar a sessão
 if (session_status() == PHP_SESSION_NONE) {
-    session_start();
+  session_start();
+}
+
+// Funções de validação e cálculo
+function validateDiscountCode($code)
+{
+  return $code === 'DESCONTO10';
+}
+
+function calculateInstallments($total, $maxInstallments = 6)
+{
+  $installments = [];
+  for ($i = 1; $i <= $maxInstallments; $i++) {
+    $installmentValue = $total / $i;
+    $installments[$i] = number_format($installmentValue, 2, ',', '.');
+  }
+  return $installments;
+}
+
+// Processar desconto
+$total = $_SESSION['cart_total'] ?? 0;
+$discount = 0;
+$isDiscountApplied = false;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['discount_code'])) {
+  if (validateDiscountCode($_POST['discount_code'])) {
+    $discount = $total * 0.1;
+    $_SESSION['discount'] = $discount;
+    $isDiscountApplied = true;
+  }
+} elseif (isset($_SESSION['discount'])) {
+  $discount = $_SESSION['discount'];
+  $isDiscountApplied = true;
+}
+
+$finalTotal = $total - $discount;
+$installmentValues = calculateInstallments($finalTotal);
+
+// Verificar se o usuário está logado antes de exibir o login
+$isLoggedIn = isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0;
+
+// Processa o login via AJAX
+if (isset($_POST['signin'])) {
+    include('conecta.php');
+    $conn = conecta();
+
+    $email = $_POST['email'];
+    $senha = $_POST['senha'];
+
+    // Verificar se os campos de email ou senha estão vazios
+    if (empty($email) || empty($senha)) {
+        echo "Por favor, preencha todos os campos de login!";
+        exit;
+    }
+
+    try {
+        // Buscar usuário no banco de dados
+        $sql = "SELECT * FROM login WHERE email = :email";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+            $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Verificar se a senha está correta
+            if (password_verify($senha, $usuario['senha'])) {
+                // Iniciar a sessão e armazenar dados do usuário
+                $_SESSION['user_logged_in'] = true;
+                $_SESSION['user_id'] = $usuario['id'];
+                $_SESSION['user_name'] = $usuario['usuario'];
+                $_SESSION['current_step'] = 1; // Atualiza para a etapa de pagamento
+
+                echo "success"; // Retorna a indicação de sucesso
+                exit;
+            } else {
+                echo "Senha incorreta!";
+                exit;
+            }
+        } else {
+            echo "Email não encontrado!";
+            exit;
+        }
+    } catch (PDOException $e) {
+        echo "Erro no banco de dados: " . $e->getMessage();
+        exit;
+    }
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teste</title>
-  <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"/>
-  <link rel="stylesheet" href="../css/checkout.css" />
+  <title>Checkout</title>
+  <link rel="stylesheet" href="/css/checkout.css" />
+  <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" />
 </head>
+
 <body>
   <div class="main-container">
     <div class="checkout-container">
+
       <!-- Cart summary section -->
       <div class="cart-summary">
         <h2 class="form-title">Resumo do Carrinho</h2>
@@ -32,9 +121,12 @@ if (session_status() == PHP_SESSION_NONE) {
           echo "<div class='carrinho-vazio'>Carrinho vazio.</div>";
         } else {
           echo "<div class='cart-summary-container'>";
+
+          // Exibe o total original sem processar descontos
           $totalFormatted = number_format($total, 2, ',', '.');
           echo "<div class='total-title'><strong>Total:</strong> R$ " . $totalFormatted . "</div>";
 
+          // Exibe os itens do carrinho
           echo "<div class='cart-items'>";
           foreach ($items as $index => $item) {
             $imageSrc = $imageSrcArray[$index] ?? '';
@@ -43,7 +135,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
             echo "<div style='display: flex; align-items: center; margin-bottom: 10px;'>";
             if ($imageSrc) {
-              echo "<div style='flex: 0 0 auto; margin-right: 4px;margin-top: 2px;'>";
+              echo "<div style='flex: 0 0 auto; margin-right: 6px;'>";
               echo "<img src='" . htmlspecialchars($imageSrc) . "' alt='Imagem do Carrinho' style='max-width: 75px; height: auto;' />";
               echo "</div>";
             }
@@ -52,6 +144,7 @@ if (session_status() == PHP_SESSION_NONE) {
           }
           echo "</div>";
 
+          // Formulário de desconto
           echo '<div class="discount-form-container">';
           echo '<form class="discount-form" onsubmit="return false;">';
           echo '<input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required autocomplete="off">';
@@ -62,57 +155,49 @@ if (session_status() == PHP_SESSION_NONE) {
           echo "</div>";
         }
         ?>
-        <form method="POST" action="#">
-        <button type="submit" class="checkout-btn">Finalizar Compra</button>
-        </form> 
-       </div>
-       
-       <div class="master-container">
-         <div class="container-steps">
-           <div class="step">
-             <div class="step-item">
-               <span class="circle active" id="step1-icon"><i class='bx bx-male-female'></i></span>
-               <h2 class="step-title">Login</h2>
-             </div>
-             <div class="step-item">
-               <span class="circle" id="step2-icon"><i class='bx bx-dollar'></i></span>
-               <h2 class="step-title">Pagamento</h2>
-             </div>
-             <div class="step-item">
-               <span class="circle" id="step3-icon"><i class='bx bxs-cart-alt'></i></span>
-               <h2 class="step-title">Revisão</h2>
-             </div>
-             <div class="progress-bar">
-               <span class="indicator" id="progress-indicator"></span>
-             </div>
-           </div>
-         </div>
-         
-         <!-- Step 1: Login Form -->
-         <div id="step1" class="step-content">
-           <?php include 'login.php'; ?> <!-- Formulário de login incluído aqui -->
-         </div>
+      </div>
 
-         <!-- Step 2: Payment Form -->
-         <div id="step2" class="step-content" style="display:none;">
-         <?php include 'payment.php'; ?> <!-- Formulário de pagamento incluído aqui -->
-         </div>
+  <!-- Steps section -->
+<div class="container-steps">
+  <div class="progress-container">
+    <!-- Barra de progresso -->
+    <div class="progress-bar">
+      <div class="progress-bar-inner"></div> <!-- A parte interna da barra de progresso -->
+    </div>
+    
+    <!-- Círculos dos passos -->
+    <div class="circle active" id="step1-icon">
+      <i class='bx bx-male-female'></i>
+      <div class="step-name">Login</div>
+    </div>
+    <div class="circle" id="step2-icon">
+      <i class='bx bx-dollar'></i>
+      <div class="step-name">Pagamento</div>
+    </div>
+    <div class="circle" id="step3-icon">
+      <i class='bx bxs-cart-alt'></i>
+      <div class="step-name">Revisão</div>
+    </div>
+  </div>  
+</div>
 
-         <!-- Step 3: Review Form -->
-         <div id="step3" class="step-content" style="display:none;">
-         <?php include 'review.php'; ?> <!-- Formulário de revisão incluído aqui -->
-         </div>
+<!-- Step 1: Login Form -->
+<div id="step1">
+  <?php include 'login.php'; ?> <!-- Formulário de login incluído aqui -->
+</div>
 
-         <!-- Botões de navegação -->
-         <div class="step-buttons">
-           <button id="prev" class="step-btn" disabled>Anterior</button>
-           <button id="next" class="step-btn">Próximo</button>
-         </div>
-       </div>
+<!-- Step 2: Pagamento Form -->
+<div id="step2" style="display:none;">
+  <?php include 'payment.php'; ?> <!-- Formulário de pagamento incluído aqui -->
+</div>
 
-   </div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="../js/checkout.js"></script>
+<!-- Step 3: Revisão -->
+<div id="step3" style="display:none;">
+  <?php include 'review.php'; ?> <!-- Formulário de revisão incluído aqui -->  
+</div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
+  <script src="../js/checkout.js"></script>
 </body>
+
 </html>

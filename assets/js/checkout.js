@@ -1,13 +1,9 @@
-// Seletor para os elementos das etapas
-const steps = document.querySelectorAll(".circle");
-const indicator = document.querySelector(".indicator");
-const prevBtn = document.getElementById("prev");
-const nextBtn = document.getElementById("next");
-const signinForm = document.getElementById("signin");
+const authFormsContainer = document.querySelector(".auth-forms-container");
 const signupForm = document.getElementById("signup");
-const totalSteps = 3; // Atualizado para 3 etapas: Login, Pagamento, Revisão
+const signinForm = document.getElementById("signin");
+const signupBtn = document.getElementById("signup-btn");
+const signBtn = document.getElementById("sign-btn");
 
-let currentStep = 0;
 let isDiscountApplied = false;
 const validDiscountCodes = ["DESCONTO10"];
 const messages = {
@@ -15,27 +11,6 @@ const messages = {
   discountAlreadyApplied: "Desconto já aplicado!",
   invalidDiscountCode: "Código de desconto inválido.",
 };
-
-// Função para atualizar as etapas e a visibilidade dos formulários
-function updateSteps() {
-  // Atualiza o estado das etapas
-  steps.forEach((step, idx) => {
-    step.classList.toggle("active", idx <= currentStep); // Marca as etapas anteriores como ativas
-  });
-
-  // Atualiza a largura da barra de progresso
-  indicator.style.width = `${(currentStep / (totalSteps - 1)) * 100}%`;
-
-  // Atualiza a visibilidade das etapas
-  document.querySelectorAll(".step-content").forEach((content, idx) => {
-    content.style.display = idx === currentStep ? "block" : "none";
-  });
-
-  // Ajusta a visibilidade dos botões de navegação
-  prevBtn.style.display = currentStep === 0 ? "none" : "inline-block";
-  nextBtn.textContent =
-    currentStep === totalSteps - 1 ? "Finalizar" : "Próximo";
-}
 
 // Função para alternar entre os formulários de login e registro
 function toggleForms() {
@@ -49,12 +24,12 @@ function toggleForms() {
 }
 
 // Event listeners para alternar entre login e registro
-document.getElementById("signup-btn").addEventListener("click", (e) => {
+signupBtn.addEventListener("click", (e) => {
   e.preventDefault();
   toggleForms();
 });
 
-document.getElementById("sign-btn").addEventListener("click", (e) => {
+signBtn.addEventListener("click", (e) => {
   e.preventDefault();
   toggleForms();
 });
@@ -62,34 +37,6 @@ document.getElementById("sign-btn").addEventListener("click", (e) => {
 // Inicializa a página com o formulário de login visível
 signinForm.style.display = "block";
 signupForm.style.display = "none";
-
-// Event listeners para os botões de navegação entre as etapas
-prevBtn.addEventListener("click", () => {
-  if (currentStep > 0) {
-    currentStep--;
-    updateSteps();
-  }
-});
-
-nextBtn.addEventListener("click", () => {
-  if (currentStep < totalSteps - 1) {
-    currentStep++;
-    updateSteps();
-  } else if (currentStep === totalSteps - 1) {
-    alert("Pedido finalizado com sucesso!");
-  }
-});
-
-// Previne o envio do formulário e avança para a próxima etapa
-document.querySelectorAll("form").forEach((form) => {
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    if (currentStep < totalSteps - 1) {
-      currentStep++;
-      updateSteps();
-    }
-  });
-});
 
 // Função para aplicar o desconto
 function applyDiscount(discountCode) {
@@ -208,94 +155,147 @@ function resetDiscountInput() {
 // Função para atualizar as parcelas com base no desconto
 function updateInstallments(totalAfterDiscount) {
   const installmentsSelect = document.getElementById("installments");
+  installmentsSelect.innerHTML = ""; // Limpa as opções existentes
+
+  const totalElement = document.querySelector(".total-title");
+  const currentTotal = parseFloat(
+    totalElement.textContent.replace(/[^\d,]/g, "").replace(",", ".")
+  );
+  const totalToConsider = isDiscountApplied ? totalAfterDiscount : currentTotal;
+
   const installmentValues = {
-    1: (totalAfterDiscount / 1).toFixed(2).replace(".", ","),
-    2: (totalAfterDiscount / 2).toFixed(2).replace(".", ","),
-    3: (totalAfterDiscount / 3).toFixed(2).replace(".", ","),
-    4: (totalAfterDiscount / 4).toFixed(2).replace(".", ","),
-    5: (totalAfterDiscount / 5).toFixed(2).replace(".", ","),
-    6: (totalAfterDiscount / 6).toFixed(2).replace(".", ","),
+    1: totalToConsider.toFixed(2).replace(".", ","),
+    2: (totalToConsider / 2).toFixed(2).replace(".", ","),
+    3: (totalToConsider / 3).toFixed(2).replace(".", ","),
   };
 
-  Object.keys(installmentValues).forEach((installment) => {
+  for (const [numInstallments, installmentValue] of Object.entries(
+    installmentValues
+  )) {
+    const optionText = isDiscountApplied
+      ? `${numInstallments} x R$ ${installmentValue} (com desconto)`
+      : `${numInstallments} x R$ ${installmentValue}`;
     const option = document.createElement("option");
-    option.value = installmentValues[installment];
-    option.textContent = `${installment}x de R$ ${installmentValues[installment]}`;
+    option.value = numInstallments;
+    option.textContent = optionText;
     installmentsSelect.appendChild(option);
+  }
+}
+
+// Função para alternar a visibilidade da senha
+$(document).ready(function () {
+  var currentStep = 1;
+
+  // Função para atualizar a barra de progresso e os ícones dos passos
+  function updateProgressBarAndIcons(step) {
+    // Reset classes
+    $(".circle").removeClass("active");
+    $(".progress-bar-inner").removeClass("active"); // Remove a classe active inicialmente
+    $(".progress-bar-inner").css("width", "0%"); // A largura da barra é 0% no começo
+
+    // Atualiza a parte interna da barra de progresso e os ícones conforme o passo
+    if (step === 1) {
+      $("#step1-icon").addClass("active");
+      $(".progress-bar-inner").css({
+        width: "33%",
+        "background-color": "var(--violet)", // Cor inicial da barra de progresso (violeta)
+      });
+    } else if (step === 2) {
+      $("#step1-icon").addClass("active");
+      $("#step2-icon").addClass("active");
+      $(".progress-bar-inner").css({
+        width: "50%", // A barra agora fica em 50% para o Passo 2
+        "background-color": "var(--green)", // Cor verde no passo 2
+      });
+    } else if (step === 3) {
+      $("#step1-icon").addClass("active");
+      $("#step2-icon").addClass("active");
+      $("#step3-icon").addClass("active");
+      $(".progress-bar-inner").css({
+        width: "50%", // A barra fica com 50% no Passo 3
+        "background-color": "var(--violet)", // Cor violeta no passo 3
+      });
+    }
+  }
+
+  // Lógica de login
+  $("#signin-form").on("submit", function (e) {
+    e.preventDefault();
+    var email = $("#signin-email").val();
+    var senha = $("#signin-senha").val();
+
+    $.ajax({
+      url: "", // Adicione a URL de envio do formulário aqui
+      type: "POST",
+      data: {
+        signin: true,
+        email: email,
+        senha: senha,
+      },
+      success: function (response) {
+        if (response === "success") {
+          alert("Login realizado com sucesso!");
+
+          // Após o login, a barra de progresso vai para Passo 2 (50%) com cor verde
+          updateProgressBarAndIcons(2); // Passo 2 após login (50%)
+
+          // A barra de progresso deve ser verde após o login
+          $(".progress-bar-inner")
+            .css({
+              width: "50%", // A barra deve ficar com 50% após o login
+              "background-color": "var(--green)", // Barra de progresso verde após o login
+            })
+            .addClass("active"); // Garante que a barra de progresso seja ativada corretamente
+
+          $("#step1").fadeOut(function () {
+            $("#step2").fadeIn(); // Exibe a etapa de pagamento
+          });
+
+          currentStep = 2; // Atualiza o passo atual para 2
+        } else {
+          alert(response); // Exibe o erro caso o login falhe
+        }
+      },
+      error: function () {
+        alert("Erro ao processar o login.");
+      },
+    });
   });
-}
 
-function togglePasswordVisibility(formType, passwordFieldId) {
-  var passwordField = document.getElementById(passwordFieldId);
-  var eyeIconShow = document.getElementById("eyeicon-show-" + formType);
-  var eyeIconHide = document.getElementById("eyeicon-hide-" + formType);
+  // Avançar entre os passos
+  $("#next").on("click", function () {
+    if (currentStep === 1) {
+      $("#step1").fadeOut(function () {
+        $("#step2").fadeIn();
+      });
+      updateProgressBarAndIcons(2); // Atualiza o progresso para Passo 2 (50%)
+      currentStep = 2; // Atualiza o passo atual
+    } else if (currentStep === 2) {
+      $("#step2").fadeOut(function () {
+        $("#step3").fadeIn();
+      });
+      updateProgressBarAndIcons(3); // Atualiza o progresso para Passo 3 (50%) com cor violeta
+      currentStep = 3; // Atualiza o passo atual
+    }
+  });
 
-  // Verifica se a senha está visível ou oculta
-  if (passwordField.type === "password") {
-    // Se a senha estiver oculta, exibe ela
-    passwordField.type = "text";
-    eyeIconShow.style.display = "none"; // Oculta o ícone de mostrar
-    eyeIconHide.style.display = "block"; // Exibe o ícone de esconder
-  } else {
-    // Se a senha estiver visível, oculta ela
-    passwordField.type = "password";
-    eyeIconShow.style.display = "block"; // Exibe o ícone de mostrar
-    eyeIconHide.style.display = "none"; // Oculta o ícone de esconder
-  }
-}
+  // Voltar entre os passos
+  $("#prev").on("click", function () {
+    if (currentStep === 2) {
+      $("#step2").fadeOut(function () {
+        $("#step1").fadeIn();
+      });
+      updateProgressBarAndIcons(1); // Atualiza o progresso para Passo 1 (33%)
+      currentStep = 1; // Atualiza o passo atual
+    } else if (currentStep === 3) {
+      $("#step3").fadeOut(function () {
+        $("#step2").fadeIn();
+      });
+      updateProgressBarAndIcons(2); // Atualiza o progresso para Passo 2 (50%)
+      currentStep = 2; // Atualiza o passo atual
+    }
+  });
 
-// Função para validar se o email é válido
-function validaEmail(email) {
-  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-  return emailRegex.test(email);
-}
-
-// Validação do formulário de Login
-document.getElementById('signin-form').addEventListener('submit', function(event) {
-  const email = document.getElementById('signin-email').value;
-  const senha = document.getElementById('signin-senha').value;
-
-  // Verificar se o campo de email ou senha estão vazios
-  if (!email || !senha) {
-      event.preventDefault();
-      alert("Por favor, preencha todos os campos de login.");
-      return false;
-  }
-
-  // Verificar se o email é válido
-  if (!validaEmail(email)) {
-      event.preventDefault();
-      alert("Por favor, insira um email válido.");
-      return false;
-  }
-});
-
-// Validação do formulário de Registro
-document.getElementById('signup-form').addEventListener('submit', function(event) {
-  const nome = document.getElementById('fname').value;
-  const sobrenome = document.getElementById('lname').value;
-  const email = document.getElementById('signup-email').value;
-  const senha = document.getElementById('senha').value;
-  const confirmaSenha = document.getElementById('confirma-senha').value;
-
-  // Verificar se algum campo está vazio
-  if (!nome || !sobrenome || !email || !senha || !confirmaSenha) {
-      event.preventDefault();
-      alert("Por favor, preencha todos os campos.");
-      return false;
-  }
-
-  // Verificar se o email é válido
-  if (!validaEmail(email)) {
-      event.preventDefault();
-      alert("Por favor, insira um email válido.");
-      return false;
-  }
-
-  // Verificar se as senhas coincidem
-  if (senha !== confirmaSenha) {
-      event.preventDefault();
-      alert("As senhas não coincidem.");
-      return false;
-  }
+  // Inicializa as etapas com o estilo correto (passo 1)
+  updateProgressBarAndIcons(1); // Inicializa o passo 1 com 33% e cor violeta
 });

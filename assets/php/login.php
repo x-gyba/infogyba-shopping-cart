@@ -88,9 +88,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $_SESSION['user_id'] = $usuario['id'];
                         $_SESSION['user_name'] = $usuario['usuario'];
 
-                        // Redirecionar para a página de pagamento (checkout.php)
-                        echo "<script>window.location.href='checkout.php';</script>";
-                        exit;
+                        // Exibir conteúdo de payment.php diretamente
+                        echo "<script>
+                                document.getElementById('signin').style.display = 'none';
+                                document.getElementById('payment').style.display = 'block';
+                              </script>";
                     } else {
                         echo "<script>alert('Senha incorreta!');</script>";
                     }
@@ -103,7 +105,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -160,30 +161,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <!-- Formulário de Login -->
-<div class="container" id="signin">
-    <h1 class="box-title">Login</h1>
-    <form method="POST" action="" id="signin-form">
-        <div class="input-group">
-            <i class='bx bx-envelope'></i>
-            <input type="email" name="email" id="signin-email" placeholder="Insira seu email." autocomplete="off">
-            <label for="signin-email">Email</label>
-        </div>
-        <div class="input-group password-container">
-            <i class='bx bxs-lock-alt'></i>
-            <input type="password" name="senha" id="signin-senha" placeholder="Insira sua senha." autocomplete="off">
-            <label for="signin-senha">Senha</label>
-            <i class='bx bx-show' id="eyeicon-show-login" onclick="togglePasswordVisibility('login', 'signin-senha')"></i>
-            <i class='bx bx-hide' id="eyeicon-hide-login" onclick="togglePasswordVisibility('login', 'signin-senha')" style="display: none;"></i>
-        </div>
-        <p class="recover"><a href="#">Esqueci minha senha.</a></p>
-        <input type="submit" class="auth-btn" value="Entrar" name="signin">
-        <div class="links">
-            <p>Não tenho uma conta.</p>
-            <button type="button" class="auth-buttons" id="signup-btn">Cadastre-se</button>    
-        </div>    
-    </form>  
-</div>
+    <div class="container" id="signin">
+        <h1 class="box-title">Login</h1>
+        <form method="POST" action="" id="signin-form">
+            <div class="input-group">
+                <i class='bx bx-envelope'></i>
+                <input type="email" name="email" id="signin-email" placeholder="Insira seu email." autocomplete="off">
+                <label for="signin-email">Email</label>
+            </div>
+            <div class="input-group password-container">
+                <i class='bx bxs-lock-alt'></i>
+                <input type="password" name="senha" id="signin-senha" placeholder="Insira sua senha." autocomplete="off">
+                <label for="signin-senha">Senha</label>
+                <i class='bx bx-show' id="eyeicon-show-login" onclick="togglePasswordVisibility('login', 'signin-senha')"></i>
+                <i class='bx bx-hide' id="eyeicon-hide-login" onclick="togglePasswordVisibility('login', 'signin-senha')" style="display: none;"></i>
+            </div>
+            <p class="recover"><a href="#">Esqueci minha senha.</a></p>
+            <input type="submit" class="auth-btn" value="Entrar" name="signin">
+            <div class="links">
+                <p>Não tenho uma conta.</p>
+                <button type="button" class="auth-buttons" id="signup-btn">Cadastre-se</button>    
+            </div>    
+        </form>  
+    </div>
 
+    <!-- Conteúdo de pagamento (Será exibido após login) -->
+    <div class="container" id="payment" style="display:none;">
+        <h2>Pagamento</h2>
+        <p>Informações de pagamento aqui.</p>
+        <!-- Seu conteúdo de pagamento aqui -->
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="../js/checkout.js"></script>
