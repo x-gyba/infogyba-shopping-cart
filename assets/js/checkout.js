@@ -38,6 +38,23 @@ signBtn.addEventListener("click", (e) => {
 signinForm.style.display = "block";
 signupForm.style.display = "none";
 
+// Função para alternar a visibilidade da senha
+function togglePasswordVisibility(formType, passwordFieldId) {
+  const passwordField = document.getElementById(passwordFieldId);
+  const toggleIconShow = document.getElementById("eyeicon-show-" + formType);
+  const toggleIconHide = document.getElementById("eyeicon-hide-" + formType);
+
+  if (passwordField.type === "password") {
+    passwordField.type = "text"; // Mostrar a senha
+    toggleIconShow.style.display = "none";
+    toggleIconHide.style.display = "inline";
+  } else {
+    passwordField.type = "password"; // Esconder a senha
+    toggleIconShow.style.display = "inline";
+    toggleIconHide.style.display = "none";
+  }
+}
+
 // Função para aplicar o desconto
 function applyDiscount(discountCode) {
   if (isDiscountApplied) {
