@@ -57,12 +57,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
-
-    // Login
     if (isset($_POST['signin'])) {
         $email = $_POST['email'];
         $senha = $_POST['senha'];
-
+    
         // Verificar se os campos de email ou senha estão vazios
         if (empty($email) || empty($senha)) {
             echo "<script>alert('Por favor, preencha todos os campos de login!');</script>";
@@ -75,24 +73,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $conn->prepare($sql);
                 $stmt->bindParam(':email', $email, PDO::PARAM_STR);
                 $stmt->execute();
-
+    
                 if ($stmt->rowCount() > 0) {
                     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
+    
                     // Verificar se a senha está correta
                     if (password_verify($senha, $usuario['senha'])) {
-                        // Iniciar a sessão e armazenar dados do usuário
-                        if (session_status() == PHP_SESSION_NONE) {
-                            session_start();
-                        }
-                        $_SESSION['user_id'] = $usuario['id'];
-                        $_SESSION['user_name'] = $usuario['usuario'];
-
-                        // Exibir conteúdo de payment.php diretamente
+                    // Iniciar a sessão e armazenar dados do usuário
+                    if (session_status() == PHP_SESSION_NONE) {
+                        session_start();
+                    }
+                    $_SESSION['user_id'] = $usuario['id'];
+                    $_SESSION['user_name'] = $usuario['usuario'];
+                    
+                    if ($usuario['email'] === 'admin@infogyba.com.br' || $usuario['id'] == 1) {
+                        echo "<script>window.location.replace('dashboard.php');</script>";
+                        exit();
+                    } else {
                         echo "<script>
-                                document.getElementById('signin').style.display = 'none';
-                                document.getElementById('payment').style.display = 'block';
-                              </script>";
+                            document.getElementById('signin').style.display = 'none';
+                            document.getElementById('payment').style.display = 'block';
+                        </script>";
+                    }
+                          
                     } else {
                         echo "<script>alert('Senha incorreta!');</script>";
                     }
@@ -104,6 +107,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
+    
+}
+?>
+
 }
 ?>
 

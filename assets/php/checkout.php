@@ -50,14 +50,12 @@ if (isset($_POST['signin'])) {
     $email = $_POST['email'];
     $senha = $_POST['senha'];
 
-    // Verificar se os campos de email ou senha estão vazios
     if (empty($email) || empty($senha)) {
         echo "Por favor, preencha todos os campos de login!";
         exit;
     }
 
     try {
-        // Buscar usuário no banco de dados
         $sql = "SELECT * FROM login WHERE email = :email";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':email', $email);
@@ -66,15 +64,16 @@ if (isset($_POST['signin'])) {
         if ($stmt->rowCount() > 0) {
             $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Verificar se a senha está correta
             if (password_verify($senha, $usuario['senha'])) {
-                // Iniciar a sessão e armazenar dados do usuário
                 $_SESSION['user_logged_in'] = true;
                 $_SESSION['user_id'] = $usuario['id'];
                 $_SESSION['user_name'] = $usuario['usuario'];
-                $_SESSION['current_step'] = 1; // Atualiza para a etapa de pagamento
-
-                echo "success"; // Retorna a indicação de sucesso
+                
+                if ($usuario['email'] === 'admin@infogyba.com.br' || $usuario['id'] == 1) {
+                    echo "admin";
+                } else {
+                    echo "success";
+                }
                 exit;
             } else {
                 echo "Senha incorreta!";
@@ -89,6 +88,7 @@ if (isset($_POST['signin'])) {
         exit;
     }
 }
+
 ?>
 
 <!DOCTYPE html>

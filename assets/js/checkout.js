@@ -238,39 +238,25 @@ $(document).ready(function () {
   // Lógica de login
   $("#signin-form").on("submit", function (e) {
     e.preventDefault();
-    var email = $("#signin-email").val();
-    var senha = $("#signin-senha").val();
-
     $.ajax({
-      url: "", // Adicione a URL de envio do formulário aqui
+      url: "", // Adicione a URL de envio do formulário
       type: "POST",
       data: {
         signin: true,
-        email: email,
-        senha: senha,
+        email: $("#signin-email").val(),
+        senha: $("#signin-senha").val(),
       },
       success: function (response) {
-        if (response === "success") {
-          alert("Login realizado com sucesso!");
-
-          // Após o login, a barra de progresso vai para Passo 2 (50%) com cor verde
-          updateProgressBarAndIcons(2); // Passo 2 após login (50%)
-
-          // A barra de progresso deve ser verde após o login
-          $(".progress-bar-inner")
-            .css({
-              width: "50%", // A barra deve ficar com 50% após o login
-              "background-color": "var(--green)", // Barra de progresso verde após o login
-            })
-            .addClass("active"); // Garante que a barra de progresso seja ativada corretamente
-
-          $("#step1").fadeOut(function () {
-            $("#step2").fadeIn(); // Exibe a etapa de pagamento
+        if (response === "admin") {
+          window.location.href = 'dashboard.php'; // Redireciona para o painel de administração
+        } else if (response === "success") {
+          updateProgressBarAndIcons(2);
+          $("#step1").fadeOut(() => {
+            $("#step2").fadeIn();
           });
-
-          currentStep = 2; // Atualiza o passo atual para 2
+          currentStep = 2;
         } else {
-          alert(response); // Exibe o erro caso o login falhe
+          alert(response); // Exibe a resposta do servidor, se o login falhar
         }
       },
       error: function () {
