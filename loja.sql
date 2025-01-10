@@ -1,49 +1,74 @@
-CREATE DATABASE IF NOT EXISTS loja;
-USE loja;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
--- Tabela de usuários
-CREATE TABLE usuarios (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    senha VARCHAR(255) NOT NULL,
-    cep VARCHAR(10),
-    endereco VARCHAR(255),
-    bairro VARCHAR(100),
-    cidade VARCHAR(100),
-    estado VARCHAR(100),
-    cpf VARCHAR(14) NOT NULL UNIQUE, -- CPF é único
-    telefone VARCHAR(15),
-    data_nascimento DATE,
-    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
--- Tabela de produtos
-CREATE TABLE produtos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    descricao TEXT,
-    preco DECIMAL(10, 2) NOT NULL,
-    estoque INT NOT NULL
-);
+CREATE DATABASE IF NOT EXISTS `loja` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `loja`;
 
--- Tabela de pedidos
-CREATE TABLE pedidos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT,
-    data_pedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    status ENUM('pendente', 'concluído', 'cancelado') DEFAULT 'pendente',
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL
-);
+CREATE TABLE `cart_temp` (
+  `id` int(11) NOT NULL,
+  `session_id` varchar(255) NOT NULL,
+  `product_name` varchar(255) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `image_src` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- Tabela de itens de pedido
-CREATE TABLE itens_pedido (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    pedido_id INT NOT NULL,  -- Definido como NOT NULL
-    produto_id INT NOT NULL,  -- Definido como NOT NULL
-    quantidade INT NOT NULL,
-    preco_unitario DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE CASCADE,
-    FOREIGN KEY (produto_id) REFERENCES produtos(id) ON DELETE CASCADE
-);
+CREATE TABLE `login` (
+  `id` int(11) NOT NULL,
+  `usuario` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `senha` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
+INSERT INTO `login` (`id`, `usuario`, `email`, `senha`, `created_at`) VALUES
+(1, 'Admin', 'admin@infogyba.com.br', '$2y$10$Bn.xBsD.jM9.MBr4kLF.G.Z0s07URO22SHx5W2Zz.QkI3X3TvfAd2', '2025-01-10 19:21:24'),
+(2, 'Clayton Campos', 'infogyba@zmail.com', '$2y$10$8ReMWL5JgCHxvSmIRLQHBuK9n/B2TSz/CS8xY42A1mE8n4g/loqG2', '2025-01-10 19:24:30');
+
+CREATE TABLE `Pagamentos` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `product_name` varchar(255) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  `price` decimal(10,2) NOT NULL,
+  `image_src` varchar(255) DEFAULT NULL,
+  `payment_date` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+
+ALTER TABLE `cart_temp`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `login`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+ALTER TABLE `Pagamentos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+
+ALTER TABLE `cart_temp`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `login`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+ALTER TABLE `Pagamentos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+ALTER TABLE `Pagamentos`
+  ADD CONSTRAINT `Pagamentos_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `login` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
