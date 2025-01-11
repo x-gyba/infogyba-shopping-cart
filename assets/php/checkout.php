@@ -126,37 +126,42 @@ if (isset($_POST['signin'])) {
           // Exibe o total original sem processar descontos
           $totalFormatted = number_format($total, 2, ',', '.');
           echo "<div class='total-title'><strong>Total:</strong> R$ " . $totalFormatted . "</div>";
-
-          // Exibe os itens do carrinho
-          echo "<div class='cart-items'>";
-          foreach ($items as $index => $item) {
-            $imageSrc = $imageSrcArray[$index] ?? '';
-            $quantity = $quantities[$index] ?? 0;
-            $quantityDisplay = ($quantity == 1) ? "x1" : "x" . htmlspecialchars($quantity);
-
-            echo "<div style='display: flex; align-items: center; margin-bottom: 10px;'>";
-            if ($imageSrc) {
-              echo "<div style='flex: 0 0 auto; margin-right: 6px;'>";
-              echo "<img src='" . htmlspecialchars($imageSrc) . "' alt='Imagem do Carrinho' style='max-width: 75px; height: auto;' />";
-              echo "</div>";
-            }
-            echo "<div class='qtd-item' style='flex: 1;'>" . nl2br(htmlspecialchars($item)) . " " . $quantityDisplay . "</div>";
-            echo "</div>";
-          }
-          echo "</div>";
-
-          // Formulário de desconto
-          echo '<div class="discount-form-container">';
-          echo '<form class="discount-form" onsubmit="return false;">';
-          echo '<input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required autocomplete="off">';
-          echo '<button class="discount-btn" onclick="applyDiscount()">Aplicar</button>';
-          echo '</form>';
-          echo '</div>';
-          echo ' <div class="discount-message"></div>';
-          echo "</div>";
-        }
-        ?>
-      </div>
+        // Exibe os itens do carrinho
+echo "<div class='cart-items' id='cart-items'>";
+foreach ($items as $index => $item) {
+    $imageSrc = $imageSrcArray[$index] ?? '';
+    $quantity = $quantities[$index] ?? 0;
+    $quantityDisplay = ($quantity == 1) ? "x1" : "x" . htmlspecialchars($quantity);
+    echo "<div style='display: flex; align-items: center; margin-bottom: 10px;'>";
+    if ($imageSrc) {
+        echo "<div style='flex: 0 0 auto; margin-right: 6px;'>";
+        echo "<img src='" . htmlspecialchars($imageSrc) . "' alt='Imagem do Carrinho' style='max-width: 75px; height: auto;' />";
+        echo "</div>";
+    }
+    echo "<div class='qtd-item' style='flex: 1;'>" . nl2br(htmlspecialchars($item)) . " " . $quantityDisplay . "</div>";
+    echo "</div>";
+}
+echo "</div>";
+// Formulário de desconto
+echo '<div class="discount-form-container">';
+echo '<form class="discount-form" onsubmit="return false;">';
+echo '<input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required autocomplete="off">';
+echo '<button class="discount-btn" onclick="applyDiscount()">Aplicar</button>';
+echo '</form>';
+echo '</div>';
+echo ' <div class="discount-message"></div>';
+echo "</div>";
+// Adicionando a mensagem "Confirma a compra?" após o input
+echo '<div id="confirmation-message">';
+echo '<p>Confirma a compra?</p>';
+echo '<div class="button-container">';
+echo '<button type="button" id="confirm-yes">Sim</button>';
+echo '<button type="button" id="confirm-no">Não</button>';
+echo '</div>';
+echo '</div>';
+ }
+ ?>
+ </div>
 
   <!-- Steps section -->
 <div class="container-steps">

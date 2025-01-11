@@ -3,13 +3,16 @@ const signupForm = document.getElementById("signup");
 const signinForm = document.getElementById("signin");
 const signupBtn = document.getElementById("signup-btn");
 const signBtn = document.getElementById("sign-btn");
-
+const confirmationMessage = document.getElementById('confirmation-message');
+const confirmYesButton = document.getElementById('confirm-yes');
+const confirmNoButton = document.getElementById('confirm-no');
+const discountForm = document.querySelector('.discount-form-container');
 let isDiscountApplied = false;
 const validDiscountCodes = ["DESCONTO10"];
 const messages = {
-  discountApplied: "Você ganhou 10% de desconto!",
-  discountAlreadyApplied: "Desconto já aplicado!",
-  invalidDiscountCode: "Código de desconto inválido.",
+discountApplied: "Você ganhou 10% de desconto!",
+discountAlreadyApplied: "Desconto já aplicado!",
+invalidDiscountCode: "Código de desconto inválido.",
 };
 
 // Função para alternar entre os formulários de login e registro
@@ -168,7 +171,7 @@ function resetDiscountInput() {
     }, 3000);
   }
 }
-
+   
 // Função para atualizar as parcelas com base no desconto
 function updateInstallments(totalAfterDiscount) {
   const installmentsSelect = document.getElementById("installments");
@@ -198,6 +201,72 @@ function updateInstallments(totalAfterDiscount) {
     installmentsSelect.appendChild(option);
   }
 }
+
+// Função para rolagem automática
+function autoScrollProducts() {
+  const cartContainer = document.getElementById('cart-items');
+  if (!cartContainer) return;
+
+  // Configurações do scroll
+  const scrollSpeed = 30; // Pixels por scroll
+  const scrollInterval = 3000; // Tempo entre cada scroll (3 segundos)
+  let scrollPosition = 0;
+  
+  // Função que realiza o scroll
+  function scroll() {
+      if (!cartContainer) return;
+      
+      // Se chegou ao final, volta ao início
+      if (scrollPosition >= cartContainer.scrollHeight - cartContainer.clientHeight) {
+          scrollPosition = 0;
+      } else {
+          scrollPosition += scrollSpeed;
+      }
+
+      cartContainer.scrollTo({
+          top: scrollPosition,
+          behavior: 'smooth'
+      });
+  }
+
+  // Inicia o autoscroll
+  const scrollTimer = setInterval(scroll, scrollInterval);
+
+  // Para o autoscroll quando o mouse está sobre o container
+  cartContainer.addEventListener('mouseenter', () => {
+      clearInterval(scrollTimer);
+  });
+
+  // Reinicia o autoscroll quando o mouse sai do container
+  cartContainer.addEventListener('mouseleave', () => {
+      scrollPosition = cartContainer.scrollTop;
+      setInterval(scroll, scrollInterval);
+  });
+}
+// Função para lidar com os cliques nos botões "Sim" e "Não"
+function handleConfirmation() {
+  // Adiciona o evento de clique para o botão "Sim"
+  confirmYesButton.addEventListener('click', function() {
+    // Exibe o alerta
+    alert('Preencha os dados de Login para prosseguir com a compra.');
+    
+    // Oculta a mensagem de confirmação, os botões e o formulário de desconto
+    confirmationMessage.style.display = 'none';
+    discountForm.style.display = 'none'; // Oculta o formulário de desconto
+  });
+
+  // Adiciona o evento de clique para o botão "Não"
+  confirmNoButton.addEventListener('click', function() {
+    // Impede o redirecionamento para index.html
+    event.preventDefault(); // Impede o comportamento padrão do botão, se houver.
+
+    // Redireciona para index.html
+    window.location.href = '../../index.html'; 
+  });
+}
+
+// Chama a função quando o script for carregado
+handleConfirmation();
 
 // Função para alternar a visibilidade da senha
 $(document).ready(function () {

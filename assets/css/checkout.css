@@ -60,19 +60,19 @@ label {
   flex-wrap: wrap;
 }
 
-
 /* cart-summary */
 .cart-summary {
   position: fixed;
   left: calc(50% - 60rem);
-  top: 8rem;
+  top: 4rem;
   width: 35rem;
   background-color: var(--white);
   border: 1px solid var(--grey);
   border-radius: 1rem;
-  padding: 2rem;
+  padding: 1rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   z-index: 2;
+  overflow: hidden;
 }
 
 .cart-summary .form-title {
@@ -96,16 +96,48 @@ label {
   font-size: 1.5rem;
   font-weight: 500;
   margin-bottom: 0.5rem;
-
   display: flex;
   justify-content: center;
+}
+
+#cart-items {
+  max-height:30rem; /* Altura máxima do container */
+  overflow-y: auto;  /* Habilita a barra de rolagem vertical */
+  position: relative;
+  padding: 10px;
+  
+  scroll-behavior: smooth;
+}
+
+/* Estilo para os itens dentro do carrinho */
+#cart-items > div {
+  padding: 10px 0;
+  transition: all 0.3s ease;
+}
+
+/* Estilização da barra de rolagem */
+#cart-items::-webkit-scrollbar {
+  width: 6px;
+}
+
+#cart-items::-webkit-scrollbar-track {
+  background:var(--white);
+}
+
+#cart-items::-webkit-scrollbar-thumb {
+  background:var(--white);
+  border-radius: 3px;
+}
+
+#cart-items::-webkit-scrollbar-thumb:hover {
+  background: var(--grey);
 }
 
 /* Discount */
 .discount-form-container {
   display: flex;
   justify-content: center;
-  margin-top: 3rem;
+  margin-top: 1.25rem;
   padding: 0 1rem;
 }
 
@@ -238,6 +270,58 @@ label {
 .discount-btn {
   transition: opacity 0.5s ease;
 }
+ /* Mensagem de confirmação */
+#confirmation-message {
+  position: relative;
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+  padding: 1.5rem;
+  text-align: center; 
+  color: var(--black);
+  width: 90%;
+  max-width: 400px; 
+  margin: 1rem auto;
+}
+/* Estilo para o texto */
+#confirmation-message p {
+  font-size: 1.4rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+/* Botões de confirmação */
+#confirmation-message .button-container {
+  display: flex;
+  justify-content: center;
+  gap:0.625rem; 
+}
+#confirmation-message button {
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#confirmation-message #confirm-yes {
+background-color: var(--blue2);
+color: var(--white);
+}
+
+#confirmation-message #confirm-yes:hover {
+  background-color: var(--green);
+}
+#confirmation-message #confirm-no {
+  background-color: var(--blue2);
+  color: var(--white);
+}
+
+#confirmation-message #confirm-no:hover {
+  background-color: var(--green);
+}
 
 /* Estilo para os passos */
 .container-steps {
@@ -330,7 +414,7 @@ label {
   background-color: var(--white);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   position: absolute;
-  top: 22%; /* Ajusta o espaço entre os dois containers */
+  top: 20%; /* Ajusta o espaço entre os dois containers */
   left: 28%;
   transform: translateX(50%) translateY(0);
   max-width: 33.59%; /* Substitui 430px por 33.59% da largura da tela */
