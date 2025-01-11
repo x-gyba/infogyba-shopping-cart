@@ -26,7 +26,8 @@ $discount = 0;
 $isDiscountApplied = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['discount_code'])) {
-  if (validateDiscountCode($_POST['discount_code'])) {
+  $discountCode = htmlspecialchars(trim($_POST['discount_code'])); // Sanitizar entrada
+  if (validateDiscountCode($discountCode)) {
     $discount = $total * 0.1;
     $_SESSION['discount'] = $discount;
     $isDiscountApplied = true;
@@ -47,8 +48,8 @@ if (isset($_POST['signin'])) {
     include('conecta.php');
     $conn = conecta();
 
-    $email = $_POST['email'];
-    $senha = $_POST['senha'];
+    $email = htmlspecialchars(trim($_POST['email'])); // Sanitizar entrada
+    $senha = htmlspecialchars(trim($_POST['senha'])); // Sanitizar entrada
 
     if (empty($email) || empty($senha)) {
         echo "Por favor, preencha todos os campos de login!";
@@ -58,7 +59,7 @@ if (isset($_POST['signin'])) {
     try {
         $sql = "SELECT * FROM login WHERE email = :email";
         $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
 
         if ($stmt->rowCount() > 0) {

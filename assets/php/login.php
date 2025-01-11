@@ -8,14 +8,20 @@ function validaEmail($email) {
     return filter_var($email, FILTER_VALIDATE_EMAIL);
 }
 
+// Função para escapar dados de entrada contra XSS
+function sanitizeInput($data) {
+    return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
+}
+
 // Verificar se o formulário foi enviado (registro ou login)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Registro
     if (isset($_POST['signup'])) {
-        $nome = $_POST['fname'];
-        $sobrenome = $_POST['lname'];
-        $email = $_POST['email'];
+        // Sanitizar e escapar os dados de entrada
+        $nome = sanitizeInput($_POST['fname']);
+        $sobrenome = sanitizeInput($_POST['lname']);
+        $email = sanitizeInput($_POST['email']);
         $senha = $_POST['senha'];
         $confirmaSenha = $_POST['confirma-senha'];
 
@@ -57,57 +63,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
-    if (isset($_POST['signin'])) {
-        $email = $_POST['email'];
-        $senha = $_POST['senha'];
-    
-        // Verificar se os campos de email ou senha estão vazios
-        if (empty($email) || empty($senha)) {
-            echo "<script>alert('Por favor, preencha todos os campos de login!');</script>";
-        } elseif (!validaEmail($email)) {
-            echo "<script>alert('Por favor, insira um email válido!');</script>";
-        } else {
-            try {
-                // Buscar usuário no banco de dados
-                $sql = "SELECT * FROM login WHERE email = :email";
-                $stmt = $conn->prepare($sql);
-                $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-                $stmt->execute();
-    
-                if ($stmt->rowCount() > 0) {
-                    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-                    // Verificar se a senha está correta
-                    if (password_verify($senha, $usuario['senha'])) {
+
+    // Login
+if (isset($_POST['signin'])) {
+    // Sanitizar e escapar os dados de entrada
+    $email = sanitizeInput($_POST['email']);
+    $senha = $_POST['senha'];
+
+    // Verificar se os campos de email ou senha estão vazios
+    if (empty($email) || empty($senha)) {
+        echo "<script>alert('Por favor, preencha todos os campos de login!');</script>";
+    } elseif (!validaEmail($email)) {
+        echo "<script>alert('Por favor, insira um email válido!');</script>";
+    } else {
+        try {
+            // Buscar usuário no banco de dados
+            $sql = "SELECT * FROM login WHERE email = :email";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+
+            if ($stmt->rowCount() > 0) {
+                $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                // Verificar se a senha está correta
+                if (password_verify($senha, $usuario['senha'])) {
                     // Iniciar a sessão e armazenar dados do usuário
                     if (session_status() == PHP_SESSION_NONE) {
                         session_start();
                     }
                     $_SESSION['user_id'] = $usuario['id'];
                     $_SESSION['user_name'] = $usuario['usuario'];
-                    
                     if ($usuario['email'] === 'admin@infogyba.com.br' || $usuario['id'] == 1) {
-                        echo "<script>window.location.replace('dashboard.php');</script>";
-                        exit();
+                        echo "<script>
+                            alert('Login bem-sucedido, bem-vindo de volta, administrador!');
+                            window.location.replace('dashboard.php');
+                        </script>";
                     } else {
                         echo "<script>
-                            document.getElementById('signin').style.display = 'none';
-                            document.getElementById('payment').style.display = 'block';
+                            alert('Login bem-sucedido!');
+                            window.location.replace('dashboard.php');
                         </script>";
                     }
-                          
-                    } else {
-                        echo "<script>alert('Senha incorreta!');</script>";
-                    }
+                                                    
+
                 } else {
-                    echo "<script>alert('Email não encontrado!');</script>";
+                    echo "<script>alert('Senha incorreta!');</script>";
                 }
-            } catch (PDOException $e) {
-                echo "<script>alert('Erro no banco de dados: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8') . "');</script>";
+            } else {
+                echo "<script>alert('Email não encontrado!');</script>";
             }
+        } catch (PDOException $e) {
+            echo "<script>alert('Erro no banco de dados: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8') . "');</script>";
         }
     }
-    
+}
+
 }
 ?>
 <!DOCTYPE html>
