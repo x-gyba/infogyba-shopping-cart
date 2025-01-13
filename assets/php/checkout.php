@@ -126,22 +126,25 @@ if (isset($_POST['signin'])) {
           // Exibe o total original sem processar descontos
           $totalFormatted = number_format($total, 2, ',', '.');
           echo "<div class='total-title'><strong>Total:</strong> R$ " . $totalFormatted . "</div>";
-        // Exibe os itens do carrinho
-echo "<div class='cart-items' id='cart-items'>";
-foreach ($items as $index => $item) {
-    $imageSrc = $imageSrcArray[$index] ?? '';
-    $quantity = $quantities[$index] ?? 0;
-    $quantityDisplay = ($quantity == 1) ? "x1" : "x" . htmlspecialchars($quantity);
-    echo "<div style='display: flex; align-items: center; margin-bottom: 10px;'>";
-    if ($imageSrc) {
-        echo "<div style='flex: 0 0 auto; margin-right: 6px;'>";
-        echo "<img src='" . htmlspecialchars($imageSrc) . "' alt='Imagem do Carrinho' style='max-width: 75px; height: auto;' />";
+         // Exibe os itens do carrinho
+         echo "<div class='cart-items' id='cart-items'>";
+        foreach ($items as $index => $item) {
+        $imageSrc = $imageSrcArray[$index] ?? '';
+        $quantity = $quantities[$index] ?? 0;
+        $quantityDisplay = ($quantity == 1) ? "x1" : "x" . htmlspecialchars($quantity);
+        echo "<div style='display: flex; align-items: center; margin-bottom: 8px;' id='cart-item-$index'>";
+        if ($imageSrc) {
+        echo "<div style='flex: 0 0 auto; margin-right: 5px;'>";
+        echo "<img src='" . htmlspecialchars($imageSrc) . "' alt='Imagem do Carrinho' style='max-width: 70px; height: auto;' />";
         echo "</div>";
     }
     echo "<div class='qtd-item' style='flex: 1;'>" . nl2br(htmlspecialchars($item)) . " " . $quantityDisplay . "</div>";
+    // Adiciona o botão de lixeira
+    echo "<button type='button' class='remove-btn' onclick='removeItem($index)'><i class='bx bxs-trash'></i></button>";
     echo "</div>";
 }
 echo "</div>";
+
 // Formulário de desconto
 echo '<div class="discount-form-container">';
 echo '<form class="discount-form" onsubmit="return false;">';
