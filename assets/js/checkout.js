@@ -1,21 +1,26 @@
+/* Verifique se a variável já está declarada */
+if (typeof isDiscountApplied === "undefined") {
+  var isDiscountApplied = false; // Use 'var' to ensure it persists across function calls
+}
+
 const authFormsContainer = document.querySelector(".auth-forms-container");
 const signupForm = document.getElementById("signup");
 const signinForm = document.getElementById("signin");
 const signupBtn = document.getElementById("signup-btn");
 const signBtn = document.getElementById("sign-btn");
-const confirmationMessage = document.getElementById('confirmation-message');
-const confirmYesButton = document.getElementById('confirm-yes');
-const confirmNoButton = document.getElementById('confirm-no');
-const discountForm = document.querySelector('.discount-form-container');
-let isDiscountApplied = false;
+const confirmationMessage = document.getElementById("confirmation-message");
+const confirmYesButton = document.getElementById("confirm-yes");
+const confirmNoButton = document.getElementById("confirm-no");
+const discountForm = document.querySelector(".discount-form-container");
+
 const validDiscountCodes = ["DESCONTO10"];
 const messages = {
-discountApplied: "Você ganhou 10% de desconto!",
-discountAlreadyApplied: "Desconto já aplicado!",
-invalidDiscountCode: "Código de desconto inválido.",
+  discountApplied: "Você ganhou 10% de desconto!",
+  discountAlreadyApplied: "Desconto já aplicado!",
+  invalidDiscountCode: "Código de desconto inválido.",
 };
 
-// Função para alternar entre os formulários de login e registro
+/* Função para alternar entre formulários de inscrição e login */
 function toggleForms() {
   if (signinForm.style.display === "none") {
     signinForm.style.display = "block";
@@ -26,7 +31,7 @@ function toggleForms() {
   }
 }
 
-// Event listeners para alternar entre login e registro
+/* Event listeners para alternar entre formulários */
 signupBtn.addEventListener("click", (e) => {
   e.preventDefault();
   toggleForms();
@@ -37,28 +42,127 @@ signBtn.addEventListener("click", (e) => {
   toggleForms();
 });
 
-// Inicializa a página com o formulário de login visível
+/* Inicializa a página com o formulário de login visível */
 signinForm.style.display = "block";
 signupForm.style.display = "none";
 
-// Função para alternar a visibilidade da senha
+/* Função para alternar a visibilidade da senha */
 function togglePasswordVisibility(formType, passwordFieldId) {
   const passwordField = document.getElementById(passwordFieldId);
   const toggleIconShow = document.getElementById("eyeicon-show-" + formType);
   const toggleIconHide = document.getElementById("eyeicon-hide-" + formType);
 
   if (passwordField.type === "password") {
-    passwordField.type = "text"; // Mostrar a senha
+    passwordField.type = "text"; // Show password
     toggleIconShow.style.display = "none";
     toggleIconHide.style.display = "inline";
   } else {
-    passwordField.type = "password"; // Esconder a senha
+    passwordField.type = "password"; // Hide password
     toggleIconShow.style.display = "inline";
     toggleIconHide.style.display = "none";
   }
 }
 
-// Função para aplicar o desconto
+// Função para atualizar a barra de progresso e os ícones dos passos
+function updateProgressBarAndIcons(step) {
+  // Reset classes
+  $(".circle").removeClass("active");
+  $(".progress-bar-inner").removeClass("active"); // Remove a classe active inicialmente
+  $(".progress-bar-inner").css("width", "0%"); // A largura da barra é 0% no começo
+
+  // Atualiza a parte interna da barra de progresso e os ícones conforme o passo
+  if (step === 1) {
+    $("#step1-icon").addClass("active");
+    $(".progress-bar-inner").css({
+      width: "33%",
+      "background-color": "var(--violet)", // Cor inicial da barra de progresso (violeta)
+    });
+  } else if (step === 2) {
+    $("#step1-icon").addClass("active");
+    $("#step2-icon").addClass("active");
+    $(".progress-bar-inner").css({
+      width: "50%", // A barra agora fica em 50% para o Passo 2
+      "background-color": "var(--green)", // Cor verde no passo 2
+    });
+  } else if (step === 3) {
+    $("#step1-icon").addClass("active");
+    $("#step2-icon").addClass("active");
+    $("#step3-icon").addClass("active");
+    $(".progress-bar-inner").css({
+      width: "50%", // A barra fica com 50% no Passo 3
+      "background-color": "var(--violet)", // Cor violeta no passo 3
+    });
+  }
+}
+
+// Lógica de login
+$("#signin-form").on("submit", function (e) {
+  e.preventDefault();
+  $.ajax({
+    url: "", // Adicione a URL de envio do formulário
+    type: "POST",
+    data: {
+      signin: true,
+      email: $("#signin-email").val(),
+      senha: $("#signin-senha").val(),
+    },
+    success: function (response) {
+      if (response === "admin") {
+        window.location.href = "dashboard.php"; // Redireciona para o painel de administração
+      } else if (response === "success") {
+        updateProgressBarAndIcons(2);
+        $("#step1").fadeOut(() => {
+          $("#step2").fadeIn();
+        });
+        currentStep = 2;
+      } else {
+        alert(response); // Exibe a resposta do servidor, se o login falhar
+      }
+    },
+    error: function () {
+      alert("Erro ao processar o login.");
+    },
+  });
+});
+
+// Avançar entre os passos
+$("#next").on("click", function () {
+  if (currentStep === 1) {
+    $("#step1").fadeOut(function () {
+      $("#step2").fadeIn();
+    });
+    updateProgressBarAndIcons(2); // Atualiza o progresso para Passo 2 (50%)
+    currentStep = 2; // Atualiza o passo atual
+  } else if (currentStep === 2) {
+    $("#step2").fadeOut(function () {
+      $("#step3").fadeIn();
+    });
+    updateProgressBarAndIcons(3); // Atualiza o progresso para Passo 3 (50%) com cor violeta
+    currentStep = 3; // Atualiza o passo atual
+  }
+});
+
+// Voltar entre os passos
+$("#prev").on("click", function () {
+  if (currentStep === 2) {
+    $("#step2").fadeOut(function () {
+      $("#step1").fadeIn();
+    });
+    updateProgressBarAndIcons(1); // Atualiza o progresso para Passo 1 (33%)
+    currentStep = 1; // Atualiza o passo atual
+  } else if (currentStep === 3) {
+    $("#step3").fadeOut(function () {
+      $("#step2").fadeIn();
+    });
+    updateProgressBarAndIcons(2); // Atualiza o progresso para Passo 2 (50%)
+    currentStep = 2; // Atualiza o passo atual
+  }
+});
+
+// Inicializa as etapas com o estilo correto (passo 1)
+updateProgressBarAndIcons(1); // Inicializa o passo 1 com 33% e cor violeta
+
+/* Função para aplicar desconto */
 function applyDiscount(discountCode) {
   if (isDiscountApplied) {
     showMessage(messages.discountAlreadyApplied, "error");
@@ -73,11 +177,15 @@ function applyDiscount(discountCode) {
     console.error("Total element not found");
     return;
   }
-
+  const cartSummary = document.querySelector(".cart-summary");
+  if (cartSummary.lenght > 4) {
+    // Aplica a altura fixa e o overflow de acordo com a quantidade de itens no carrinho
+    cartSummary.style.height = cartItens.length > 4 ? "auto" : "auto";
+    cartSummary.style.overflow = cartItens.length <= 4 ? "hidden" : ""; // Aplica overflow apenas quando há 3 ou menos itens
+  }
   const currentTotal = parseFloat(
     totalElement.textContent.replace(/[^\d,]/g, "").replace(",", ".")
   );
-
   if (validDiscountCodes.includes(code)) {
     const discountAmount = currentTotal * 0.1;
     const totalAfterDiscount = currentTotal - discountAmount;
@@ -85,6 +193,7 @@ function applyDiscount(discountCode) {
     totalElement.innerHTML = `<strong>Total com desconto:&nbsp;</strong> R$ ${totalAfterDiscount
       .toFixed(2)
       .replace(".", ",")}`;
+
     insertDiscountInfo(createDiscountInfo(discountAmount));
     disableDiscountInputAndButton();
 
@@ -97,11 +206,11 @@ function applyDiscount(discountCode) {
   }
 }
 
-// Função para exibir a mensagem para o usuário
+/* Função para exibir mensagens ao usuário */
 function showMessage(message, type) {
   clearExistingMessage();
   const messageElement = document.createElement("div");
-  messageElement.className = `discount-message ${
+  messageElement.className = `message ${
     type === "error" ? "discount-alert error-message" : "success-message"
   }`;
   messageElement.innerHTML = `<strong>${message}</strong>`;
@@ -115,15 +224,15 @@ function showMessage(message, type) {
   }
 }
 
-// Função para remover a mensagem existente
+/* Função para limpar mensagens existentes */
 function clearExistingMessage() {
-  const existingMessage = document.querySelector(".discount-message");
+  const existingMessage = document.querySelector(".message");
   if (existingMessage) {
     existingMessage.remove();
   }
 }
 
-// Funções de manipulação do desconto
+/* Funções para gerenciar informações de desconto */
 function createDiscountInfo(discountAmount) {
   const discountInfo = document.createElement("div");
   discountInfo.className = "discount-info discount-success";
@@ -151,16 +260,64 @@ function clearExistingDiscountInfo() {
     existingDiscountInfo.remove();
   }
 }
+/* Função para evitar cart-summary se deslocar */
+function adjustCartSummaryHeight() {
+  const cartSummary = document.querySelector(".cart-summary");
+  const cartContent = cartSummary.querySelector(".cart-content"); // Presume um contêiner interno
 
-// Desabilita o campo de entrada de desconto e o botão
+  if (cartSummary && cartContent) {
+    const contentHeight = cartContent.offsetHeight; // Obtém a altura real do conteúdo interno
+    cartSummary.style.height = `${contentHeight}px`; // Define a altura baseada no conteúdo
+  }
+}
+
+/* Função para desativar entrada e botão de desconto */
 function disableDiscountInputAndButton() {
   const discountInput = document.querySelector(".discount-input");
   const discountBtn = document.querySelector(".discount-btn");
+  const discountFormContainer = document.querySelector(
+    ".discount-form-container"
+  );
+  const confirmationMessage = document.querySelector("#confirmation-message");
+
+  // Desativa os campos de desconto
   if (discountInput) discountInput.disabled = true;
   if (discountBtn) discountBtn.disabled = true;
+
+  // Oculta o formulário de desconto sem deslocar o layout
+  if (discountFormContainer) {
+    discountFormContainer.style.position = "absolute"; // Remove do fluxo normal do layout
+    discountFormContainer.style.zIndex = "100"; // Sobrepõe outros elementos
+    discountFormContainer.style.transform = "translateY(-100%)"; // Move para fora da visão
+    discountFormContainer.style.transition =
+      "transform 0.3s ease, opacity 0.3s ease"; // Animação suave
+    discountFormContainer.style.opacity = "0"; // Oculta visualmente
+  }
+
+  // Ajusta o #confirmation-message e seus conteúdos para subir
+  if (confirmationMessage) {
+    confirmationMessage.style.position = "relative"; // Mantém no fluxo de layout
+    confirmationMessage.style.transform = "translateY(-1rem)"; // Move para cima
+    confirmationMessage.style.transition = "transform 0.3s ease"; // Animação suave
+
+    // Ajusta estilos internos se necessário
+    const paragraph = confirmationMessage.querySelector("p");
+    const buttonContainer =
+      confirmationMessage.querySelector(".button-container");
+
+    if (paragraph) {
+      paragraph.style.marginTop = "0"; // Remove margem adicional
+      paragraph.style.transition = "transform 0.3s ease"; // Animação suave
+    }
+
+    if (buttonContainer) {
+      buttonContainer.style.marginTop = "0"; // Remove margem adicional
+      buttonContainer.style.transition = "transform 0.3s ease"; // Animação suave
+    }
+  }
 }
 
-// Reseta o campo de entrada do desconto
+/* Função para redefinir entrada de desconto */
 function resetDiscountInput() {
   const discountInput = document.querySelector(".discount-input");
   if (discountInput) {
@@ -171,11 +328,11 @@ function resetDiscountInput() {
     }, 3000);
   }
 }
-   
-// Função para atualizar as parcelas com base no desconto
+
+/* Função para atualizar parcelas (installments) com base no desconto. */
 function updateInstallments(totalAfterDiscount) {
   const installmentsSelect = document.getElementById("installments");
-  installmentsSelect.innerHTML = ""; // Limpa as opções existentes
+  installmentsSelect.innerHTML = ""; // Limpa opções existentes
 
   const totalElement = document.querySelector(".total-title");
   const currentTotal = parseFloat(
@@ -192,9 +349,9 @@ function updateInstallments(totalAfterDiscount) {
   for (const [numInstallments, installmentValue] of Object.entries(
     installmentValues
   )) {
-    const optionText = isDiscountApplied
-      ? `${numInstallments} x R$ ${installmentValue} (com desconto)`
-      : `${numInstallments} x R$ ${installmentValue}`;
+    const optionText =
+      `${numInstallments} x R$ ${installmentValue}` +
+      (isDiscountApplied ? " (com desconto)" : "");
     const option = document.createElement("option");
     option.value = numInstallments;
     option.textContent = optionText;
@@ -202,172 +359,52 @@ function updateInstallments(totalAfterDiscount) {
   }
 }
 
-// Função para rolagem automática
+/* Função para rolagem automática de produtos. */
 function autoScrollProducts() {
-  const cartContainer = document.getElementById('cart-items');
+  const cartContainer = document.getElementById("cart-items");
   if (!cartContainer) return;
-
-  // Configurações do scroll
-  const scrollSpeed = 30; // Pixels por scroll
-  const scrollInterval = 3000; // Tempo entre cada scroll (3 segundos)
+  const scrollSpeed = 30; // Pixels per scroll
+  const scrollInterval = 3000; // Time between each scroll (3 seconds)
   let scrollPosition = 0;
-  
-  // Função que realiza o scroll
   function scroll() {
-      if (!cartContainer) return;
-      
-      // Se chegou ao final, volta ao início
-      if (scrollPosition >= cartContainer.scrollHeight - cartContainer.clientHeight) {
-          scrollPosition = 0;
-      } else {
-          scrollPosition += scrollSpeed;
-      }
-
-      cartContainer.scrollTo({
-          top: scrollPosition,
-          behavior: 'smooth'
-      });
-  }
-
-  // Inicia o autoscroll
-  const scrollTimer = setInterval(scroll, scrollInterval);
-
-  // Para o autoscroll quando o mouse está sobre o container
-  cartContainer.addEventListener('mouseenter', () => {
-      clearInterval(scrollTimer);
-  });
-
-  // Reinicia o autoscroll quando o mouse sai do container
-  cartContainer.addEventListener('mouseleave', () => {
-      scrollPosition = cartContainer.scrollTop;
-      setInterval(scroll, scrollInterval);
-  });
-}
-// Função para lidar com os cliques nos botões "Sim" e "Não"
-function handleConfirmation() {
-  // Adiciona o evento de clique para o botão "Sim"
-  confirmYesButton.addEventListener('click', function() {
-    // Exibe o alerta
-    alert('Preencha os dados de Login para prosseguir com a compra.');
-    
-    // Oculta a mensagem de confirmação, os botões e o formulário de desconto
-    confirmationMessage.style.display = 'none';
-    discountForm.style.display = 'none'; // Oculta o formulário de desconto
-  });
-
-  // Adiciona o evento de clique para o botão "Não"
-  confirmNoButton.addEventListener('click', function() {
-    // Impede o redirecionamento para index.html
-    event.preventDefault(); // Impede o comportamento padrão do botão, se houver.
-
-    // Redireciona para index.html
-    window.location.href = '../../index.html'; 
-  });
-}
-
-// Chama a função quando o script for carregado
-handleConfirmation();
-
-// Função para alternar a visibilidade da senha
-$(document).ready(function () {
-  var currentStep = 1;
-
-  // Função para atualizar a barra de progresso e os ícones dos passos
-  function updateProgressBarAndIcons(step) {
-    // Reset classes
-    $(".circle").removeClass("active");
-    $(".progress-bar-inner").removeClass("active"); // Remove a classe active inicialmente
-    $(".progress-bar-inner").css("width", "0%"); // A largura da barra é 0% no começo
-
-    // Atualiza a parte interna da barra de progresso e os ícones conforme o passo
-    if (step === 1) {
-      $("#step1-icon").addClass("active");
-      $(".progress-bar-inner").css({
-        width: "33%",
-        "background-color": "var(--violet)", // Cor inicial da barra de progresso (violeta)
-      });
-    } else if (step === 2) {
-      $("#step1-icon").addClass("active");
-      $("#step2-icon").addClass("active");
-      $(".progress-bar-inner").css({
-        width: "50%", // A barra agora fica em 50% para o Passo 2
-        "background-color": "var(--green)", // Cor verde no passo 2
-      });
-    } else if (step === 3) {
-      $("#step1-icon").addClass("active");
-      $("#step2-icon").addClass("active");
-      $("#step3-icon").addClass("active");
-      $(".progress-bar-inner").css({
-        width: "50%", // A barra fica com 50% no Passo 3
-        "background-color": "var(--violet)", // Cor violeta no passo 3
-      });
+    if (!cartContainer) return;
+    if (
+      scrollPosition >=
+      cartContainer.scrollHeight - cartContainer.clientHeight
+    ) {
+      scrollPosition = 0;
+    } else {
+      scrollPosition += scrollSpeed;
     }
-  }
-
-  // Lógica de login
-  $("#signin-form").on("submit", function (e) {
-    e.preventDefault();
-    $.ajax({
-      url: "", // Adicione a URL de envio do formulário
-      type: "POST",
-      data: {
-        signin: true,
-        email: $("#signin-email").val(),
-        senha: $("#signin-senha").val(),
-      },
-      success: function (response) {
-        if (response === "admin") {
-          window.location.href = 'dashboard.php'; // Redireciona para o painel de administração
-        } else if (response === "success") {
-          updateProgressBarAndIcons(2);
-          $("#step1").fadeOut(() => {
-            $("#step2").fadeIn();
-          });
-          currentStep = 2;
-        } else {
-          alert(response); // Exibe a resposta do servidor, se o login falhar
-        }
-      },
-      error: function () {
-        alert("Erro ao processar o login.");
-      },
+    cartContainer.scrollTo({
+      top: scrollPosition,
+      behavior: "smooth",
     });
+  }
+  const scrollTimer = setInterval(scroll, scrollInterval);
+  cartContainer.addEventListener("mouseenter", () => {
+    clearInterval(scrollTimer);
   });
 
-  // Avançar entre os passos
-  $("#next").on("click", function () {
-    if (currentStep === 1) {
-      $("#step1").fadeOut(function () {
-        $("#step2").fadeIn();
-      });
-      updateProgressBarAndIcons(2); // Atualiza o progresso para Passo 2 (50%)
-      currentStep = 2; // Atualiza o passo atual
-    } else if (currentStep === 2) {
-      $("#step2").fadeOut(function () {
-        $("#step3").fadeIn();
-      });
-      updateProgressBarAndIcons(3); // Atualiza o progresso para Passo 3 (50%) com cor violeta
-      currentStep = 3; // Atualiza o passo atual
-    }
+  cartContainer.addEventListener("mouseleave", () => {
+    scrollPosition = cartContainer.scrollTop;
+    setInterval(scroll, scrollInterval);
+  });
+}
+
+/* Função para lidar com cliques no botão de confirmação */
+function handleConfirmation() {
+  confirmYesButton.addEventListener("click", function () {
+    alert("Preencha os dados de Login para prosseguir com a compra.");
+    confirmationMessage.style.display = "none";
+    discountForm.style.display = "none";
   });
 
-  // Voltar entre os passos
-  $("#prev").on("click", function () {
-    if (currentStep === 2) {
-      $("#step2").fadeOut(function () {
-        $("#step1").fadeIn();
-      });
-      updateProgressBarAndIcons(1); // Atualiza o progresso para Passo 1 (33%)
-      currentStep = 1; // Atualiza o passo atual
-    } else if (currentStep === 3) {
-      $("#step3").fadeOut(function () {
-        $("#step2").fadeIn();
-      });
-      updateProgressBarAndIcons(2); // Atualiza o progresso para Passo 2 (50%)
-      currentStep = 2; // Atualiza o passo atual
-    }
+  confirmNoButton.addEventListener("click", function (event) {
+    event.preventDefault();
+    window.location.href = "../../index.html";
   });
+}
 
-  // Inicializa as etapas com o estilo correto (passo 1)
-  updateProgressBarAndIcons(1); // Inicializa o passo 1 com 33% e cor violeta
-});
+/* Chame a função handleConfirmation quando o script for carregado */
+handleConfirmation();
