@@ -1,23 +1,23 @@
-/* Verifique se a variável já está declarada */
+/* Verifique se as variáveis ​​já existem antes de declará-las */
 if (typeof isDiscountApplied === "undefined") {
-  var isDiscountApplied = false; // Use 'var' to ensure it persists across function calls
+    var isDiscountApplied = false;
 }
 
-const authFormsContainer = document.querySelector(".auth-forms-container");
-const signupForm = document.getElementById("signup");
-const signinForm = document.getElementById("signin");
-const signupBtn = document.getElementById("signup-btn");
-const signBtn = document.getElementById("sign-btn");
-const confirmationMessage = document.getElementById("confirmation-message");
-const confirmYesButton = document.getElementById("confirm-yes");
-const confirmNoButton = document.getElementById("confirm-no");
-const discountForm = document.querySelector(".discount-form-container");
-
-const validDiscountCodes = ["DESCONTO10"];
-const messages = {
-  discountApplied: "Você ganhou 10% de desconto!",
-  discountAlreadyApplied: "Desconto já aplicado!",
-  invalidDiscountCode: "Código de desconto inválido.",
+/* Use var em vez de const/let para elementos que podem ser declarados em outro lugar */
+var authFormsContainer = document.querySelector(".auth-forms-container");
+var signupForm = document.getElementById("signup");
+var signinForm = document.getElementById("signin");
+var signupBtn = document.getElementById("signup-btn");
+var signBtn = document.getElementById("sign-btn");
+var confirmationMessage = document.getElementById("confirmation-message");
+var confirmYesButton = document.getElementById("confirm-yes");
+var confirmNoButton = document.getElementById("confirm-no");
+var discountForm = document.querySelector(".discount-form-container");
+var validDiscountCodes = ["DESCONTO10"];
+var messages = {
+    discountApplied: "Você ganhou 10% de desconto!",
+    discountAlreadyApplied: "Desconto já aplicado!",
+    invalidDiscountCode: "Código de desconto inválido.",
 };
 
 /* Função para alternar entre formulários de inscrição e login */
