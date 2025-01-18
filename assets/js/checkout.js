@@ -1,6 +1,6 @@
 /* Verifique se as variáveis ​​já existem antes de declará-las */
 if (typeof isDiscountApplied === "undefined") {
-    var isDiscountApplied = false;
+  var isDiscountApplied = false;
 }
 
 /* Use var em vez de const/let para elementos que podem ser declarados em outro lugar */
@@ -15,9 +15,9 @@ var confirmNoButton = document.getElementById("confirm-no");
 var discountForm = document.querySelector(".discount-form-container");
 var validDiscountCodes = ["DESCONTO10"];
 var messages = {
-    discountApplied: "Você ganhou 10% de desconto!",
-    discountAlreadyApplied: "Desconto já aplicado!",
-    invalidDiscountCode: "Código de desconto inválido.",
+  discountApplied: "Você ganhou 10% de desconto!",
+  discountAlreadyApplied: "Desconto já aplicado!",
+  invalidDiscountCode: "Código de desconto inválido.",
 };
 
 /* Função para alternar entre formulários de inscrição e login */
@@ -391,6 +391,7 @@ function autoScrollProducts() {
     setInterval(scroll, scrollInterval);
   });
 }
+
 
 /* Função para lidar com cliques no botão de confirmação */
 function handleConfirmation() {

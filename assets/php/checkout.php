@@ -109,61 +109,65 @@ if (isset($_POST['signin'])) {
       <div class="cart-summary">
         <h2 class="form-title">Resumo do Carrinho</h2>
         <?php
-        // Inicializa as variáveis
-        $total = $_SESSION['cart_total'] ?? 0;
-        $items = $_SESSION['cart_items'] ?? [];
-        $imageSrcArray = $_SESSION['cart_images'] ?? [];
-        $quantities = $_SESSION['quantities'] ?? [];
+    // Inicializa as variáveis
+    $total = $_SESSION['cart_total'] ?? 0;
+    $cartItems = $_SESSION['cart_items'] ?? [];
+    $cartImages = $_SESSION['cart_images'] ?? [];
+    $quantities = $_SESSION['quantities'] ?? [];
 
-        // Exibe o resumo do carrinho
-        if ($total <= 0) {
-          echo "<div class='carrinho-vazio'>Carrinho vazio.</div>";
-        } else {
-          echo "<div class='cart-summary-container'>";
+    // Exibe o resumo do carrinho
+    if ($total <= 0) {
+        echo "<div class='carrinho-vazio'>Carrinho vazio.</div>";
+    } else {
+        echo "<div class='cart-summary-container'>";
 
-          // Exibe o total original sem processar descontos
-          $totalFormatted = number_format($total, 2, ',', '.');
-          echo "<div class='total-title'><strong>Total:</strong> R$ " . $totalFormatted . "</div>";
-         // Exibe os itens do carrinho
-         echo "<div class='cart-items' id='cart-items'>";
-        foreach ($items as $index => $item) {
-        $imageSrc = $imageSrcArray[$index] ?? '';
-        $quantity = $quantities[$index] ?? 0;
-        $quantityDisplay = ($quantity == 1) ? "x1" : "x" . htmlspecialchars($quantity);
-        echo "<div style='display: flex; align-items: center; margin-bottom: 8px;' id='cart-item-$index'>";
-        if ($imageSrc) {
-        echo "<div style='flex: 0 0 auto; margin-right: 5px;'>";
-        echo "<img src='" . htmlspecialchars($imageSrc) . "' alt='Imagem do Carrinho' style='max-width: 70px; height: auto;' />";
+        // Exibe o total original sem processar descontos
+        $totalFormatted = number_format($total, 2, ',', '.');
+        echo "<div class='total-title'><strong>Total:</strong> R$ " . $totalFormatted . "</div>";
+
+        // Exibe os itens do carrinho
+        echo "<div class='cart-items' id='cart-items'>";
+        foreach ($cartItems as $index => $item) {
+            $imageSrc = $cartImages[$index] ?? '';
+            $quantity = $quantities[$index] ?? 0;
+            $quantityDisplay = ($quantity == 1) ? "x1" : "x" . htmlspecialchars($quantity);
+
+            // Important: add data-item-id
+            echo "<div class='cart-item' data-item-id='$index' style='display: flex; align-items: center; margin-bottom: 8px;'>";
+            if ($imageSrc) {
+                echo "<div style='flex: 0 0 auto; margin-right: 5px;'>";
+                echo "<img src='" . htmlspecialchars($imageSrc) . "' alt='Imagem do Carrinho' style='max-width: 70px; height: auto;' />";
+                echo "</div>";
+            }
+            echo "<div class='qtd-item' style='flex: 1;'>" . nl2br(htmlspecialchars($item)) . " " . $quantityDisplay . "</div>";
+
+            // Adiciona o botão de lixeira
+            echo "<button type='button' class='remove-btn' onclick='removeItem($index)'><i class='bx bxs-trash'></i></button>";
+            echo "</div>";
+        }
         echo "</div>";
-    }
-    echo "<div class='qtd-item' style='flex: 1;'>" . nl2br(htmlspecialchars($item)) . " " . $quantityDisplay . "</div>";
-    // Adiciona o botão de lixeira
-    echo "<button type='button' class='remove-btn' onclick='removeItem($index)'><i class='bx bxs-trash'></i></button>";
-    echo "</div>";
-}
-echo "</div>";
+   
+        // Formulário de desconto
+       echo '<div class="discount-form-container">';
+       echo '<form class="discount-form" onsubmit="return false;">';
+       echo '<input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required autocomplete="off">';
+       echo '<button class="discount-btn" onclick="applyDiscount()">Aplicar</button>';
+       echo '</form>';
+       echo '</div>';
+       echo ' <div class="discount-message"></div>';
+       echo "</div>";
 
-// Formulário de desconto
-echo '<div class="discount-form-container">';
-echo '<form class="discount-form" onsubmit="return false;">';
-echo '<input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required autocomplete="off">';
-echo '<button class="discount-btn" onclick="applyDiscount()">Aplicar</button>';
-echo '</form>';
-echo '</div>';
-echo ' <div class="discount-message"></div>';
-echo "</div>";
-// Adicionando a mensagem "Confirma a compra?" após o input
-echo '<div id="confirmation-message">';
-echo '<p>Confirma a compra?</p>';
-echo '<div class="button-container">';
-echo '<button type="button" id="confirm-yes">Sim</button>';
-echo '<button type="button" id="confirm-no">Não</button>';
-echo '</div>';
-echo '</div>';
- }
- ?>
+       // Adicionando a mensagem "Confirma a compra?" após o input
+       echo '<div id="confirmation-message">';
+       echo '<p>Confirma a compra?</p>';
+       echo '<div class="button-container">';
+       echo '<button type="button" id="confirm-yes">Sim</button>';
+       echo '<button type="button" id="confirm-no">Não</button>';
+       echo '</div>';
+       echo '</div>';
+  }
+  ?>
  </div>
-
   <!-- Steps section -->
 <div class="container-steps">
   <div class="progress-container">
