@@ -109,7 +109,7 @@ if (isset($_POST['signin'])) {
       <div class="cart-summary">
         <h2 class="form-title">Resumo do Carrinho</h2>
         <?php
-    // Inicializa as variáveis
+   // Inicializa as variáveis
     $total = $_SESSION['cart_total'] ?? 0;
     $cartItems = $_SESSION['cart_items'] ?? [];
     $cartImages = $_SESSION['cart_images'] ?? [];
@@ -146,6 +146,7 @@ if (isset($_POST['signin'])) {
             echo "</div>";
         }
         echo "</div>";
+
    
         // Formulário de desconto
        echo '<div class="discount-form-container">';

@@ -392,6 +392,72 @@ function autoScrollProducts() {
   });
 }
 
+/* Função para remover items clicando no icone da lixeira */
+function removeItem(itemId) {
+  if (!confirm('Tem certeza que deseja remover este item?')) {
+    return;
+  }
+
+  const itemElement = document.querySelector(`.cart-item[data-item-id="${itemId}"]`);
+  if (itemElement) {
+    itemElement.style.opacity = '0.5';
+  }
+  
+  fetch('remove-item.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({ itemId })
+  })
+  .then(response => {
+    if (!response.ok) {
+      return response.json().then(err => {throw new Error(err.error || `HTTP error! status: ${response.status}`);});
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Resposta do servidor:', data); // Para debug
+    
+    if (data.success) {
+      // Remove o item do DOM
+      if (itemElement) {
+        itemElement.remove();
+      }
+
+      // Atualiza o total
+      const totalElement = document.querySelector('.total-title');
+      if (totalElement) {
+        totalElement.innerHTML = `<strong>Total:</strong> R$ ${data.newTotalFormatted}`;
+      }
+
+      // Se o carrinho estiver vazio
+      if (data.isEmpty) {
+        location.reload(); // Recarrega a página para atualizar todo o estado
+      } else {
+        // Atualiza o contador se existir
+        const cartCounter = document.querySelector('.cart-counter');
+        if (cartCounter) {
+          cartCounter.textContent = data.itemCount;
+          cartCounter.style.display = data.itemCount > 0 ? 'block' : 'none';
+        }
+      }
+    } else {
+      alert(`Erro ao remover item: ${data.error}`);
+      if (itemElement) {
+        itemElement.style.opacity = '1';
+      }
+    }
+  })
+  .catch(error => {
+    console.error('Erro ao remover item:', error);
+    alert(`Erro ao remover item: ${error.message}`);
+    if (itemElement) {
+      itemElement.style.opacity = '1';
+    }
+  });
+}
 
 /* Função para lidar com cliques no botão de confirmação */
 function handleConfirmation() {
