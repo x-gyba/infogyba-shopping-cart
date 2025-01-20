@@ -2,13 +2,13 @@
 if (typeof isDiscountApplied === "undefined") {
   var isDiscountApplied = false;
 }
-
+// Seleção dos elementos necessários
+const signupForm = document.getElementById("signup");
+const signinForm = document.getElementById("signin");
+const signupBtn = document.getElementById("signup-btn");
+const signBtn = document.getElementById("sign-btn");
 /* Use var em vez de const/let para elementos que podem ser declarados em outro lugar */
 var authFormsContainer = document.querySelector(".auth-forms-container");
-var signupForm = document.getElementById("signup");
-var signinForm = document.getElementById("signin");
-var signupBtn = document.getElementById("signup-btn");
-var signBtn = document.getElementById("sign-btn");
 var confirmationMessage = document.getElementById("confirmation-message");
 var confirmYesButton = document.getElementById("confirm-yes");
 var confirmNoButton = document.getElementById("confirm-no");
@@ -21,30 +21,29 @@ var messages = {
 };
 
 /* Função para alternar entre formulários de inscrição e login */
-function toggleForms() {
-  if (signinForm.style.display === "none") {
-    signinForm.style.display = "block";
-    signupForm.style.display = "none";
-  } else {
+function toggleForms(showSignup) {
+  if (showSignup) {
     signinForm.style.display = "none";
     signupForm.style.display = "block";
+  } else {
+    signinForm.style.display = "block";
+    signupForm.style.display = "none";
   }
 }
 
-/* Event listeners para alternar entre formulários */
+// Event listeners para alternar entre os formulários
 signupBtn.addEventListener("click", (e) => {
   e.preventDefault();
-  toggleForms();
+  toggleForms(true); // Exibe o formulário de registro
 });
 
 signBtn.addEventListener("click", (e) => {
   e.preventDefault();
-  toggleForms();
+  toggleForms(false); // Exibe o formulário de login
 });
 
-/* Inicializa a página com o formulário de login visível */
-signinForm.style.display = "block";
-signupForm.style.display = "none";
+// Inicializa a página com o formulário de login visível
+toggleForms(false);
 
 /* Função para alternar a visibilidade da senha */
 function togglePasswordVisibility(formType, passwordFieldId) {
@@ -210,9 +209,8 @@ function applyDiscount(discountCode) {
 function showMessage(message, type) {
   clearExistingMessage();
   const messageElement = document.createElement("div");
-  messageElement.className = `message ${
-    type === "error" ? "discount-alert error-message" : "success-message"
-  }`;
+  messageElement.className = `message ${type === "error" ? "discount-alert error-message" : "success-message"
+    }`;
   messageElement.innerHTML = `<strong>${message}</strong>`;
 
   const formContainer = document.querySelector(".discount-form-container");
@@ -237,8 +235,7 @@ function createDiscountInfo(discountAmount) {
   const discountInfo = document.createElement("div");
   discountInfo.className = "discount-info discount-success";
   discountInfo.innerHTML = `
-    <div class="discount-title success-message"><strong>${
-      messages.discountApplied
+    <div class="discount-title success-message"><strong>${messages.discountApplied
     }</strong></div>
     <div class="discount-amount"><strong>Desconto aplicado:&nbsp;</strong> R$ ${discountAmount
       .toFixed(2)
@@ -391,71 +388,176 @@ function autoScrollProducts() {
     setInterval(scroll, scrollInterval);
   });
 }
+/* Função para verificar se o carrinho está vazio */
+function isCartEmpty() {
+  // Verifica se há itens no carrinho (substitua por sua lógica)
+  return document.querySelectorAll('.cart-item').length === 0;
+}
+
+/* Verifica o estado do carrinho ao carregar a página e após remover itens */
+function updateCartSummaryVisibility() {
+  const cartSummary = document.querySelector('.cart-summary');
+
+  if (isCartEmpty()) {
+    cartSummary.style.display = 'none';
+  } else {
+    cartSummary.style.display = 'block';
+  }
+
+  // Adiciona o evento de visibilidade da página
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') {
+      window.location.href = '../../index.html';
+    }
+  });
+}
+
+/* Chamar a função ao carregar a página */
+updateCartSummaryVisibility();
 
 /* Função para remover items clicando no icone da lixeira */
 function removeItem(itemId) {
-  if (!confirm('Tem certeza que deseja remover este item?')) {
+  // Verifica se há desconto aplicado
+  const discountInfo = document.querySelector(".discount-info");
+  if (discountInfo && discountInfo.style.display !== "none") {
+    alert("Não é possível remover itens após aplicar o desconto.");
     return;
   }
 
-  const itemElement = document.querySelector(`.cart-item[data-item-id="${itemId}"]`);
-  if (itemElement) {
-    itemElement.style.opacity = '0.5';
+  if (!confirm("Tem certeza que deseja remover este item?")) {
+    return;
   }
-  
-  fetch('remove-item.php', {
-    method: 'POST',
+
+  const itemElement = document.querySelector(
+    `.cart-item[data-item-id="${itemId}"]`
+  );
+  if (itemElement) {
+    itemElement.style.opacity = "0.5";
+  }
+
+  fetch("remove-item.php", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
+      "Content-Type": "application/json",
+      Accept: "application/json",
     },
-    body: JSON.stringify({ itemId })
+    body: JSON.stringify({ itemId }),
   })
-  .then(response => {
-    if (!response.ok) {
-      return response.json().then(err => {throw new Error(err.error || `HTTP error! status: ${response.status}`);});
-    }
-    return response.json();
-  })
-  .then(data => {
-    console.log('Resposta do servidor:', data); // Para debug
-    
-    if (data.success) {
-      // Remove o item do DOM
-      if (itemElement) {
-        itemElement.remove();
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((err) => {
+          throw new Error(
+            err.error || `HTTP error! status: ${response.status}`
+          );
+        });
       }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Resposta do servidor:", data);
 
-      // Atualiza o total
-      const totalElement = document.querySelector('.total-title');
-      if (totalElement) {
-        totalElement.innerHTML = `<strong>Total:</strong> R$ ${data.newTotalFormatted}`;
-      }
+      if (data.success) {
+        // Remove o item do DOM
+        if (itemElement) {
+          itemElement.remove();
+        }
 
-      // Se o carrinho estiver vazio
-      if (data.isEmpty) {
-        location.reload(); // Recarrega a página para atualizar todo o estado
-      } else {
         // Atualiza o contador se existir
-        const cartCounter = document.querySelector('.cart-counter');
+        const cartCounter = document.querySelector(".cart-counter");
         if (cartCounter) {
           cartCounter.textContent = data.itemCount;
-          cartCounter.style.display = data.itemCount > 0 ? 'block' : 'none';
+          cartCounter.style.display = data.itemCount > 0 ? "block" : "none";
+        }
+
+        // Handle empty cart without reloading the page
+        if (data.isEmpty) {
+          // Hide elements
+          const elementsToHide = [
+            "cart-items",
+            "discount-form-container",
+            "#confirmation-message",
+            ".button-container",
+            ".discount-form",
+            ".discount-info",
+            ".discount-success",
+            ".discount-amount",
+            ".discount-title",
+          ];
+          elementsToHide.forEach((elementId) => {
+            const element =
+              document.getElementById(elementId) ||
+              document.querySelector(elementId);
+            if (element) {
+              element.style.display = "none";
+            }
+          });
+
+          // Criar container para mensagem e botão
+          const emptyCartContainer = document.createElement("div");
+          emptyCartContainer.className = "empty-cart-container";
+
+          // Criar mensagem de carrinho vazio
+          const emptyMessage = document.createElement("p");
+          emptyMessage.className = "empty-cart-message";
+          emptyMessage.textContent = "Seu carrinho está vazio";
+
+          // Criar botão "Continuar Comprando"
+          const continueButton = document.createElement("button");
+          continueButton.className = "continue-shopping-btn";
+          continueButton.textContent = "Continuar Comprando";
+          continueButton.onclick = () =>
+            (window.location.href = "../../index.html");
+
+          // Montar e adicionar os elementos
+          emptyCartContainer.appendChild(emptyMessage);
+          emptyCartContainer.appendChild(continueButton);
+
+          // Substituir o conteúdo do totalElement
+          const totalElement = document.querySelector(".total-title");
+          if (totalElement) {
+            totalElement.innerHTML = "";
+            totalElement.appendChild(emptyCartContainer);
+          }
+        } else {
+          // Atualiza o total se o carrinho não estiver vazio
+          const totalElement = document.querySelector(".total-title");
+          if (totalElement) {
+            totalElement.innerHTML = `<strong>Total:</strong> R$ ${data.newTotalFormatted}`;
+          }
+        }
+      } else {
+        alert(`Erro ao remover item: ${data.error}`);
+        if (itemElement) {
+          itemElement.style.opacity = "1";
         }
       }
-    } else {
-      alert(`Erro ao remover item: ${data.error}`);
+    })
+    .catch((error) => {
+      console.error("Erro ao remover item:", error);
+      alert(`Erro ao remover item: ${error.message}`);
       if (itemElement) {
-        itemElement.style.opacity = '1';
+        itemElement.style.opacity = "1";
       }
-    }
-  })
-  .catch(error => {
-    console.error('Erro ao remover item:', error);
-    alert(`Erro ao remover item: ${error.message}`);
-    if (itemElement) {
-      itemElement.style.opacity = '1';
-    }
+    });
+}
+
+// Função para desabilitar os ícones de lixeira quando o desconto for aplicado
+function disableTrashIcons() {
+  const trashIcons = document.querySelectorAll(".trash-icon"); // Ajuste para a classe correta dos seus ícones
+  trashIcons.forEach((icon) => {
+    icon.style.opacity = "0.5";
+    icon.style.cursor = "not-allowed";
+    icon.style.pointerEvents = "none";
+  });
+}
+
+// Função para habilitar os ícones de lixeira se o desconto for removido
+function enableTrashIcons() {
+  const trashIcons = document.querySelectorAll(".trash-icon"); // Ajuste para a classe correta dos seus ícones
+  trashIcons.forEach((icon) => {
+    icon.style.opacity = "1";
+    icon.style.cursor = "pointer";
+    icon.style.pointerEvents = "auto";
   });
 }
 

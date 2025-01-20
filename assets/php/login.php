@@ -134,23 +134,23 @@ if (isset($_POST['signin'])) {
 
 <body>
     <!-- Formulário de Registro -->
-    <div class="container" id="signup" style="display:none;">
+    <div class="container" id="signup" style="display: none;">
         <h1 class="box-title">Registro</h1>
-        <form method="POST" action="" id="signup-form">
+        <form method="POST" action="/signup" id="signup-form">
             <div class="input-group">
                 <i class='bx bxs-user'></i>
                 <input type="text" name="fname" id="fname" placeholder="Insira seu nome." required>
-                <label for="fname">Nome</label>   
+                <label for="fname">Nome</label>
             </div>
             <div class="input-group">
                 <i class='bx bxs-user'></i>
                 <input type="text" name="lname" id="lname" placeholder="Insira seu sobrenome." required>
-                <label for="lname">Sobrenome</label>   
+                <label for="lname">Sobrenome</label>
             </div>
             <div class="input-group">
                 <i class='bx bx-envelope'></i>
                 <input type="email" name="email" id="signup-email" placeholder="Insira seu email." required>
-                <label for="signup-email">Email</label>   
+                <label for="signup-email">Email</label>
             </div>
             <div class="input-group password-container">
                 <i class='bx bxs-lock-alt'></i>
@@ -166,18 +166,17 @@ if (isset($_POST['signin'])) {
                 <i class='bx bx-show' id="eyeicon-show-confirm" onclick="togglePasswordVisibility('signup', 'confirma-senha')"></i>
                 <i class='bx bx-hide' id="eyeicon-hide-confirm" onclick="togglePasswordVisibility('signup', 'confirma-senha')" style="display: none;"></i>
             </div>
-            <input type="submit" class="auth-btn" value="Cadastre-se" name="signup">        
-        </form>    
+            <input type="submit" class="auth-btn" value="Cadastre-se" name="signup">
+        </form>
         <div class="links">
             <p>Já tenho uma conta.</p>
-            <button type="button" class="auth-buttons" id="sign-btn">Entrar</button>    
-        </div>    
+            <button type="button" class="auth-buttons" id="sign-btn">Entrar</button>
+        </div>
     </div>
-
     <!-- Formulário de Login -->
     <div class="container" id="signin">
         <h1 class="box-title">Login</h1>
-        <form method="POST" action="" id="signin-form">
+        <form method="POST" action="/signin" id="signin-form">
             <div class="input-group">
                 <i class='bx bx-envelope'></i>
                 <input type="email" name="email" id="signin-email" placeholder="Insira seu email." autocomplete="off">
@@ -194,9 +193,9 @@ if (isset($_POST['signin'])) {
             <input type="submit" class="auth-btn" value="Entrar" name="signin">
             <div class="links">
                 <p>Não tenho uma conta.</p>
-                <button type="button" class="auth-buttons" id="signup-btn">Cadastre-se</button>    
-            </div>    
-        </form>  
+                <button type="button" class="auth-buttons" id="signup-btn">Cadastre-se</button>
+                </div>
+        </form>
     </div>
 
     <!-- Conteúdo de pagamento (Será exibido após login) -->

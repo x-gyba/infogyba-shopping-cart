@@ -149,6 +149,14 @@ label {
   display: flex;
 }
 
+.empty-cart-message{
+font-size:1.6rem;
+font-weight:500;
+display:flex;
+justify-content: center; 
+}
+
+
 /* Discount */
 .discount-form-container {
   display: flex;
