@@ -149,14 +149,6 @@ label {
   display: flex;
 }
 
-.empty-cart-message{
-font-size:1.6rem;
-font-weight:500;
-display:flex;
-justify-content: center; 
-}
-
-
 /* Discount */
 .discount-form-container {
   display: flex;
@@ -370,15 +362,44 @@ justify-content: center;
   background-color: var(--green);
 }
 
+/* Estilo para a mensagem de carrinho vazio */
+.empty-cart-message {
+  font-size: 1.6rem;
+  font-style: oblique;
+  color: var(--black);
+  text-align: center;
+  margin-top: 3rem;
+}
+
+/* Estilo para o botão de continuar comprando */
+.continue-shopping-btn {
+  display: inline-block;
+  padding: 6px 15px; /* Espaçamento interno do botão */
+  font-size: 1.4rem;
+  font-weight: 500;
+  font-style: oblique;
+  color: var(--white);
+  background-color: var(--blue);
+  border: none;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  position: relative;
+  left: 10px;
+  top: 50px; /* Ajusta a posição do botão para baixo */
+}
+
 /* Estilo para os passos */
 .container-steps {
   width: 100%;
   max-width: 53.33%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center; /* Centraliza o container */
   position: absolute;
   top: 5%;
-  left: 51%;
+  left: 62%;
   transform: translateX(-50%) translateY(-20%);
 }
 
@@ -421,6 +442,7 @@ justify-content: center;
   flex-direction: column;
   transition: all 0.3s ease;
   position: relative;
+  text-align: center; /* Adicionado para centralizar o texto */
 }
 
 /* Passo ativo (quando o círculo for verde) */
@@ -444,8 +466,8 @@ justify-content: center;
   font-size: 1.5rem;
   font-weight: 500;
   color: var(--black);
-  margin-top: 6rem;
-  margin-left: 0.6rem;
+  margin-top: 6rem; /* Ajuste a margem superior conforme necessário */
+  margin-left: 0.2rem;
   text-align: center;
   width: 100%;
 }

@@ -136,7 +136,7 @@ if (isset($_POST['signin'])) {
     <!-- Formulário de Registro -->
     <div class="container" id="signup" style="display: none;">
         <h1 class="box-title">Registro</h1>
-        <form method="POST" action="/signup" id="signup-form">
+        <form method="POST" action="" id="signup-form">
             <div class="input-group">
                 <i class='bx bxs-user'></i>
                 <input type="text" name="fname" id="fname" placeholder="Insira seu nome." required>
@@ -176,15 +176,15 @@ if (isset($_POST['signin'])) {
     <!-- Formulário de Login -->
     <div class="container" id="signin">
         <h1 class="box-title">Login</h1>
-        <form method="POST" action="/signin" id="signin-form">
+        <form method="POST" action="" id="signin-form">
             <div class="input-group">
                 <i class='bx bx-envelope'></i>
-                <input type="email" name="email" id="signin-email" placeholder="Insira seu email." autocomplete="off">
+                <input type="email" name="email" id="signin-email" placeholder="Insira seu email." autocomplete="off" required>
                 <label for="signin-email">Email</label>
             </div>
             <div class="input-group password-container">
                 <i class='bx bxs-lock-alt'></i>
-                <input type="password" name="senha" id="signin-senha" placeholder="Insira sua senha." autocomplete="off">
+                <input type="password" name="senha" id="signin-senha" placeholder="Insira sua senha." autocomplete="off" required>
                 <label for="signin-senha">Senha</label>
                 <i class='bx bx-show' id="eyeicon-show-login" onclick="togglePasswordVisibility('login', 'signin-senha')"></i>
                 <i class='bx bx-hide' id="eyeicon-hide-login" onclick="togglePasswordVisibility('login', 'signin-senha')" style="display: none;"></i>
@@ -194,7 +194,7 @@ if (isset($_POST['signin'])) {
             <div class="links">
                 <p>Não tenho uma conta.</p>
                 <button type="button" class="auth-buttons" id="signup-btn">Cadastre-se</button>
-                </div>
+            </div>
         </form>
     </div>
 

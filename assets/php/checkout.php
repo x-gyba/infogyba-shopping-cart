@@ -101,57 +101,57 @@ if (isset($_POST['signin'])) {
 
 <body>
     <div class="main-container">
-        <div class="checkout-container">
-            <div class="cart-summary">
-                <?php
-                 // Inicializa as variáveis
-                 $total = $_SESSION['cart_total'] ?? 0;
-                 $cartItems = $_SESSION['cart_items'] ?? [];
-                 $cartImages = $_SESSION['cart_images'] ?? [];
-                 $quantities = $_SESSION['quantities'] ?? [];
- 
-                 if ($total > 0) : ?>
-                     <h2 class="form-title">Resumo do Carrinho</h2>
-                     <div class="cart-summary-container">
-                         <div class="total-title"><strong>Total:</strong> R$ <?= number_format($total, 2, ',', '.') ?></div>
-                         <div class="cart-items" id="cart-items">
-                             <?php foreach ($cartItems as $index => $item) :
-                                 $imageSrc = $cartImages[$index] ?? '';
-                                 $quantity = $quantities[$index] ?? 0;
-                                 $quantityDisplay = ($quantity == 1) ? "x1" : "x" . htmlspecialchars($quantity);
-                             ?>
-                                 <div class="cart-item" data-item-id="<?= $index ?>" style="display: flex; align-items: center; margin-bottom: 8px;">
-                                     <?php if ($imageSrc) : ?>
-                                         <div style="flex: 0 0 auto; margin-right: 5px;">
-                                             <img src="<?= htmlspecialchars($imageSrc) ?>" alt="Imagem do Carrinho" style="max-width: 70px; height: auto;" />
-                                         </div>
-                                     <?php endif; ?>
-                                     <div class="qtd-item" style="flex: 1;"><?= nl2br(htmlspecialchars($item)) ?> <?= $quantityDisplay ?></div>
-                                     <button type="button" class="remove-btn" onclick="removeItem(<?= $index ?>)"><i class='bx bxs-trash'></i></button>
-                                 </div>
-                             <?php endforeach; ?>
-                         </div>
-                         <div class="discount-form-container">
-                             <form class="discount-form" onsubmit="return false;">
-                                 <input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required autocomplete="off">
-                                 <button class="discount-btn" onclick="applyDiscount()">Aplicar</button>
-                             </form>
-                         </div>
-                         <div class="discount-message"></div>
-                         <div id="confirmation-message">
-                             <p>Confirma a compra?</p>
-                             <div class="button-container">
-                                 <button type="button" id="confirm-yes">Sim</button>
-                                 <button type="button" id="confirm-no">Não</button>
-                             </div>
-                         </div>
-                     </div>
-                 <?php else: ?> 
-                     <div class="cart-summary-container">                                              
-                     </div>
-                 <?php endif; ?>
-            </div>
+    <div class="checkout-container">
+        <div class="cart-summary">
+            <?php
+            // Inicializa as variáveis
+            $total = $_SESSION['cart_total'] ?? 0;
+            $cartItems = $_SESSION['cart_items'] ?? [];
+            $cartImages = $_SESSION['cart_images'] ?? [];
+            $quantities = $_SESSION['quantities'] ?? [];
 
+            if ($total > 0) : ?>
+                <h2 class="form-title">Resumo do Carrinho</h2>
+                <div class="cart-summary-container">
+                    <div class="total-title"><strong>Total:</strong> R$ <?= number_format($total, 2, ',', '.') ?></div>
+                    <div class="cart-items" id="cart-items">
+                        <?php foreach ($cartItems as $index => $item) :
+                            $imageSrc = $cartImages[$index] ?? '';
+                            $quantity = $quantities[$index] ?? 0;
+                            $quantityDisplay = ($quantity == 1) ? "x1" : "x" . htmlspecialchars($quantity);
+                        ?>
+                            <div class="cart-item" data-item-id="<?= $index ?>" style="display: flex; align-items: center; margin-bottom: 8px;">
+                                <?php if ($imageSrc) : ?>
+                                    <div style="flex: 0 0 auto; margin-right: 5px;">
+                                        <img src="<?= htmlspecialchars($imageSrc) ?>" alt="Imagem do Carrinho" style="max-width: 70px; height: auto;" />
+                                    </div>
+                                <?php endif; ?>
+                                <div class="qtd-item" style="flex: 1;"><?= nl2br(htmlspecialchars($item)) ?> <?= $quantityDisplay ?></div>
+    <button type="button" class="remove-btn" onclick="removeItem(<?= $index ?>)"><i class="bx bxs-trash"></i></button>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="discount-form-container">
+                        <form class="discount-form" onsubmit="return false;">
+                            <input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required autocomplete="off">
+                            <button class="discount-btn" onclick="applyDiscount()">Aplicar</button>
+                        </form>
+                    </div>
+                    <div class="discount-message"></div>
+                    <div id="confirmation-message">
+                        <p>Confirma a compra?</p>
+                        <div class="button-container">
+                            <button type="button" id="confirm-yes">Sim</button>
+                            <button type="button" id="confirm-no">Não</button>
+                        </div>
+                    </div>
+                </div>
+            <?php else : ?>
+                <div class="cart-summary-container">
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
             <div class="container-steps">
                 <div class="progress-container">
                     <div class="progress-bar">
@@ -163,12 +163,12 @@ if (isset($_POST['signin'])) {
                         <div class="step-name">Login</div>
                     </div>
                     <div class="circle" id="step2-icon">
-                        <i class='bx bx-dollar'></i>
-                        <div class="step-name">Pagamento</div>
+                        <i class='bx bx-home'></i>
+                        <div class="step-name">Entrega</div>
                     </div>
                     <div class="circle" id="step3-icon">
-                        <i class='bx bxs-cart-alt'></i>
-                        <div class="step-name">Revisão</div>
+                        <i class='bx bx-dollar'></i>
+                        <div class="step-name">Pagamento</div>
                     </div>
                 </div>
             </div>

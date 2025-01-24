@@ -1,15 +1,9 @@
-/* Verifique se as variáveis ​​já existem antes de declará-las */
+// Verifique se as variáveis ​​já existem antes de declará-las
 if (typeof isDiscountApplied === "undefined") {
   var isDiscountApplied = false;
 }
+
 // Seleção dos elementos necessários
-const signupForm = document.getElementById("signup");
-const signinForm = document.getElementById("signin");
-const signupBtn = document.getElementById("signup-btn");
-const signBtn = document.getElementById("sign-btn");
-/* Use var em vez de const/let para elementos que podem ser declarados em outro lugar */
-var authFormsContainer = document.querySelector(".auth-forms-container");
-var confirmationMessage = document.getElementById("confirmation-message");
 var confirmYesButton = document.getElementById("confirm-yes");
 var confirmNoButton = document.getElementById("confirm-no");
 var discountForm = document.querySelector(".discount-form-container");
@@ -19,9 +13,13 @@ var messages = {
   discountAlreadyApplied: "Desconto já aplicado!",
   invalidDiscountCode: "Código de desconto inválido.",
 };
+const discountInfo = document.querySelector(".discount-info");
 
-/* Função para alternar entre formulários de inscrição e login */
+// Função para alternar entre formulários de inscrição e login
 function toggleForms(showSignup) {
+  const signinForm = document.getElementById("signin");
+  const signupForm = document.getElementById("signup");
+
   if (showSignup) {
     signinForm.style.display = "none";
     signupForm.style.display = "block";
@@ -32,12 +30,12 @@ function toggleForms(showSignup) {
 }
 
 // Event listeners para alternar entre os formulários
-signupBtn.addEventListener("click", (e) => {
+document.getElementById("signup-btn").addEventListener("click", (e) => {
   e.preventDefault();
   toggleForms(true); // Exibe o formulário de registro
 });
 
-signBtn.addEventListener("click", (e) => {
+document.getElementById("sign-btn").addEventListener("click", (e) => {
   e.preventDefault();
   toggleForms(false); // Exibe o formulário de login
 });
@@ -45,7 +43,7 @@ signBtn.addEventListener("click", (e) => {
 // Inicializa a página com o formulário de login visível
 toggleForms(false);
 
-/* Função para alternar a visibilidade da senha */
+// Função para alternar a visibilidade da senha
 function togglePasswordVisibility(formType, passwordFieldId) {
   const passwordField = document.getElementById(passwordFieldId);
   const toggleIconShow = document.getElementById("eyeicon-show-" + formType);
@@ -60,6 +58,237 @@ function togglePasswordVisibility(formType, passwordFieldId) {
     toggleIconShow.style.display = "inline";
     toggleIconHide.style.display = "none";
   }
+}
+
+// Função para aplicar desconto
+function applyDiscount() {
+  if (isDiscountApplied) {
+    showMessage(messages.discountAlreadyApplied, "error");
+    return;
+  }
+
+  // Verifica se as lixeiras estão desabilitadas
+  const trashIcons = document.querySelectorAll(".remove-btn");
+  const isTrashIconsDisabled = Array.from(trashIcons).every(
+    (icon) => icon.disabled
+  );
+  if (isTrashIconsDisabled) {
+    showMessage("Desconto Bloqueado", "error");
+    return;
+  }
+
+  const discountInput = document.querySelector(".discount-input");
+  const totalElement = document.querySelector(".total-title");
+  const code = discountInput.value.trim();
+
+  if (code === "DESCONTO10") {
+    const currentTotal = parseFloat(
+      totalElement.textContent.replace(/[^\d,]/g, "").replace(",", ".")
+    );
+    const discountAmount = currentTotal * 0.1;
+    const totalAfterDiscount = currentTotal - discountAmount;
+
+    totalElement.innerHTML = `<strong>Total com desconto:&nbsp;</strong> R$ ${totalAfterDiscount
+      .toFixed(2)
+      .replace(".", ",")}`;
+
+    isDiscountApplied = true;
+    disableTrashIcons();
+    showMessage(messages.discountApplied, "success");
+  } else {
+    showMessage(messages.invalidDiscountCode, "error");
+  }
+}
+
+// Função para exibir mensagens
+function showMessage(message, type) {
+  // Remover qualquer mensagem existente
+  const existingMessage = document.querySelector(".message");
+  if (existingMessage) {
+    existingMessage.remove();
+  }
+
+  const messageElement = document.createElement("div");
+  messageElement.className = `message ${
+    type === "error" ? "discount-alert error-message" : "success-message"
+  }`;
+  messageElement.innerHTML = `<strong>${message}</strong>`;
+
+  const formContainer = document.querySelector(".discount-form-container");
+  if (formContainer) {
+    formContainer.parentNode.insertBefore(messageElement, formContainer);
+    setTimeout(() => {
+      messageElement.remove();
+    }, 3000);
+  }
+}
+
+// Função para desabilitar os ícones de lixeira
+function disableTrashIcons() {
+  const trashIcons = document.querySelectorAll(".remove-btn");
+  trashIcons.forEach((icon) => {
+    icon.disabled = true; // Desabilita o botão
+    icon.style.opacity = "0.5"; // Reduz a opacidade para indicar desabilitação
+    icon.style.cursor = "not-allowed"; // Impede o cursor de ser interativo
+  });
+}
+
+// Função chamada quando o botão "Sim" for pressionado
+function handleConfirmYes() {
+  disableTrashIcons(); // Garantir que os ícones da lixeira sejam desativados
+  if (discountInfo) {
+    discountInfo.style.display = "block"; // Definimos para bloquear a remoção de itens
+  }
+  alert("Preencha os dados de login para prosseguir com a compra.");
+}
+
+// Função chamada quando o botão "Não" for pressionado
+function handleConfirmNo() {
+  window.location.href = "../../index.html"; // Exemplo de redirecionamento
+}
+
+// Adiciona os event listeners aos botões
+if (confirmYesButton) {
+  confirmYesButton.addEventListener("click", handleConfirmYes);
+}
+
+if (confirmNoButton) {
+  confirmNoButton.addEventListener("click", handleConfirmNo);
+}
+
+// Adiciona o event listener ao botão de aplicar desconto
+const discountBtn = document.querySelector(".discount-btn");
+if (discountBtn) {
+  discountBtn.addEventListener("click", applyDiscount);
+}
+
+// Variável global para indicar se a compra foi confirmada
+let isPurchaseConfirmed = false;
+
+// Função para confirmar a compra (chame esta função quando a compra for confirmada)
+function confirmPurchase() {
+  isPurchaseConfirmed = true;
+  alert("Compra confirmada!");
+}
+
+// Função para remover itens
+function removeItem(itemId) {
+  // Verifica se a confirmação foi feita
+  if (
+    isPurchaseConfirmed ||
+    (discountInfo && discountInfo.style.display !== "none")
+  ) {
+    alert(
+      "Não é possível remover itens após aplicar o desconto ou confirmar a compra."
+    );
+    return;
+  }
+
+  if (!confirm("Tem certeza que deseja remover este item?")) {
+    return;
+  }
+
+  const itemElement = document.querySelector(
+    `.cart-item[data-item-id="${itemId}"]`
+  );
+  if (itemElement) {
+    itemElement.style.opacity = "0.5";
+  }
+
+  fetch("remove-item.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({ itemId }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((err) => {
+          throw new Error(
+            err.error || `HTTP error! status: ${response.status}`
+          );
+        });
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Resposta do servidor:", data);
+
+      if (data.success) {
+        if (itemElement) {
+          itemElement.remove();
+        }
+
+        const cartCounter = document.querySelector(".cart-counter");
+        if (cartCounter) {
+          cartCounter.textContent = data.itemCount;
+          cartCounter.style.display = data.itemCount > 0 ? "block" : "none";
+        }
+
+        if (data.isEmpty) {
+          const elementsToHide = [
+            "cart-items",
+            "discount-form-container",
+            "#confirmation-message",
+            ".button-container",
+            ".discount-form",
+            ".discount-info",
+            ".discount-success",
+            ".discount-amount",
+            ".discount-title",
+          ];
+          elementsToHide.forEach((elementId) => {
+            const element =
+              document.getElementById(elementId) ||
+              document.querySelector(elementId);
+            if (element) {
+              element.style.display = "none";
+            }
+          });
+
+          const emptyCartContainer = document.createElement("div");
+          emptyCartContainer.className = "empty-cart-container";
+
+          const emptyMessage = document.createElement("p");
+          emptyMessage.className = "empty-cart-message";
+          emptyMessage.textContent = "Seu carrinho está vazio";
+
+          const continueButton = document.createElement("button");
+          continueButton.className = "continue-shopping-btn";
+          continueButton.textContent = "Retornar para Loja";
+          continueButton.onclick = () =>
+            (window.location.href = "../../index.html");
+
+          emptyCartContainer.appendChild(emptyMessage);
+          emptyCartContainer.appendChild(continueButton);
+
+          const totalElement = document.querySelector(".total-title");
+          if (totalElement) {
+            totalElement.innerHTML = "";
+            totalElement.appendChild(emptyCartContainer);
+          }
+        } else {
+          const totalElement = document.querySelector(".total-title");
+          if (totalElement) {
+            totalElement.innerHTML = `<strong>Total:</strong> R$ ${data.newTotalFormatted}`;
+          }
+        }
+      } else {
+        alert(`Erro ao remover item: ${data.error}`);
+        if (itemElement) {
+          itemElement.style.opacity = "1";
+        }
+      }
+    })
+    .catch((error) => {
+      console.error("Erro ao remover item:", error);
+      alert(`Erro ao remover item: ${error.message}`);
+      if (itemElement) {
+        itemElement.style.opacity = "1";
+      }
+    });
 }
 
 // Função para atualizar a barra de progresso e os ícones dos passos
@@ -161,419 +390,14 @@ $("#prev").on("click", function () {
 // Inicializa as etapas com o estilo correto (passo 1)
 updateProgressBarAndIcons(1); // Inicializa o passo 1 com 33% e cor violeta
 
-/* Função para aplicar desconto */
-function applyDiscount(discountCode) {
-  if (isDiscountApplied) {
-    showMessage(messages.discountAlreadyApplied, "error");
-    return;
-  }
+// Função para alertar sobre a perda de dados ao atualizar ou sair da página
+window.addEventListener("beforeunload", function (e) {
+  const confirmationMessage = "Seus dados serão perdidos.";
+  e.preventDefault(); // Previne a ação padrão
+  e.returnValue = confirmationMessage; // Define a mensagem de confirmação
+});
 
-  const code =
-    discountCode || document.querySelector(".discount-input")?.value.trim();
-  const totalElement = document.querySelector(".total-title");
-
-  if (!totalElement) {
-    console.error("Total element not found");
-    return;
-  }
-  const cartSummary = document.querySelector(".cart-summary");
-  if (cartSummary.lenght > 4) {
-    // Aplica a altura fixa e o overflow de acordo com a quantidade de itens no carrinho
-    cartSummary.style.height = cartItens.length > 4 ? "auto" : "auto";
-    cartSummary.style.overflow = cartItens.length <= 4 ? "hidden" : ""; // Aplica overflow apenas quando há 3 ou menos itens
-  }
-  const currentTotal = parseFloat(
-    totalElement.textContent.replace(/[^\d,]/g, "").replace(",", ".")
-  );
-  if (validDiscountCodes.includes(code)) {
-    const discountAmount = currentTotal * 0.1;
-    const totalAfterDiscount = currentTotal - discountAmount;
-
-    totalElement.innerHTML = `<strong>Total com desconto:&nbsp;</strong> R$ ${totalAfterDiscount
-      .toFixed(2)
-      .replace(".", ",")}`;
-
-    insertDiscountInfo(createDiscountInfo(discountAmount));
-    disableDiscountInputAndButton();
-
-    isDiscountApplied = true;
-    updateInstallments(totalAfterDiscount);
-  } else {
-    clearExistingDiscountInfo();
-    showMessage(messages.invalidDiscountCode, "error");
-    resetDiscountInput();
-  }
-}
-
-/* Função para exibir mensagens ao usuário */
-function showMessage(message, type) {
-  clearExistingMessage();
-  const messageElement = document.createElement("div");
-  messageElement.className = `message ${type === "error" ? "discount-alert error-message" : "success-message"
-    }`;
-  messageElement.innerHTML = `<strong>${message}</strong>`;
-
-  const formContainer = document.querySelector(".discount-form-container");
-  if (formContainer) {
-    formContainer.parentNode.insertBefore(messageElement, formContainer);
-    setTimeout(() => {
-      messageElement.remove();
-    }, 3000);
-  }
-}
-
-/* Função para limpar mensagens existentes */
-function clearExistingMessage() {
-  const existingMessage = document.querySelector(".message");
-  if (existingMessage) {
-    existingMessage.remove();
-  }
-}
-
-/* Funções para gerenciar informações de desconto */
-function createDiscountInfo(discountAmount) {
-  const discountInfo = document.createElement("div");
-  discountInfo.className = "discount-info discount-success";
-  discountInfo.innerHTML = `
-    <div class="discount-title success-message"><strong>${messages.discountApplied
-    }</strong></div>
-    <div class="discount-amount"><strong>Desconto aplicado:&nbsp;</strong> R$ ${discountAmount
-      .toFixed(2)
-      .replace(".", ",")}</div>`;
-  return discountInfo;
-}
-
-function insertDiscountInfo(discountInfo) {
-  const formContainer = document.querySelector(".discount-form-container");
-  if (formContainer) {
-    clearExistingDiscountInfo();
-    formContainer.parentNode.insertBefore(discountInfo, formContainer);
-  }
-}
-
-function clearExistingDiscountInfo() {
-  const existingDiscountInfo = document.querySelector(".discount-info");
-  if (existingDiscountInfo) {
-    existingDiscountInfo.remove();
-  }
-}
-/* Função para evitar cart-summary se deslocar */
-function adjustCartSummaryHeight() {
-  const cartSummary = document.querySelector(".cart-summary");
-  const cartContent = cartSummary.querySelector(".cart-content"); // Presume um contêiner interno
-
-  if (cartSummary && cartContent) {
-    const contentHeight = cartContent.offsetHeight; // Obtém a altura real do conteúdo interno
-    cartSummary.style.height = `${contentHeight}px`; // Define a altura baseada no conteúdo
-  }
-}
-
-/* Função para desativar entrada e botão de desconto */
-function disableDiscountInputAndButton() {
-  const discountInput = document.querySelector(".discount-input");
-  const discountBtn = document.querySelector(".discount-btn");
-  const discountFormContainer = document.querySelector(
-    ".discount-form-container"
-  );
-  const confirmationMessage = document.querySelector("#confirmation-message");
-
-  // Desativa os campos de desconto
-  if (discountInput) discountInput.disabled = true;
-  if (discountBtn) discountBtn.disabled = true;
-
-  // Oculta o formulário de desconto sem deslocar o layout
-  if (discountFormContainer) {
-    discountFormContainer.style.position = "absolute"; // Remove do fluxo normal do layout
-    discountFormContainer.style.zIndex = "100"; // Sobrepõe outros elementos
-    discountFormContainer.style.transform = "translateY(-100%)"; // Move para fora da visão
-    discountFormContainer.style.transition =
-      "transform 0.3s ease, opacity 0.3s ease"; // Animação suave
-    discountFormContainer.style.opacity = "0"; // Oculta visualmente
-  }
-
-  // Ajusta o #confirmation-message e seus conteúdos para subir
-  if (confirmationMessage) {
-    confirmationMessage.style.position = "relative"; // Mantém no fluxo de layout
-    confirmationMessage.style.transform = "translateY(-1rem)"; // Move para cima
-    confirmationMessage.style.transition = "transform 0.3s ease"; // Animação suave
-
-    // Ajusta estilos internos se necessário
-    const paragraph = confirmationMessage.querySelector("p");
-    const buttonContainer =
-      confirmationMessage.querySelector(".button-container");
-
-    if (paragraph) {
-      paragraph.style.marginTop = "0"; // Remove margem adicional
-      paragraph.style.transition = "transform 0.3s ease"; // Animação suave
-    }
-
-    if (buttonContainer) {
-      buttonContainer.style.marginTop = "0"; // Remove margem adicional
-      buttonContainer.style.transition = "transform 0.3s ease"; // Animação suave
-    }
-  }
-}
-
-/* Função para redefinir entrada de desconto */
-function resetDiscountInput() {
-  const discountInput = document.querySelector(".discount-input");
-  if (discountInput) {
-    discountInput.value = "";
-    discountInput.classList.add("error");
-    setTimeout(() => {
-      discountInput.classList.remove("error");
-    }, 3000);
-  }
-}
-
-/* Função para atualizar parcelas (installments) com base no desconto. */
-function updateInstallments(totalAfterDiscount) {
-  const installmentsSelect = document.getElementById("installments");
-  installmentsSelect.innerHTML = ""; // Limpa opções existentes
-
-  const totalElement = document.querySelector(".total-title");
-  const currentTotal = parseFloat(
-    totalElement.textContent.replace(/[^\d,]/g, "").replace(",", ".")
-  );
-  const totalToConsider = isDiscountApplied ? totalAfterDiscount : currentTotal;
-
-  const installmentValues = {
-    1: totalToConsider.toFixed(2).replace(".", ","),
-    2: (totalToConsider / 2).toFixed(2).replace(".", ","),
-    3: (totalToConsider / 3).toFixed(2).replace(".", ","),
-  };
-
-  for (const [numInstallments, installmentValue] of Object.entries(
-    installmentValues
-  )) {
-    const optionText =
-      `${numInstallments} x R$ ${installmentValue}` +
-      (isDiscountApplied ? " (com desconto)" : "");
-    const option = document.createElement("option");
-    option.value = numInstallments;
-    option.textContent = optionText;
-    installmentsSelect.appendChild(option);
-  }
-}
-
-/* Função para rolagem automática de produtos. */
-function autoScrollProducts() {
-  const cartContainer = document.getElementById("cart-items");
-  if (!cartContainer) return;
-  const scrollSpeed = 30; // Pixels per scroll
-  const scrollInterval = 3000; // Time between each scroll (3 seconds)
-  let scrollPosition = 0;
-  function scroll() {
-    if (!cartContainer) return;
-    if (
-      scrollPosition >=
-      cartContainer.scrollHeight - cartContainer.clientHeight
-    ) {
-      scrollPosition = 0;
-    } else {
-      scrollPosition += scrollSpeed;
-    }
-    cartContainer.scrollTo({
-      top: scrollPosition,
-      behavior: "smooth",
-    });
-  }
-  const scrollTimer = setInterval(scroll, scrollInterval);
-  cartContainer.addEventListener("mouseenter", () => {
-    clearInterval(scrollTimer);
-  });
-
-  cartContainer.addEventListener("mouseleave", () => {
-    scrollPosition = cartContainer.scrollTop;
-    setInterval(scroll, scrollInterval);
-  });
-}
-/* Função para verificar se o carrinho está vazio */
-function isCartEmpty() {
-  // Verifica se há itens no carrinho (substitua por sua lógica)
-  return document.querySelectorAll('.cart-item').length === 0;
-}
-
-/* Verifica o estado do carrinho ao carregar a página e após remover itens */
-function updateCartSummaryVisibility() {
-  const cartSummary = document.querySelector('.cart-summary');
-
-  if (isCartEmpty()) {
-    cartSummary.style.display = 'none';
-  } else {
-    cartSummary.style.display = 'block';
-  }
-
-  // Adiciona o evento de visibilidade da página
-  document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'hidden') {
-      window.location.href = '../../index.html';
-    }
-  });
-}
-
-/* Chamar a função ao carregar a página */
-updateCartSummaryVisibility();
-
-/* Função para remover items clicando no icone da lixeira */
-function removeItem(itemId) {
-  // Verifica se há desconto aplicado
-  const discountInfo = document.querySelector(".discount-info");
-  if (discountInfo && discountInfo.style.display !== "none") {
-    alert("Não é possível remover itens após aplicar o desconto.");
-    return;
-  }
-
-  if (!confirm("Tem certeza que deseja remover este item?")) {
-    return;
-  }
-
-  const itemElement = document.querySelector(
-    `.cart-item[data-item-id="${itemId}"]`
-  );
-  if (itemElement) {
-    itemElement.style.opacity = "0.5";
-  }
-
-  fetch("remove-item.php", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify({ itemId }),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        return response.json().then((err) => {
-          throw new Error(
-            err.error || `HTTP error! status: ${response.status}`
-          );
-        });
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log("Resposta do servidor:", data);
-
-      if (data.success) {
-        // Remove o item do DOM
-        if (itemElement) {
-          itemElement.remove();
-        }
-
-        // Atualiza o contador se existir
-        const cartCounter = document.querySelector(".cart-counter");
-        if (cartCounter) {
-          cartCounter.textContent = data.itemCount;
-          cartCounter.style.display = data.itemCount > 0 ? "block" : "none";
-        }
-
-        // Handle empty cart without reloading the page
-        if (data.isEmpty) {
-          // Hide elements
-          const elementsToHide = [
-            "cart-items",
-            "discount-form-container",
-            "#confirmation-message",
-            ".button-container",
-            ".discount-form",
-            ".discount-info",
-            ".discount-success",
-            ".discount-amount",
-            ".discount-title",
-          ];
-          elementsToHide.forEach((elementId) => {
-            const element =
-              document.getElementById(elementId) ||
-              document.querySelector(elementId);
-            if (element) {
-              element.style.display = "none";
-            }
-          });
-
-          // Criar container para mensagem e botão
-          const emptyCartContainer = document.createElement("div");
-          emptyCartContainer.className = "empty-cart-container";
-
-          // Criar mensagem de carrinho vazio
-          const emptyMessage = document.createElement("p");
-          emptyMessage.className = "empty-cart-message";
-          emptyMessage.textContent = "Seu carrinho está vazio";
-
-          // Criar botão "Continuar Comprando"
-          const continueButton = document.createElement("button");
-          continueButton.className = "continue-shopping-btn";
-          continueButton.textContent = "Continuar Comprando";
-          continueButton.onclick = () =>
-            (window.location.href = "../../index.html");
-
-          // Montar e adicionar os elementos
-          emptyCartContainer.appendChild(emptyMessage);
-          emptyCartContainer.appendChild(continueButton);
-
-          // Substituir o conteúdo do totalElement
-          const totalElement = document.querySelector(".total-title");
-          if (totalElement) {
-            totalElement.innerHTML = "";
-            totalElement.appendChild(emptyCartContainer);
-          }
-        } else {
-          // Atualiza o total se o carrinho não estiver vazio
-          const totalElement = document.querySelector(".total-title");
-          if (totalElement) {
-            totalElement.innerHTML = `<strong>Total:</strong> R$ ${data.newTotalFormatted}`;
-          }
-        }
-      } else {
-        alert(`Erro ao remover item: ${data.error}`);
-        if (itemElement) {
-          itemElement.style.opacity = "1";
-        }
-      }
-    })
-    .catch((error) => {
-      console.error("Erro ao remover item:", error);
-      alert(`Erro ao remover item: ${error.message}`);
-      if (itemElement) {
-        itemElement.style.opacity = "1";
-      }
-    });
-}
-
-// Função para desabilitar os ícones de lixeira quando o desconto for aplicado
-function disableTrashIcons() {
-  const trashIcons = document.querySelectorAll(".trash-icon"); // Ajuste para a classe correta dos seus ícones
-  trashIcons.forEach((icon) => {
-    icon.style.opacity = "0.5";
-    icon.style.cursor = "not-allowed";
-    icon.style.pointerEvents = "none";
-  });
-}
-
-// Função para habilitar os ícones de lixeira se o desconto for removido
-function enableTrashIcons() {
-  const trashIcons = document.querySelectorAll(".trash-icon"); // Ajuste para a classe correta dos seus ícones
-  trashIcons.forEach((icon) => {
-    icon.style.opacity = "1";
-    icon.style.cursor = "pointer";
-    icon.style.pointerEvents = "auto";
-  });
-}
-
-/* Função para lidar com cliques no botão de confirmação */
-function handleConfirmation() {
-  confirmYesButton.addEventListener("click", function () {
-    alert("Preencha os dados de Login para prosseguir com a compra.");
-    confirmationMessage.style.display = "none";
-    discountForm.style.display = "none";
-  });
-
-  confirmNoButton.addEventListener("click", function (event) {
-    event.preventDefault();
-    window.location.href = "../../index.html";
-  });
-}
-
-/* Chame a função handleConfirmation quando o script for carregado */
-handleConfirmation();
+// Função para redirecionar para index.html após o alerta
+window.addEventListener("unload", function () {
+  window.location.href = "../../index.html";
+});
