@@ -149,6 +149,14 @@ label {
   display: flex;
 }
 
+.empty-cart-message{
+font-size:1.6rem;
+font-weight:500;
+display:flex;
+justify-content: center; 
+}
+
+
 /* Discount */
 .discount-form-container {
   display: flex;
@@ -362,44 +370,15 @@ label {
   background-color: var(--green);
 }
 
-/* Estilo para a mensagem de carrinho vazio */
-.empty-cart-message {
-  font-size: 1.6rem;
-  font-style: oblique;
-  color: var(--black);
-  text-align: center;
-  margin-top: 3rem;
-}
-
-/* Estilo para o botão de continuar comprando */
-.continue-shopping-btn {
-  display: inline-block;
-  padding: 6px 15px; /* Espaçamento interno do botão */
-  font-size: 1.4rem;
-  font-weight: 500;
-  font-style: oblique;
-  color: var(--white);
-  background-color: var(--blue);
-  border: none;
-  border-radius: 5px;
-  text-align: center;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background-color 0.3s ease;
-  position: relative;
-  left: 10px;
-  top: 50px; /* Ajusta a posição do botão para baixo */
-}
-
 /* Estilo para os passos */
 .container-steps {
   width: 100%;
   max-width: 53.33%;
   display: flex;
-  justify-content: center; /* Centraliza o container */
+  justify-content: flex-end;
   position: absolute;
   top: 5%;
-  left: 62%;
+  left: 51%;
   transform: translateX(-50%) translateY(-20%);
 }
 
@@ -442,7 +421,6 @@ label {
   flex-direction: column;
   transition: all 0.3s ease;
   position: relative;
-  text-align: center; /* Adicionado para centralizar o texto */
 }
 
 /* Passo ativo (quando o círculo for verde) */
@@ -466,8 +444,8 @@ label {
   font-size: 1.5rem;
   font-weight: 500;
   color: var(--black);
-  margin-top: 6rem; /* Ajuste a margem superior conforme necessário */
-  margin-left: 0.2rem;
+  margin-top: 6rem;
+  margin-left: 0.6rem;
   text-align: center;
   width: 100%;
 }
@@ -476,32 +454,18 @@ label {
 .container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 20px;
+  gap: 15px;
+  padding: 30px;
   border: 1px solid var(--grey);
   border-radius: 10px;
   background-color: var(--white);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   position: absolute;
-  top: 20%; /* Ajusta o espaço entre os dois containers */
-  left: 28%;
-  transform: translateX(50%) translateY(0);
-  max-width: 33.59%; /* Substitui 430px por 33.59% da largura da tela */
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 430px;
   width: 100%;
-}
-
-.container form {
-  margin: 0 2rem;
-}
-
-.container input {
-  width: 100%;
-  color: inherit;
-  background-color: transparent;
-  border: none;
-  border-bottom: 1px solid var(--grey);
-  padding-left: 3rem;
-  font-size: 15px;
 }
 
 .container input:focus {
@@ -514,26 +478,162 @@ label {
   color: transparent;
 }
 
-.container label {
-  position: relative;
-  color: var(--grey);
-  left: 2rem;
-  top: -2rem;
-  cursor: auto;
-  transition: 0.3s ease all;
+.box-title{
+font-size:1.8rem;
+font-weight:500;
 }
 
-.container input:focus ~ label,
-input:not(:placeholder-shown) ~ label {
-  top: -3rem;
-  color: transparent;
+.input-group {
+  position: relative;
+  margin-top: 10px;
+}
+
+.input-group input {
+  padding-left: 3rem;
+  padding-right: 4rem; 
+  height: 3rem;
+  width: 100%;
+  border: 1px solid var(--grey);
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 1.6rem;
+  transition: border-color 0.3s ease;
+}
+
+.input-group label {
+  position: absolute;
+  left: 35px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 1rem;
+  color: var(--grey);
+}
+
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+  top: -10px;  
+  font-size: 0.8rem;
+  color: var(--white);
+  transform: translateY(0);
+}
+
+.input-group input:focus {
+  border-color: var(--blue2);
+  outline: none;
+}
+
+.input-group i {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  font-size:1.5rem;
+  transform: translateY(-50%);
+  color: var(--black);
+}
+
+.password-container {
+  position: relative;
+  margin-top: 10px;
+}
+
+.password-container input {
+  padding-left: 3rem;
+  padding-right: 4rem; 
+}
+
+.eye-icon {
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: var(--grey);
+  z-index: 2;
+  margin-left: 33rem;  
+}
+
+.eye-icon:hover {
+  color: var(--blue2);
+}
+
+.eye-icon-hide {
+  display: none;
+}
+
+.input-group input:focus,
+.password-container input:focus {
+  border-color: var(--blue2);
+  outline: none;
+}
+
+.radio-container {
+  margin-bottom: 20px;
+}
+
+.radio-container .input-group {
+  margin-top: 0;
+}
+
+.radio-container .input-group {
+  position: static;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--black);
+  margin-bottom: 10px;
+  transform: none;
+}
+
+.title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+.radio-form {
+  margin-top: 10px;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  align-items: center;
+}
+
+.radio-item {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 8px;
+}
+
+.radio-item input[type="radio"] {
+  margin: 0;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.radio-item label {
+  position: static;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--black);
+  cursor: pointer;
+  margin: 0;
+  transform: none;
+}
+
+.hidden-section {
+  display: none;
+}
+
+.common-fields {
+  display: block;
 }
 
 .auth-buttons {
   color: hsl(246, 51%, 54%);
   background-color: transparent;
   border: none;
-  margin-top: 0.5rem;
   font-size: 1.3rem;
   font-weight: 500;
 }
@@ -543,43 +643,7 @@ input:not(:placeholder-shown) ~ label {
   text-decoration: underline;
 }
 
-.box-title {
-  position: relative;
-  font-size: 1.8rem;
-  font-weight: 500;
-  top: -1rem;
-  color: var(--black);
-}
-
-.input-group {
-  position: relative;
-  padding: 1% 0;
-}
-
-.input-group i {
-  position: absolute;
-  font-size: 1.6rem;
-  color: var(--black);
-}
-
-.recover {
-  font-size: 1.3rem;
-  font-weight: 500;
-  margin-bottom: 1rem;
-  text-align: right;
-}
-
-.recover a {
-  text-decoration: none;
-  color: hsl(246, 51%, 54%);
-}
-
-.recover a:hover {
-  color: var(--blue);
-  text-decoration: underline;
-}
-
-input[type="submit"].auth-btn {
+.auth-btn {
   width: 100%;
   font-size: 1.3rem;
   font-weight: 500;
@@ -592,14 +656,15 @@ input[type="submit"].auth-btn {
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
   text-align: center;
+  margin-top: 15px;
 }
 
-input[type="submit"].auth-btn:hover {
+.auth-btn:hover {
   background: hsl(135, 83%, 34%);
   transform: scale(1.05);
 }
 
-input[type="submit"].auth-btn:active {
+.auth-btn:active {
   transform: scale(0.98);
   background: hsl(135, 83%, 30%);
 }
@@ -614,41 +679,6 @@ input[type="submit"].auth-btn:active {
   font-weight: 400;
 }
 
-/* Estilos para os ícones de exibir/ocultar a senha */
-.password-container {
-  position: relative;
-}
-
-.password-container input {
-  padding-right: 40px; /* Espaço para os ícones */
-}
-
-/* Ícones de exibir/ocultar senha - Login */
-.password-container #eyeicon-show-login,
-.password-container #eyeicon-hide-login,
-.password-container #eyeicon-show-signup,
-.password-container #eyeicon-hide-signup,
-.password-container #eyeicon-show-confirm,
-.password-container #eyeicon-hide-confirm {
-  position: absolute;
-  right: 5px; /* Ajusta a distância da borda direita */
-  top: 35%; /* Posiciona verticalmente no meio do campo de entrada */
-  transform: translateY(-50%);
-  font-size: 20px; /* Tamanho do ícone */
-  cursor: pointer;
-  color: var(--black);
-}
-
-.password-container #eyeicon-show-login:hover,
-.password-container #eyeicon-hide-login:hover,
-.password-container #eyeicon-show-signup:hover,
-.password-container #eyeicon-hide-signup:hover,
-.password-container #eyeicon-show-confirm:hover,
-.password-container #eyeicon-hide-confirm:hover {
-  color: var(--blue2); /* Cor ao passar o mouse */
-}
-
-/* Inicialmente, os ícones de "ocultar" devem estar escondidos */
 #eyeicon-hide-login,
 #eyeicon-hide-signup,
 #eyeicon-hide-confirm {

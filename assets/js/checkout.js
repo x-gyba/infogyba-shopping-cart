@@ -4,11 +4,11 @@ if (typeof isDiscountApplied === "undefined") {
 }
 
 // Seleção dos elementos necessários
-var confirmYesButton = document.getElementById("confirm-yes");
-var confirmNoButton = document.getElementById("confirm-no");
-var discountForm = document.querySelector(".discount-form-container");
-var validDiscountCodes = ["DESCONTO10"];
-var messages = {
+const confirmYesButton = document.getElementById("confirm-yes");
+const confirmNoButton = document.getElementById("confirm-no");
+const discountForm = document.querySelector(".discount-form-container");
+const validDiscountCodes = ["DESCONTO10"];
+const messages = {
   discountApplied: "Você ganhou 10% de desconto!",
   discountAlreadyApplied: "Desconto já aplicado!",
   invalidDiscountCode: "Código de desconto inválido.",
@@ -20,45 +20,69 @@ function toggleForms(showSignup) {
   const signinForm = document.getElementById("signin");
   const signupForm = document.getElementById("signup");
 
-  if (showSignup) {
-    signinForm.style.display = "none";
-    signupForm.style.display = "block";
-  } else {
-    signinForm.style.display = "block";
-    signupForm.style.display = "none";
-  }
+  signinForm.style.display = showSignup ? "none" : "block";
+  signupForm.style.display = showSignup ? "block" : "none";
 }
-
-// Event listeners para alternar entre os formulários
-document.getElementById("signup-btn").addEventListener("click", (e) => {
-  e.preventDefault();
-  toggleForms(true); // Exibe o formulário de registro
-});
-
-document.getElementById("sign-btn").addEventListener("click", (e) => {
-  e.preventDefault();
-  toggleForms(false); // Exibe o formulário de login
-});
-
-// Inicializa a página com o formulário de login visível
-toggleForms(false);
 
 // Função para alternar a visibilidade da senha
-function togglePasswordVisibility(formType, passwordFieldId) {
-  const passwordField = document.getElementById(passwordFieldId);
-  const toggleIconShow = document.getElementById("eyeicon-show-" + formType);
-  const toggleIconHide = document.getElementById("eyeicon-hide-" + formType);
+// Função para alternar a visibilidade da senha
+function togglePasswordVisibility(type) {
+  const passwordField = document.getElementById(`senha_${type}`);
+  const eyeIconShow = document.getElementById(`eyeicon-show-senha_${type}`);
+  const eyeIconHide = document.getElementById(`eyeicon-hide-senha_${type}`);
 
   if (passwordField.type === "password") {
-    passwordField.type = "text"; // Show password
-    toggleIconShow.style.display = "none";
-    toggleIconHide.style.display = "inline";
+    passwordField.type = "text";
+    eyeIconShow.style.display = "none";
+    eyeIconHide.style.display = "inline";
   } else {
-    passwordField.type = "password"; // Hide password
-    toggleIconShow.style.display = "inline";
-    toggleIconHide.style.display = "none";
+    passwordField.type = "password";
+    eyeIconShow.style.display = "inline";
+    eyeIconHide.style.display = "none";
   }
 }
+
+function toggleConfirmPasswordVisibility(type) {
+  const confirmPasswordField = document.getElementById(`confirmar_senha_${type}`);
+  const eyeIconShowConfirm = document.getElementById(`eyeicon-show-confirmar_senha_${type}`);
+  const eyeIconHideConfirm = document.getElementById(`eyeicon-hide-confirmar_senha_${type}`);
+
+  if (confirmPasswordField.type === "password") {
+    confirmPasswordField.type = "text";
+    eyeIconShowConfirm.style.display = "none";
+    eyeIconHideConfirm.style.display = "inline";
+  } else {
+    confirmPasswordField.type = "password";
+    eyeIconShowConfirm.style.display = "inline";
+    eyeIconHideConfirm.style.display = "none";
+  }
+}
+
+// Alternar campos conforme o tipo de pessoa
+function togglePessoa(tipo) {
+  const pessoaFisica = document.getElementById("pessoa-fisica");
+  const pessoaJuridica = document.getElementById("pessoa-juridica");
+
+  pessoaFisica.style.display = tipo === 'fisica' ? "block" : "none";
+  pessoaJuridica.style.display = tipo === 'juridica' ? "block" : "none";
+}
+
+// Alternar entre login e registro
+document.getElementById("signup-btn").addEventListener("click", function(e) {
+  e.preventDefault();
+  toggleForms(true);
+});
+
+document.getElementById("sign-btn").addEventListener("click", function(e) {
+  e.preventDefault();
+  toggleForms(false);
+});
+
+// Inicializar ao carregar a página
+document.addEventListener('DOMContentLoaded', function() {
+  togglePessoa('fisica'); // Mostrar Pessoa Física por padrão
+  toggleForms(false); // Mostrar o formulário de login por padrão
+});
 
 // Função para aplicar desconto
 function applyDiscount() {
@@ -68,10 +92,7 @@ function applyDiscount() {
   }
 
   // Verifica se as lixeiras estão desabilitadas
-  const trashIcons = document.querySelectorAll(".remove-btn");
-  const isTrashIconsDisabled = Array.from(trashIcons).every(
-    (icon) => icon.disabled
-  );
+  const isTrashIconsDisabled = Array.from(document.querySelectorAll(".remove-btn")).every(icon => icon.disabled);
   if (isTrashIconsDisabled) {
     showMessage("Desconto Bloqueado", "error");
     return;
@@ -82,15 +103,11 @@ function applyDiscount() {
   const code = discountInput.value.trim();
 
   if (code === "DESCONTO10") {
-    const currentTotal = parseFloat(
-      totalElement.textContent.replace(/[^\d,]/g, "").replace(",", ".")
-    );
+    const currentTotal = parseFloat(totalElement.textContent.replace(/[^\d,]/g, "").replace(",", "."));
     const discountAmount = currentTotal * 0.1;
     const totalAfterDiscount = currentTotal - discountAmount;
 
-    totalElement.innerHTML = `<strong>Total com desconto:&nbsp;</strong> R$ ${totalAfterDiscount
-      .toFixed(2)
-      .replace(".", ",")}`;
+    totalElement.innerHTML = `<strong>Total com desconto:&nbsp;</strong> R$ ${totalAfterDiscount.toFixed(2).replace(".", ",")}`;
 
     isDiscountApplied = true;
     disableTrashIcons();
@@ -109,9 +126,7 @@ function showMessage(message, type) {
   }
 
   const messageElement = document.createElement("div");
-  messageElement.className = `message ${
-    type === "error" ? "discount-alert error-message" : "success-message"
-  }`;
+  messageElement.className = `message ${type === "error" ? "discount-alert error-message" : "success-message"}`;
   messageElement.innerHTML = `<strong>${message}</strong>`;
 
   const formContainer = document.querySelector(".discount-form-container");
@@ -125,8 +140,7 @@ function showMessage(message, type) {
 
 // Função para desabilitar os ícones de lixeira
 function disableTrashIcons() {
-  const trashIcons = document.querySelectorAll(".remove-btn");
-  trashIcons.forEach((icon) => {
+  document.querySelectorAll(".remove-btn").forEach(icon => {
     icon.disabled = true; // Desabilita o botão
     icon.style.opacity = "0.5"; // Reduz a opacidade para indicar desabilitação
     icon.style.cursor = "not-allowed"; // Impede o cursor de ser interativo
@@ -174,13 +188,8 @@ function confirmPurchase() {
 // Função para remover itens
 function removeItem(itemId) {
   // Verifica se a confirmação foi feita
-  if (
-    isPurchaseConfirmed ||
-    (discountInfo && discountInfo.style.display !== "none")
-  ) {
-    alert(
-      "Não é possível remover itens após aplicar o desconto ou confirmar a compra."
-    );
+  if (isPurchaseConfirmed || (discountInfo && discountInfo.style.display !== "none")) {
+    alert("Não é possível remover itens após aplicar o desconto ou confirmar a compra.");
     return;
   }
 
@@ -188,9 +197,7 @@ function removeItem(itemId) {
     return;
   }
 
-  const itemElement = document.querySelector(
-    `.cart-item[data-item-id="${itemId}"]`
-  );
+  const itemElement = document.querySelector(`.cart-item[data-item-id="${itemId}"]`);
   if (itemElement) {
     itemElement.style.opacity = "0.5";
   }
@@ -199,21 +206,19 @@ function removeItem(itemId) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Accept: "application/json",
+      "Accept": "application/json",
     },
     body: JSON.stringify({ itemId }),
   })
-    .then((response) => {
+    .then(response => {
       if (!response.ok) {
-        return response.json().then((err) => {
-          throw new Error(
-            err.error || `HTTP error! status: ${response.status}`
-          );
+        return response.json().then(err => {
+          throw new Error(err.error || `HTTP error! status: ${response.status}`);
         });
       }
       return response.json();
     })
-    .then((data) => {
+    .then(data => {
       console.log("Resposta do servidor:", data);
 
       if (data.success) {
@@ -239,10 +244,8 @@ function removeItem(itemId) {
             ".discount-amount",
             ".discount-title",
           ];
-          elementsToHide.forEach((elementId) => {
-            const element =
-              document.getElementById(elementId) ||
-              document.querySelector(elementId);
+          elementsToHide.forEach(elementId => {
+            const element = document.getElementById(elementId) || document.querySelector(elementId);
             if (element) {
               element.style.display = "none";
             }
@@ -258,8 +261,7 @@ function removeItem(itemId) {
           const continueButton = document.createElement("button");
           continueButton.className = "continue-shopping-btn";
           continueButton.textContent = "Retornar para Loja";
-          continueButton.onclick = () =>
-            (window.location.href = "../../index.html");
+          continueButton.onclick = () => (window.location.href = "../../index.html");
 
           emptyCartContainer.appendChild(emptyMessage);
           emptyCartContainer.appendChild(continueButton);
@@ -282,7 +284,7 @@ function removeItem(itemId) {
         }
       }
     })
-    .catch((error) => {
+    .catch(error => {
       console.error("Erro ao remover item:", error);
       alert(`Erro ao remover item: ${error.message}`);
       if (itemElement) {
@@ -324,7 +326,7 @@ function updateProgressBarAndIcons(step) {
 }
 
 // Lógica de login
-$("#signin-form").on("submit", function (e) {
+$("#signin-form").on("submit", function(e) {
   e.preventDefault();
   $.ajax({
     url: "", // Adicione a URL de envio do formulário
@@ -334,7 +336,7 @@ $("#signin-form").on("submit", function (e) {
       email: $("#signin-email").val(),
       senha: $("#signin-senha").val(),
     },
-    success: function (response) {
+    success: function(response) {
       if (response === "admin") {
         window.location.href = "dashboard.php"; // Redireciona para o painel de administração
       } else if (response === "success") {
@@ -347,22 +349,22 @@ $("#signin-form").on("submit", function (e) {
         alert(response); // Exibe a resposta do servidor, se o login falhar
       }
     },
-    error: function () {
+    error: function() {
       alert("Erro ao processar o login.");
     },
   });
 });
 
 // Avançar entre os passos
-$("#next").on("click", function () {
+$("#next").on("click", function() {
   if (currentStep === 1) {
-    $("#step1").fadeOut(function () {
+    $("#step1").fadeOut(function() {
       $("#step2").fadeIn();
     });
     updateProgressBarAndIcons(2); // Atualiza o progresso para Passo 2 (50%)
     currentStep = 2; // Atualiza o passo atual
   } else if (currentStep === 2) {
-    $("#step2").fadeOut(function () {
+    $("#step2").fadeOut(function() {
       $("#step3").fadeIn();
     });
     updateProgressBarAndIcons(3); // Atualiza o progresso para Passo 3 (50%) com cor violeta
@@ -371,15 +373,15 @@ $("#next").on("click", function () {
 });
 
 // Voltar entre os passos
-$("#prev").on("click", function () {
+$("#prev").on("click", function() {
   if (currentStep === 2) {
-    $("#step2").fadeOut(function () {
+    $("#step2").fadeOut(function() {
       $("#step1").fadeIn();
     });
     updateProgressBarAndIcons(1); // Atualiza o progresso para Passo 1 (33%)
     currentStep = 1; // Atualiza o passo atual
   } else if (currentStep === 3) {
-    $("#step3").fadeOut(function () {
+    $("#step3").fadeOut(function() {
       $("#step2").fadeIn();
     });
     updateProgressBarAndIcons(2); // Atualiza o progresso para Passo 2 (50%)
@@ -391,13 +393,13 @@ $("#prev").on("click", function () {
 updateProgressBarAndIcons(1); // Inicializa o passo 1 com 33% e cor violeta
 
 // Função para alertar sobre a perda de dados ao atualizar ou sair da página
-window.addEventListener("beforeunload", function (e) {
+window.addEventListener("beforeunload", function(e) {
   const confirmationMessage = "Seus dados serão perdidos.";
   e.preventDefault(); // Previne a ação padrão
   e.returnValue = confirmationMessage; // Define a mensagem de confirmação
 });
 
 // Função para redirecionar para index.html após o alerta
-window.addEventListener("unload", function () {
+window.addEventListener("unload", function() {
   window.location.href = "../../index.html";
 });
