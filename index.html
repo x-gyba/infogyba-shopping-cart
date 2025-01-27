@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teste</title>
+    <link
+      rel="shortcut icon"
+      href="./assets/images/favicon.ico"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+    />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <a href="#" class="logo">
+        <img src="./assets/images/logo.png" alt="logo" />
+        <span>Cestas Online</span></a
+      >
+      <ul class="navbar">
+        <li class="nav-item"><a href="#home" class="nav-link">Início</a></li>
+        <li class="nav-item"><a href="#about" class="nav-link">Sobre</a></li>
+        <li class="nav-item"><a href="#menu" class="nav-link">Menu</a></li>
+        <li class="nav-item"><a href="#" class="nav-link">link</a></li>
+        <li class="nav-item"><a href="#" class="nav-link">link</a></li>
+        <li class="nav-item"><a href="#" class="nav-link">Contato</a></li>
+        <div class="icon">
+         <i class="bx bx-shopping-bag" id="cart-btn"
+            ><span class="carrinho-item-qtd" value="1">0</span></i
+          >
+        </div>
+      </ul>
+      <div class="nav-toggle">
+        <i class="bx bx-menu"></i>
+      </div>
+      <!-- Carrinho -->
+<div class="carrinho">
+  <div class="header-carrinho">
+    <i class="bx bx-x-circle carrinho-close"></i>
+    <h2>Meu Carrinho:</h2>
+  </div>
+  <div class="carrinho-items">
+  </div>
+        <div class="carrinho-total">
+          <div class="lista">
+            <strong>Total:</strong>
+            <span class="carrinho-preco-total">R$ 0,00</span>
+          </div>
+          <button class="btn-checkout">
+            <i class="bx bx-cart-alt"></i>Pagar
+          </button>
+        </div>
+      </div>
+    </header>
+    <section class="menu" id="menu">
+        <div class="menu-items">
+        <div class="item">
+          <span class="titulo-item">Cesta Básica Ultra</span>
+          <img src="assets/images/cesta1.png" alt="cesta" class="img-item" />
+          <span class="preco-item">R$ 220,00</span>
+          <button class="add-cart">Adicionar</button>
+        </div>
+      </div>
+      <div class="menu-items">
+        <div class="item">
+          <span class="titulo-item">Cesta Básica Top</span>
+          <img src="assets/images/cesta1.png" alt="cesta" class="img-item" />
+          <span class="preco-item">R$ 220,00</span>
+          <button class="add-cart">Adicionar</button>
+        </div>
+      </div>
+      <div class="menu-items">
+        <div class="item">
+          <span class="titulo-item">Cesta Básica Slim</span>
+          <img src="assets/images/cesta1.png" alt="cesta" class="img-item" />
+          <span class="preco-item">R$ 120,00</span>
+          <button class="add-cart">Adicionar</button>
+        </div>
+      </div>
+      <div class="menu-items">
+        <div class="item">
+          <span class="titulo-item">Cesta Social Básica</span>
+          <img src="assets/images/cesta1.png" alt="cesta" class="img-item" />
+          <span class="preco-item">R$ 85,00</span>
+          <button class="add-cart">Adicionar</button>
+        </div>
+      </div>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="assets/js/script.js"></script>
+    <script src="assets/js/cart.js"></script>
+  </body>
+</html>
