@@ -60,7 +60,6 @@ label {
   flex-wrap: wrap;
 }
 
-/* cart-summary */
 .cart-summary {
   position: fixed;
   left: calc(50% - 60rem);
@@ -73,8 +72,6 @@ label {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   z-index: 2;
   overflow: hidden;
-
-  /*cálculo de altura para evitar deslocamentos na div */
   max-height: calc(100vh - 2rem);
   overflow-y: auto;
 }
@@ -105,8 +102,8 @@ label {
 }
 
 #cart-items {
-  max-height: 30rem; /* Altura máxima do container */
-  overflow-y: auto; /* Habilita a barra de rolagem vertical */
+  max-height: 30rem;
+  overflow-y: auto;
   position: relative;
   padding: 5px;
   background-color: var(--white);
@@ -115,13 +112,11 @@ label {
   scroll-behavior: smooth;
 }
 
-/* Estilo para os itens dentro do carrinho */
 #cart-items > div {
   padding: 10px 0;
   transition: all 0.3s ease;
 }
 
-/* Estilização da barra de rolagem */
 #cart-items::-webkit-scrollbar {
   width: 6px;
 }
@@ -149,15 +144,13 @@ label {
   display: flex;
 }
 
-.empty-cart-message{
-font-size:1.6rem;
-font-weight:500;
-display:flex;
-justify-content: center; 
+.empty-cart-message {
+  font-size: 1.6rem;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
 }
 
-
-/* Discount */
 .discount-form-container {
   display: flex;
   justify-content: center;
@@ -186,7 +179,7 @@ justify-content: center;
 }
 
 .discount-input:focus {
-  border-color: #007bff;
+  border-color: var(--blue2);
 }
 
 .discount-input::placeholder {
@@ -206,7 +199,7 @@ justify-content: center;
 }
 
 .discount-btn {
-  background-color: #007bff;
+  background-color: var(--blue2);
   color: var(--white);
   font-size: 1.2rem;
   font-weight: 600;
@@ -266,12 +259,11 @@ justify-content: center;
 }
 
 .discount-input.error {
-  border-color: var(--blue);
+  border-color: var(--blue2);
   background-color: #fff8f8;
   animation: shake 0.5s ease-in-out;
 }
 
-/* Animação de shake para feedback de erro */
 @keyframes shake {
   0%,
   100% {
@@ -292,7 +284,6 @@ justify-content: center;
   }
 }
 
-/* Estilos para input e botão quando desativados */
 .discount-input:disabled,
 .discount-btn:disabled {
   cursor: not-allowed;
@@ -300,18 +291,15 @@ justify-content: center;
   transition: opacity 0.5s ease;
 }
 
-/* Hover estado no botão */
 .discount-btn:not(:disabled):hover {
   opacity: 0.9;
 }
 
-/* Para garantir a transição suave quando for aplicado o desconto */
 .discount-input,
 .discount-btn {
   transition: opacity 0.5s ease;
 }
 
-/* Mensagem de confirmação */
 #confirmation-message {
   position: relative;
   display: flex;
@@ -326,14 +314,12 @@ justify-content: center;
   margin: 0 auto;
 }
 
-/* Estilo para o texto */
 #confirmation-message p {
   font-size: 1.4rem;
   font-weight: 500;
   margin-bottom: 5.25rem;
 }
 
-/* Botões de confirmação */
 #confirmation-message .button-container {
   display: flex;
   justify-content: center;
@@ -370,7 +356,6 @@ justify-content: center;
   background-color: var(--green);
 }
 
-/* Estilo para os passos */
 .container-steps {
   width: 100%;
   max-width: 53.33%;
@@ -408,7 +393,6 @@ justify-content: center;
   background-color: var(--green);
 }
 
-/* Estilo dos círculos */
 .circle {
   width: 3.5rem;
   height: 3.5rem;
@@ -423,12 +407,10 @@ justify-content: center;
   position: relative;
 }
 
-/* Passo ativo (quando o círculo for verde) */
 .circle.active {
   background-color: var(--green);
 }
 
-/* Estilo do ícone dentro do círculo */
 .circle i {
   font-size: 1.8rem;
   color: var(--white);
@@ -439,7 +421,6 @@ justify-content: center;
   transform: translate(-50%, -50%);
 }
 
-/* Estilo do nome da etapa (abaixo do círculo) */
 .step-name {
   font-size: 1.5rem;
   font-weight: 500;
@@ -450,7 +431,6 @@ justify-content: center;
   width: 100%;
 }
 
-/* Container de Login/Registro */
 .container {
   display: flex;
   flex-direction: column;
@@ -461,8 +441,8 @@ justify-content: center;
   background-color: var(--white);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   position: absolute;
-  top: 20%;
-  left: 50%;
+  top: 18%;
+  left: 60%;
   transform: translateX(-50%);
   max-width: 430px;
   width: 100%;
@@ -478,9 +458,9 @@ justify-content: center;
   color: transparent;
 }
 
-.box-title{
-font-size:1.8rem;
-font-weight:500;
+.box-title {
+  font-size: 1.8rem;
+  font-weight: 500;
 }
 
 .input-group {
@@ -490,13 +470,13 @@ font-weight:500;
 
 .input-group input {
   padding-left: 3rem;
-  padding-right: 4rem; 
+  padding-right: 4rem;
   height: 3rem;
   width: 100%;
   border: 1px solid var(--grey);
   border-radius: 5px;
   box-sizing: border-box;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   transition: border-color 0.3s ease;
 }
 
@@ -512,7 +492,7 @@ font-weight:500;
 
 .input-group input:focus + label,
 .input-group input:not(:placeholder-shown) + label {
-  top: -10px;  
+  top: -10px;
   font-size: 0.8rem;
   color: var(--white);
   transform: translateY(0);
@@ -527,7 +507,7 @@ font-weight:500;
   position: absolute;
   left: 10px;
   top: 50%;
-  font-size:1.5rem;
+  font-size: 1.5rem;
   transform: translateY(-50%);
   color: var(--black);
 }
@@ -539,7 +519,7 @@ font-weight:500;
 
 .password-container input {
   padding-left: 3rem;
-  padding-right: 4rem; 
+  padding-right: 4rem;
 }
 
 .eye-icon {
@@ -547,7 +527,7 @@ font-weight:500;
   cursor: pointer;
   color: var(--grey);
   z-index: 2;
-  margin-left: 33rem;  
+  margin-left: 33rem;
 }
 
 .eye-icon:hover {
@@ -556,12 +536,6 @@ font-weight:500;
 
 .eye-icon-hide {
   display: none;
-}
-
-.input-group input:focus,
-.password-container input:focus {
-  border-color: var(--blue2);
-  outline: none;
 }
 
 .radio-container {
@@ -651,8 +625,8 @@ font-weight:500;
   border-radius: 5px;
   outline: none;
   border: none;
-  background: #4070f4;
-  color: #ffffff;
+  background: var(--blue);
+  color: var(--white);
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
   text-align: center;

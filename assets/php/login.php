@@ -147,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <i class='bx bx-show eye-icon' id="eyeicon-show-senha_signin" onclick="togglePasswordVisibility('signin')"></i>
             <i class='bx bx-hide eye-icon' id="eyeicon-hide-senha_signin" onclick="togglePasswordVisibility('signin')" style="display: none;"></i>
         </div>
-        <input type="submit" class="auth-btn" value="Entrar">
+        <input type="submit" class="auth-btn" value="Entrar" name="signin">
     </form>
     <div class="links">
         <p>Não tem uma conta?</p>
@@ -160,23 +160,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h1 class="box-title">Registro</h1>
     <form method="POST" action="" id="signup-form">
         <!-- Tipo de Pessoa (Pessoa Física ou Jurídica) -->
-         <div class="radio-container">
-<div class="input-group">
-            <h3 class="title">Tipo de Pessoa:</h3>
-            <div class="radio-form">
-            <div class="radio-group">
-                <div class="radio-item">
-                    <label for="pessoa_fisica">Pessoa Física</label>
-                    <input type="radio" id="pessoa_fisica" name="tipo_pessoa" value="fisica" checked onchange="togglePessoa('fisica')">
-                </div>
-                <div class="radio-item">
-                    <label for="pessoa_juridica">Pessoa Jurídica</label>
-                    <input type="radio" id="pessoa_juridica" name="tipo_pessoa" value="juridica" onchange="togglePessoa('juridica')">
+        <div class="radio-container">
+            <div class="input-group">
+                <h3 class="title">Tipo de Pessoa:</h3>
+                <div class="radio-form">
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <label for="pessoa_fisica">Pessoa Física</label>
+                            <input type="radio" id="pessoa_fisica" name="tipo_pessoa" value="fisica" checked onchange="togglePessoa('fisica')">
+                        </div>
+                        <div class="radio-item">
+                            <label for="pessoa_juridica">Pessoa Jurídica</label>
+                            <input type="radio" id="pessoa_juridica" name="tipo_pessoa" value="juridica" onchange="togglePessoa('juridica')">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        </div>
-         </div>
         
         <!-- Campos comuns para Pessoa Física e Jurídica -->
         <div class="input-group">

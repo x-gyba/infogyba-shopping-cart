@@ -1,4 +1,4 @@
-// Verifique se as variáveis ​​já existem antes de declará-las
+// Verifique se as variáveis já existem antes de declará-las
 if (typeof isDiscountApplied === "undefined") {
   var isDiscountApplied = false;
 }
@@ -24,7 +24,6 @@ function toggleForms(showSignup) {
   signupForm.style.display = showSignup ? "block" : "none";
 }
 
-// Função para alternar a visibilidade da senha
 // Função para alternar a visibilidade da senha
 function togglePasswordVisibility(type) {
   const passwordField = document.getElementById(`senha_${type}`);
@@ -297,30 +296,30 @@ function removeItem(itemId) {
 function updateProgressBarAndIcons(step) {
   // Reset classes
   $(".circle").removeClass("active");
-  $(".progress-bar-inner").removeClass("active"); // Remove a classe active inicialmente
-  $(".progress-bar-inner").css("width", "0%"); // A largura da barra é 0% no começo
+  $(".progress-bar-inner").removeClass("active");
+  $(".progress-bar-inner").css("width", "0%");
 
   // Atualiza a parte interna da barra de progresso e os ícones conforme o passo
   if (step === 1) {
     $("#step1-icon").addClass("active");
     $(".progress-bar-inner").css({
       width: "33%",
-      "background-color": "var(--violet)", // Cor inicial da barra de progresso (violeta)
+      "background-color": "var(--violet)",
     });
   } else if (step === 2) {
     $("#step1-icon").addClass("active");
     $("#step2-icon").addClass("active");
     $(".progress-bar-inner").css({
-      width: "50%", // A barra agora fica em 50% para o Passo 2
-      "background-color": "var(--green)", // Cor verde no passo 2
+      width: "50%",
+      "background-color": "var(--green)",
     });
   } else if (step === 3) {
     $("#step1-icon").addClass("active");
     $("#step2-icon").addClass("active");
     $("#step3-icon").addClass("active");
     $(".progress-bar-inner").css({
-      width: "50%", // A barra fica com 50% no Passo 3
-      "background-color": "var(--violet)", // Cor violeta no passo 3
+      width: "50%",
+      "background-color": "var(--violet)",
     });
   }
 }
@@ -361,14 +360,14 @@ $("#next").on("click", function() {
     $("#step1").fadeOut(function() {
       $("#step2").fadeIn();
     });
-    updateProgressBarAndIcons(2); // Atualiza o progresso para Passo 2 (50%)
-    currentStep = 2; // Atualiza o passo atual
+    updateProgressBarAndIcons(2);
+    currentStep = 2;
   } else if (currentStep === 2) {
     $("#step2").fadeOut(function() {
       $("#step3").fadeIn();
     });
-    updateProgressBarAndIcons(3); // Atualiza o progresso para Passo 3 (50%) com cor violeta
-    currentStep = 3; // Atualiza o passo atual
+    updateProgressBarAndIcons(3);
+    currentStep = 3;
   }
 });
 
@@ -378,19 +377,19 @@ $("#prev").on("click", function() {
     $("#step2").fadeOut(function() {
       $("#step1").fadeIn();
     });
-    updateProgressBarAndIcons(1); // Atualiza o progresso para Passo 1 (33%)
-    currentStep = 1; // Atualiza o passo atual
+    updateProgressBarAndIcons(1);
+    currentStep = 1;
   } else if (currentStep === 3) {
     $("#step3").fadeOut(function() {
       $("#step2").fadeIn();
     });
-    updateProgressBarAndIcons(2); // Atualiza o progresso para Passo 2 (50%)
-    currentStep = 2; // Atualiza o passo atual
+    updateProgressBarAndIcons(2);
+    currentStep = 2;
   }
 });
 
 // Inicializa as etapas com o estilo correto (passo 1)
-updateProgressBarAndIcons(1); // Inicializa o passo 1 com 33% e cor violeta
+updateProgressBarAndIcons(1);
 
 // Função para alertar sobre a perda de dados ao atualizar ou sair da página
 window.addEventListener("beforeunload", function(e) {
