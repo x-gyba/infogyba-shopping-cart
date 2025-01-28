@@ -1,19 +1,24 @@
-// Verifique se as variáveis já existem antes de declará-las
-if (typeof isDiscountApplied === "undefined") {
-  var isDiscountApplied = false;
-}
-
-// Seleção dos elementos necessários
-const confirmYesButton = document.getElementById("confirm-yes");
-const confirmNoButton = document.getElementById("confirm-no");
-const discountForm = document.querySelector(".discount-form-container");
-const validDiscountCodes = ["DESCONTO10"];
-const messages = {
+// Declaração de variáveis globais com verificação de existência prévia
+window.isDiscountApplied = window.isDiscountApplied || false;
+window.isPurchaseConfirmed = window.isPurchaseConfirmed || false;
+window.confirmationInProgress = window.confirmationInProgress || false;
+window.confirmYesButton =
+  window.confirmYesButton || document.getElementById("confirm-yes");
+window.confirmNoButton =
+  window.confirmNoButton || document.getElementById("confirm-no");
+window.discountForm =
+  window.discountForm || document.querySelector(".discount-form-container");
+window.validDiscountCodes = window.validDiscountCodes || ["DESCONTO10"];
+window.messages = window.messages || {
   discountApplied: "Você ganhou 10% de desconto!",
   discountAlreadyApplied: "Desconto já aplicado!",
   invalidDiscountCode: "Código de desconto inválido.",
+  discountBlocked: "Desconto bloqueado.",
 };
-const discountInfo = document.querySelector(".discount-info");
+window.discountInfo =
+  window.discountInfo || document.querySelector(".discount-info");
+window.discountBtn =
+  window.discountBtn || document.querySelector(".discount-btn");
 
 // Função para alternar entre formulários de inscrição e login
 function toggleForms(showSignup) {
@@ -24,37 +29,62 @@ function toggleForms(showSignup) {
   signupForm.style.display = showSignup ? "block" : "none";
 }
 
+// Event listeners para alternar entre os formulários
+document.getElementById("signup-btn")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  toggleForms(true);
+});
+
+document.getElementById("sign-btn")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  toggleForms(false);
+});
+
+// Inicializa a página com o formulário de login visível
+toggleForms(false);
+
 // Função para alternar a visibilidade da senha
 function togglePasswordVisibility(type) {
   const passwordField = document.getElementById(`senha_${type}`);
   const eyeIconShow = document.getElementById(`eyeicon-show-senha_${type}`);
   const eyeIconHide = document.getElementById(`eyeicon-hide-senha_${type}`);
 
-  if (passwordField.type === "password") {
-    passwordField.type = "text";
-    eyeIconShow.style.display = "none";
-    eyeIconHide.style.display = "inline";
-  } else {
-    passwordField.type = "password";
-    eyeIconShow.style.display = "inline";
-    eyeIconHide.style.display = "none";
-  }
+  const isPassword = passwordField.type === "password";
+  passwordField.type = isPassword ? "text" : "password";
+  eyeIconShow.style.display = isPassword ? "none" : "inline";
+  eyeIconHide.style.display = isPassword ? "inline" : "none";
 }
 
 function toggleConfirmPasswordVisibility(type) {
-  const confirmPasswordField = document.getElementById(`confirmar_senha_${type}`);
-  const eyeIconShowConfirm = document.getElementById(`eyeicon-show-confirmar_senha_${type}`);
-  const eyeIconHideConfirm = document.getElementById(`eyeicon-hide-confirmar_senha_${type}`);
+  const confirmPasswordField = document.getElementById(
+    `confirmar_senha_${type}`
+  );
+  const eyeIconShowConfirm = document.getElementById(
+    `eyeicon-show-confirmar_senha_${type}`
+  );
+  const eyeIconHideConfirm = document.getElementById(
+    `eyeicon-hide-confirmar_senha_${type}`
+  );
 
-  if (confirmPasswordField.type === "password") {
-    confirmPasswordField.type = "text";
-    eyeIconShowConfirm.style.display = "none";
-    eyeIconHideConfirm.style.display = "inline";
-  } else {
-    confirmPasswordField.type = "password";
-    eyeIconShowConfirm.style.display = "inline";
-    eyeIconHideConfirm.style.display = "none";
-  }
+  const isPassword = confirmPasswordField.type === "password";
+  confirmPasswordField.type = isPassword ? "text" : "password";
+  eyeIconShowConfirm.style.display = isPassword ? "none" : "inline";
+  eyeIconHideConfirm.style.display = isPassword ? "inline" : "none";
+}
+
+// Adiciona a funcionalidade de mostrar/esconder senha
+function initializePasswordToggle() {
+  const passwordToggles = document.querySelectorAll(".password-toggle");
+  passwordToggles.forEach((toggle) => {
+    toggle.addEventListener("click", (e) => {
+      const type = e.target.dataset.type;
+      if (e.target.id.includes("confirmar")) {
+        toggleConfirmPasswordVisibility(type);
+      } else {
+        togglePasswordVisibility(type);
+      }
+    });
+  });
 }
 
 // Alternar campos conforme o tipo de pessoa
@@ -62,38 +92,19 @@ function togglePessoa(tipo) {
   const pessoaFisica = document.getElementById("pessoa-fisica");
   const pessoaJuridica = document.getElementById("pessoa-juridica");
 
-  pessoaFisica.style.display = tipo === 'fisica' ? "block" : "none";
-  pessoaJuridica.style.display = tipo === 'juridica' ? "block" : "none";
+  pessoaFisica.style.display = tipo === "fisica" ? "block" : "none";
+  pessoaJuridica.style.display = tipo === "juridica" ? "block" : "none";
 }
-
-// Alternar entre login e registro
-document.getElementById("signup-btn").addEventListener("click", function(e) {
-  e.preventDefault();
-  toggleForms(true);
-});
-
-document.getElementById("sign-btn").addEventListener("click", function(e) {
-  e.preventDefault();
-  toggleForms(false);
-});
-
-// Inicializar ao carregar a página
-document.addEventListener('DOMContentLoaded', function() {
-  togglePessoa('fisica'); // Mostrar Pessoa Física por padrão
-  toggleForms(false); // Mostrar o formulário de login por padrão
-});
 
 // Função para aplicar desconto
 function applyDiscount() {
-  if (isDiscountApplied) {
-    showMessage(messages.discountAlreadyApplied, "error");
+  if (window.isPurchaseConfirmed) {
+    showMessage(window.messages.discountBlocked, "error");
     return;
   }
 
-  // Verifica se as lixeiras estão desabilitadas
-  const isTrashIconsDisabled = Array.from(document.querySelectorAll(".remove-btn")).every(icon => icon.disabled);
-  if (isTrashIconsDisabled) {
-    showMessage("Desconto Bloqueado", "error");
+  if (window.isDiscountApplied) {
+    showMessage(window.messages.discountAlreadyApplied, "error");
     return;
   }
 
@@ -102,30 +113,34 @@ function applyDiscount() {
   const code = discountInput.value.trim();
 
   if (code === "DESCONTO10") {
-    const currentTotal = parseFloat(totalElement.textContent.replace(/[^\d,]/g, "").replace(",", "."));
+    const currentTotal = parseFloat(
+      totalElement.textContent.replace(/[^\d,]/g, "").replace(",", ".")
+    );
     const discountAmount = currentTotal * 0.1;
     const totalAfterDiscount = currentTotal - discountAmount;
 
-    totalElement.innerHTML = `<strong>Total com desconto:&nbsp;</strong> R$ ${totalAfterDiscount.toFixed(2).replace(".", ",")}`;
+    totalElement.innerHTML = `<strong>Total com desconto:&nbsp;</strong> R$ ${totalAfterDiscount
+      .toFixed(2)
+      .replace(".", ",")}`;
 
-    isDiscountApplied = true;
-    disableTrashIcons();
-    showMessage(messages.discountApplied, "success");
+    window.isDiscountApplied = true;
+    showMessage(window.messages.discountApplied, "success");
   } else {
-    showMessage(messages.invalidDiscountCode, "error");
+    showMessage(window.messages.invalidDiscountCode, "error");
   }
 }
 
 // Função para exibir mensagens
 function showMessage(message, type) {
-  // Remover qualquer mensagem existente
   const existingMessage = document.querySelector(".message");
   if (existingMessage) {
     existingMessage.remove();
   }
 
   const messageElement = document.createElement("div");
-  messageElement.className = `message ${type === "error" ? "discount-alert error-message" : "success-message"}`;
+  messageElement.className = `message ${
+    type === "error" ? "discount-alert error-message" : "success-message"
+  }`;
   messageElement.innerHTML = `<strong>${message}</strong>`;
 
   const formContainer = document.querySelector(".discount-form-container");
@@ -139,56 +154,70 @@ function showMessage(message, type) {
 
 // Função para desabilitar os ícones de lixeira
 function disableTrashIcons() {
-  document.querySelectorAll(".remove-btn").forEach(icon => {
-    icon.disabled = true; // Desabilita o botão
-    icon.style.opacity = "0.5"; // Reduz a opacidade para indicar desabilitação
-    icon.style.cursor = "not-allowed"; // Impede o cursor de ser interativo
+  const trashIcons = document.querySelectorAll(".remove-btn");
+  trashIcons.forEach((icon) => {
+    icon.disabled = true;
+    icon.style.opacity = "0.5";
+    icon.style.cursor = "not-allowed";
   });
 }
 
 // Função chamada quando o botão "Sim" for pressionado
-function handleConfirmYes() {
-  disableTrashIcons(); // Garantir que os ícones da lixeira sejam desativados
-  if (discountInfo) {
-    discountInfo.style.display = "block"; // Definimos para bloquear a remoção de itens
+function handleConfirmYes(event) {
+  event.preventDefault();
+
+  if (!window.confirmationInProgress) {
+    window.confirmationInProgress = true;
+    alert("Seu pedido foi realizado com sucesso.");
+    disableTrashIcons();
+    window.isPurchaseConfirmed = true;
+
+    // Logging para confirmação da compra
+    console.log(
+      `Compra confirmada por ${window.currentUser} em ${window.currentDateTime}`
+    );
+
+    setTimeout(() => {
+      alert("Preencha os dados de login para prosseguir com a compra.");
+      window.confirmationInProgress = false;
+    }, 500);
   }
-  alert("Preencha os dados de login para prosseguir com a compra.");
 }
 
 // Função chamada quando o botão "Não" for pressionado
 function handleConfirmNo() {
-  window.location.href = "../../index.html"; // Exemplo de redirecionamento
+  window.location.href = "../../index.html";
 }
 
 // Adiciona os event listeners aos botões
-if (confirmYesButton) {
-  confirmYesButton.addEventListener("click", handleConfirmYes);
-}
+function initializeEventListeners() {
+  if (window.confirmYesButton) {
+    window.confirmYesButton.replaceWith(
+      window.confirmYesButton.cloneNode(true)
+    );
+    window.confirmYesButton = document.getElementById("confirm-yes");
+    window.confirmYesButton.addEventListener("click", handleConfirmYes);
+  }
 
-if (confirmNoButton) {
-  confirmNoButton.addEventListener("click", handleConfirmNo);
-}
+  if (window.confirmNoButton) {
+    window.confirmNoButton.replaceWith(window.confirmNoButton.cloneNode(true));
+    window.confirmNoButton = document.getElementById("confirm-no");
+    window.confirmNoButton.addEventListener("click", handleConfirmNo);
+  }
 
-// Adiciona o event listener ao botão de aplicar desconto
-const discountBtn = document.querySelector(".discount-btn");
-if (discountBtn) {
-  discountBtn.addEventListener("click", applyDiscount);
-}
-
-// Variável global para indicar se a compra foi confirmada
-let isPurchaseConfirmed = false;
-
-// Função para confirmar a compra (chame esta função quando a compra for confirmada)
-function confirmPurchase() {
-  isPurchaseConfirmed = true;
-  alert("Compra confirmada!");
+  if (window.discountBtn) {
+    window.discountBtn.replaceWith(window.discountBtn.cloneNode(true));
+    window.discountBtn = document.querySelector(".discount-btn");
+    window.discountBtn.addEventListener("click", applyDiscount);
+  }
 }
 
 // Função para remover itens
 function removeItem(itemId) {
-  // Verifica se a confirmação foi feita
-  if (isPurchaseConfirmed || (discountInfo && discountInfo.style.display !== "none")) {
-    alert("Não é possível remover itens após aplicar o desconto ou confirmar a compra.");
+  if (window.isPurchaseConfirmed) {
+    alert(
+      "Não é possível remover itens após aplicar o desconto ou confirmar a compra."
+    );
     return;
   }
 
@@ -196,7 +225,9 @@ function removeItem(itemId) {
     return;
   }
 
-  const itemElement = document.querySelector(`.cart-item[data-item-id="${itemId}"]`);
+  const itemElement = document.querySelector(
+    `.cart-item[data-item-id="${itemId}"]`
+  );
   if (itemElement) {
     itemElement.style.opacity = "0.5";
   }
@@ -205,200 +236,159 @@ function removeItem(itemId) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Accept": "application/json",
+      Accept: "application/json",
     },
     body: JSON.stringify({ itemId }),
   })
-    .then(response => {
+    .then((response) => {
       if (!response.ok) {
-        return response.json().then(err => {
-          throw new Error(err.error || `HTTP error! status: ${response.status}`);
+        return response.json().then((err) => {
+          throw new Error(
+            err.error || `HTTP error! status: ${response.status}`
+          );
         });
       }
       return response.json();
     })
-    .then(data => {
+    .then((data) => {
       console.log("Resposta do servidor:", data);
 
       if (data.success) {
-        if (itemElement) {
-          itemElement.remove();
-        }
-
-        const cartCounter = document.querySelector(".cart-counter");
-        if (cartCounter) {
-          cartCounter.textContent = data.itemCount;
-          cartCounter.style.display = data.itemCount > 0 ? "block" : "none";
-        }
-
-        if (data.isEmpty) {
-          const elementsToHide = [
-            "cart-items",
-            "discount-form-container",
-            "#confirmation-message",
-            ".button-container",
-            ".discount-form",
-            ".discount-info",
-            ".discount-success",
-            ".discount-amount",
-            ".discount-title",
-          ];
-          elementsToHide.forEach(elementId => {
-            const element = document.getElementById(elementId) || document.querySelector(elementId);
-            if (element) {
-              element.style.display = "none";
-            }
-          });
-
-          const emptyCartContainer = document.createElement("div");
-          emptyCartContainer.className = "empty-cart-container";
-
-          const emptyMessage = document.createElement("p");
-          emptyMessage.className = "empty-cart-message";
-          emptyMessage.textContent = "Seu carrinho está vazio";
-
-          const continueButton = document.createElement("button");
-          continueButton.className = "continue-shopping-btn";
-          continueButton.textContent = "Retornar para Loja";
-          continueButton.onclick = () => (window.location.href = "../../index.html");
-
-          emptyCartContainer.appendChild(emptyMessage);
-          emptyCartContainer.appendChild(continueButton);
-
-          const totalElement = document.querySelector(".total-title");
-          if (totalElement) {
-            totalElement.innerHTML = "";
-            totalElement.appendChild(emptyCartContainer);
-          }
-        } else {
-          const totalElement = document.querySelector(".total-title");
-          if (totalElement) {
-            totalElement.innerHTML = `<strong>Total:</strong> R$ ${data.newTotalFormatted}`;
-          }
-        }
+        handleSuccessfulRemoval(itemElement, data);
       } else {
-        alert(`Erro ao remover item: ${data.error}`);
-        if (itemElement) {
-          itemElement.style.opacity = "1";
-        }
+        handleFailedRemoval(itemElement, data.error);
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.error("Erro ao remover item:", error);
-      alert(`Erro ao remover item: ${error.message}`);
-      if (itemElement) {
-        itemElement.style.opacity = "1";
-      }
+      handleFailedRemoval(itemElement, error.message);
     });
+}
+
+// Função auxiliar para lidar com remoção bem-sucedida
+function handleSuccessfulRemoval(itemElement, data) {
+  if (itemElement) {
+    itemElement.remove();
+  }
+
+  updateCartCounter(data);
+
+  if (data.isEmpty) {
+    showEmptyCartMessage();
+  } else {
+    updateTotalPrice(data);
+  }
+}
+
+// Função auxiliar para lidar com falha na remoção
+function handleFailedRemoval(itemElement, errorMessage) {
+  alert(`Erro ao remover item: ${errorMessage}`);
+  if (itemElement) {
+    itemElement.style.opacity = "1";
+  }
+}
+
+// Função para atualizar o contador do carrinho
+function updateCartCounter(data) {
+  const cartCounter = document.querySelector(".cart-counter");
+  if (cartCounter) {
+    cartCounter.textContent = data.itemCount;
+    cartCounter.style.display = data.itemCount > 0 ? "block" : "none";
+  }
+}
+
+// Função para mostrar mensagem de carrinho vazio
+function showEmptyCartMessage() {
+  const elementsToHide = [
+    "cart-items",
+    "discount-form-container",
+    "#confirmation-message",
+    ".button-container",
+    ".discount-form",
+    ".discount-info",
+    ".discount-success",
+    ".discount-amount",
+    ".discount-title",
+  ];
+
+  elementsToHide.forEach((elementId) => {
+    const element =
+      document.getElementById(elementId) || document.querySelector(elementId);
+    if (element) {
+      element.style.display = "none";
+    }
+  });
+
+  const emptyCartContainer = createEmptyCartContainer();
+  const totalElement = document.querySelector(".total-title");
+  if (totalElement) {
+    totalElement.innerHTML = "";
+    totalElement.appendChild(emptyCartContainer);
+  }
+}
+
+// Função para criar o container de carrinho vazio
+function createEmptyCartContainer() {
+  const container = document.createElement("div");
+  container.className = "empty-cart-container";
+
+  const message = document.createElement("p");
+  message.className = "empty-cart-message";
+  message.textContent = "Seu carrinho está vazio";
+
+  const button = document.createElement("button");
+  button.className = "continue-shopping-btn";
+  button.textContent = "Continuar Comprando";
+  button.onclick = () => (window.location.href = "../../index.html");
+
+  container.appendChild(message);
+  container.appendChild(button);
+
+  return container;
+}
+
+// Função para atualizar o preço total
+function updateTotalPrice(data) {
+  const totalElement = document.querySelector(".total-title");
+  if (totalElement) {
+    totalElement.innerHTML = `<strong>Total:</strong> R$ ${data.newTotalFormatted}`;
+  }
 }
 
 // Função para atualizar a barra de progresso e os ícones dos passos
 function updateProgressBarAndIcons(step) {
-  // Reset classes
   $(".circle").removeClass("active");
-  $(".progress-bar-inner").removeClass("active");
-  $(".progress-bar-inner").css("width", "0%");
+  $(".progress-bar-inner").removeClass("active").css("width", "0%");
 
-  // Atualiza a parte interna da barra de progresso e os ícones conforme o passo
-  if (step === 1) {
-    $("#step1-icon").addClass("active");
-    $(".progress-bar-inner").css({
-      width: "33%",
-      "background-color": "var(--violet)",
-    });
-  } else if (step === 2) {
-    $("#step1-icon").addClass("active");
-    $("#step2-icon").addClass("active");
-    $(".progress-bar-inner").css({
+  const progressConfig = {
+    1: { width: "33%", color: "var(--violet)", icons: ["step1-icon"] },
+    2: {
       width: "50%",
-      "background-color": "var(--green)",
-    });
-  } else if (step === 3) {
-    $("#step1-icon").addClass("active");
-    $("#step2-icon").addClass("active");
-    $("#step3-icon").addClass("active");
-    $(".progress-bar-inner").css({
+      color: "var(--green)",
+      icons: ["step1-icon", "step2-icon"],
+    },
+    3: {
       width: "50%",
-      "background-color": "var(--violet)",
+      color: "var(--violet)",
+      icons: ["step1-icon", "step2-icon", "step3-icon"],
+    },
+  };
+
+  const config = progressConfig[step];
+  if (config) {
+    config.icons.forEach((iconId) => $(`#${iconId}`).addClass("active"));
+    $(".progress-bar-inner").css({
+      width: config.width,
+      "background-color": config.color,
     });
   }
 }
 
-// Lógica de login
-$("#signin-form").on("submit", function(e) {
-  e.preventDefault();
-  $.ajax({
-    url: "", // Adicione a URL de envio do formulário
-    type: "POST",
-    data: {
-      signin: true,
-      email: $("#signin-email").val(),
-      senha: $("#signin-senha").val(),
-    },
-    success: function(response) {
-      if (response === "admin") {
-        window.location.href = "dashboard.php"; // Redireciona para o painel de administração
-      } else if (response === "success") {
-        updateProgressBarAndIcons(2);
-        $("#step1").fadeOut(() => {
-          $("#step2").fadeIn();
-        });
-        currentStep = 2;
-      } else {
-        alert(response); // Exibe a resposta do servidor, se o login falhar
-      }
-    },
-    error: function() {
-      alert("Erro ao processar o login.");
-    },
-  });
-});
-
-// Avançar entre os passos
-$("#next").on("click", function() {
-  if (currentStep === 1) {
-    $("#step1").fadeOut(function() {
-      $("#step2").fadeIn();
-    });
-    updateProgressBarAndIcons(2);
-    currentStep = 2;
-  } else if (currentStep === 2) {
-    $("#step2").fadeOut(function() {
-      $("#step3").fadeIn();
-    });
-    updateProgressBarAndIcons(3);
-    currentStep = 3;
-  }
-});
-
-// Voltar entre os passos
-$("#prev").on("click", function() {
-  if (currentStep === 2) {
-    $("#step2").fadeOut(function() {
-      $("#step1").fadeIn();
-    });
-    updateProgressBarAndIcons(1);
-    currentStep = 1;
-  } else if (currentStep === 3) {
-    $("#step3").fadeOut(function() {
-      $("#step2").fadeIn();
-    });
-    updateProgressBarAndIcons(2);
-    currentStep = 2;
-  }
-});
-
-// Inicializa as etapas com o estilo correto (passo 1)
+// Inicialização
+initializeEventListeners();
+initializePasswordToggle();
 updateProgressBarAndIcons(1);
 
-// Função para alertar sobre a perda de dados ao atualizar ou sair da página
-window.addEventListener("beforeunload", function(e) {
-  const confirmationMessage = "Seus dados serão perdidos.";
-  e.preventDefault(); // Previne a ação padrão
-  e.returnValue = confirmationMessage; // Define a mensagem de confirmação
-});
-
-// Função para redirecionar para index.html após o alerta
-window.addEventListener("unload", function() {
-  window.location.href = "../../index.html";
-});
+console.log(
+  `Página inicializada para ${window.currentUser} em ${window.currentDateTime}`
+);
