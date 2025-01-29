@@ -2,12 +2,9 @@
 window.isDiscountApplied = window.isDiscountApplied || false;
 window.isPurchaseConfirmed = window.isPurchaseConfirmed || false;
 window.confirmationInProgress = window.confirmationInProgress || false;
-window.confirmYesButton =
-  window.confirmYesButton || document.getElementById("confirm-yes");
-window.confirmNoButton =
-  window.confirmNoButton || document.getElementById("confirm-no");
-window.discountForm =
-  window.discountForm || document.querySelector(".discount-form-container");
+window.confirmYesButton = window.confirmYesButton || document.getElementById("confirm-yes");
+window.confirmNoButton = window.confirmNoButton || document.getElementById("confirm-no");
+window.discountForm = window.discountForm || document.querySelector(".discount-form-container");
 window.validDiscountCodes = window.validDiscountCodes || ["DESCONTO10"];
 window.messages = window.messages || {
   discountApplied: "Você ganhou 10% de desconto!",
@@ -15,10 +12,8 @@ window.messages = window.messages || {
   invalidDiscountCode: "Código de desconto inválido.",
   discountBlocked: "Desconto bloqueado.",
 };
-window.discountInfo =
-  window.discountInfo || document.querySelector(".discount-info");
-window.discountBtn =
-  window.discountBtn || document.querySelector(".discount-btn");
+window.discountInfo = window.discountInfo || document.querySelector(".discount-info");
+window.discountBtn = window.discountBtn || document.querySelector(".discount-btn");
 
 // Função para alternar entre formulários de inscrição e login
 function toggleForms(showSignup) {
@@ -56,15 +51,9 @@ function togglePasswordVisibility(type) {
 }
 
 function toggleConfirmPasswordVisibility(type) {
-  const confirmPasswordField = document.getElementById(
-    `confirmar_senha_${type}`
-  );
-  const eyeIconShowConfirm = document.getElementById(
-    `eyeicon-show-confirmar_senha_${type}`
-  );
-  const eyeIconHideConfirm = document.getElementById(
-    `eyeicon-hide-confirmar_senha_${type}`
-  );
+  const confirmPasswordField = document.getElementById(`confirmar_senha_${type}`);
+  const eyeIconShowConfirm = document.getElementById(`eyeicon-show-confirmar_senha_${type}`);
+  const eyeIconHideConfirm = document.getElementById(`eyeicon-hide-confirmar_senha_${type}`);
 
   const isPassword = confirmPasswordField.type === "password";
   confirmPasswordField.type = isPassword ? "text" : "password";
@@ -113,15 +102,11 @@ function applyDiscount() {
   const code = discountInput.value.trim();
 
   if (code === "DESCONTO10") {
-    const currentTotal = parseFloat(
-      totalElement.textContent.replace(/[^\d,]/g, "").replace(",", ".")
-    );
+    const currentTotal = parseFloat(totalElement.textContent.replace(/[^\d,]/g, "").replace(",", "."));
     const discountAmount = currentTotal * 0.1;
     const totalAfterDiscount = currentTotal - discountAmount;
 
-    totalElement.innerHTML = `<strong>Total com desconto:&nbsp;</strong> R$ ${totalAfterDiscount
-      .toFixed(2)
-      .replace(".", ",")}`;
+    totalElement.innerHTML = `<strong>Total com desconto:&nbsp;</strong> R$ ${totalAfterDiscount.toFixed(2).replace(".", ",")}`;
 
     window.isDiscountApplied = true;
     showMessage(window.messages.discountApplied, "success");
@@ -138,9 +123,7 @@ function showMessage(message, type) {
   }
 
   const messageElement = document.createElement("div");
-  messageElement.className = `message ${
-    type === "error" ? "discount-alert error-message" : "success-message"
-  }`;
+  messageElement.className = `message ${type === "error" ? "discount-alert error-message" : "success-message"}`;
   messageElement.innerHTML = `<strong>${message}</strong>`;
 
   const formContainer = document.querySelector(".discount-form-container");
@@ -173,9 +156,7 @@ function handleConfirmYes(event) {
     window.isPurchaseConfirmed = true;
 
     // Logging para confirmação da compra
-    console.log(
-      `Compra confirmada por ${window.currentUser} em ${window.currentDateTime}`
-    );
+    console.log(`Compra confirmada por ${window.currentUser} em ${window.currentDateTime}`);
 
     setTimeout(() => {
       alert("Preencha os dados de login para prosseguir com a compra.");
@@ -192,22 +173,14 @@ function handleConfirmNo() {
 // Adiciona os event listeners aos botões
 function initializeEventListeners() {
   if (window.confirmYesButton) {
-    window.confirmYesButton.replaceWith(
-      window.confirmYesButton.cloneNode(true)
-    );
-    window.confirmYesButton = document.getElementById("confirm-yes");
     window.confirmYesButton.addEventListener("click", handleConfirmYes);
   }
 
   if (window.confirmNoButton) {
-    window.confirmNoButton.replaceWith(window.confirmNoButton.cloneNode(true));
-    window.confirmNoButton = document.getElementById("confirm-no");
     window.confirmNoButton.addEventListener("click", handleConfirmNo);
   }
 
   if (window.discountBtn) {
-    window.discountBtn.replaceWith(window.discountBtn.cloneNode(true));
-    window.discountBtn = document.querySelector(".discount-btn");
     window.discountBtn.addEventListener("click", applyDiscount);
   }
 }
@@ -215,9 +188,7 @@ function initializeEventListeners() {
 // Função para remover itens
 function removeItem(itemId) {
   if (window.isPurchaseConfirmed) {
-    alert(
-      "Não é possível remover itens após aplicar o desconto ou confirmar a compra."
-    );
+    alert("Não é possível remover itens após aplicar o desconto ou confirmar a compra.");
     return;
   }
 
@@ -225,9 +196,7 @@ function removeItem(itemId) {
     return;
   }
 
-  const itemElement = document.querySelector(
-    `.cart-item[data-item-id="${itemId}"]`
-  );
+  const itemElement = document.querySelector(`.cart-item[data-item-id="${itemId}"]`);
   if (itemElement) {
     itemElement.style.opacity = "0.5";
   }
@@ -243,9 +212,7 @@ function removeItem(itemId) {
     .then((response) => {
       if (!response.ok) {
         return response.json().then((err) => {
-          throw new Error(
-            err.error || `HTTP error! status: ${response.status}`
-          );
+          throw new Error(err.error || `HTTP error! status: ${response.status}`);
         });
       }
       return response.json();
@@ -312,8 +279,7 @@ function showEmptyCartMessage() {
   ];
 
   elementsToHide.forEach((elementId) => {
-    const element =
-      document.getElementById(elementId) || document.querySelector(elementId);
+    const element = document.getElementById(elementId) || document.querySelector(elementId);
     if (element) {
       element.style.display = "none";
     }
@@ -362,16 +328,8 @@ function updateProgressBarAndIcons(step) {
 
   const progressConfig = {
     1: { width: "33%", color: "var(--violet)", icons: ["step1-icon"] },
-    2: {
-      width: "50%",
-      color: "var(--green)",
-      icons: ["step1-icon", "step2-icon"],
-    },
-    3: {
-      width: "50%",
-      color: "var(--violet)",
-      icons: ["step1-icon", "step2-icon", "step3-icon"],
-    },
+    2: { width: "50%", color: "var(--green)", icons: ["step1-icon", "step2-icon"] },
+    3: { width: "50%", color: "var(--violet)", icons: ["step1-icon", "step2-icon", "step3-icon"] },
   };
 
   const config = progressConfig[step];
@@ -389,6 +347,4 @@ initializeEventListeners();
 initializePasswordToggle();
 updateProgressBarAndIcons(1);
 
-console.log(
-  `Página inicializada para ${window.currentUser} em ${window.currentDateTime}`
-);
+console.log(`Página inicializada para ${window.currentUser} em ${window.currentDateTime}`);

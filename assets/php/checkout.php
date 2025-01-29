@@ -5,13 +5,11 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 // Funções de validação e cálculo
-function validateDiscountCode($code)
-{
+function validateDiscountCode($code) {
     return $code === 'DESCONTO10';
 }
 
-function calculateInstallments($total, $maxInstallments = 6)
-{
+function calculateInstallments($total, $maxInstallments = 6) {
     $installments = [];
     for ($i = 1; $i <= $maxInstallments; $i++) {
         $installmentValue = $total / $i;
@@ -20,11 +18,12 @@ function calculateInstallments($total, $maxInstallments = 6)
     return $installments;
 }
 
-// Processar desconto
+// Inicialização de variáveis
 $total = $_SESSION['cart_total'] ?? 0;
 $discount = 0;
 $isDiscountApplied = false;
 
+// Processar desconto
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['discount_code'])) {
     if (validateDiscountCode($_POST['discount_code'])) {
         $discount = $total * 0.1;
@@ -68,7 +67,7 @@ if (isset($_POST['signin'])) {
                 $_SESSION['user_logged_in'] = true;
                 $_SESSION['user_id'] = $usuario['id'];
                 $_SESSION['user_name'] = $usuario['usuario'];
-                
+
                 if ($usuario['email'] === 'admin@infogyba.com.br' || $usuario['id'] == 1) {
                     echo "admin";
                 } else {
@@ -98,13 +97,11 @@ if (isset($_POST['signin'])) {
     <link rel="stylesheet" href="/css/checkout.css" />
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" />
 </head>
-
 <body>
 <div class="main-container">
     <div class="checkout-container">
         <div class="cart-summary">
             <?php
-            $total = $_SESSION['cart_total'] ?? 0;
             $cartItems = $_SESSION['cart_items'] ?? [];
             $cartImages = $_SESSION['cart_images'] ?? [];
             $quantities = $_SESSION['quantities'] ?? [];
@@ -133,9 +130,9 @@ if (isset($_POST['signin'])) {
                         <?php endforeach; ?>
                     </div>
                     <div class="discount-form-container">
-                        <form class="discount-form" onsubmit="return false;">
+                        <form class="discount-form" method="POST" action="">
                             <input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required autocomplete="off">
-                            <button class="discount-btn" onclick="applyDiscount()">Aplicar</button>
+                            <button class="discount-btn" type="submit">Aplicar</button>
                         </form>
                     </div>
                     <div class="discount-message"></div>
@@ -158,41 +155,40 @@ if (isset($_POST['signin'])) {
     </div>
 </div>
 
-        <div class="container-steps">
-            <div class="progress-container">
-                <div class="progress-bar">
-                    <div class="progress-bar-inner"></div>
-                </div>
-                <div class="circle active" id="step1-icon">
-                    <i class='bx bx-male-female'></i>
-                    <div class="step-name">Login</div>
-                </div>
-                <div class="circle" id="step2-icon">
-                    <i class='bx bx-home'></i>
-                    <div class="step-name">Entrega</div>
-                </div>
-                <div class="circle" id="step3-icon">
-                    <i class='bx bx-dollar'></i>
-                    <div class="step-name">Pagamento</div>
-                </div>
-            </div>
+<div class="container-steps">
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress-bar-inner"></div>
         </div>
-
-        <div id="step1">
-            <?php include 'login.php'; ?>
+        <div class="circle active" id="step1-icon">
+            <i class='bx bx-male-female'></i>
+            <div class="step-name">Login</div>
         </div>
-
-        <div id="step2" style="display:none;">
-            <?php include 'payment.php'; ?>
+        <div class="circle" id="step2-icon">
+            <i class='bx bx-home'></i>
+            <div class="step-name">Entrega</div>
         </div>
-
-        <div id="step3" style="display:none;">
-            <?php include 'review.php'; ?>
+        <div class="circle" id="step3-icon">
+            <i class='bx bx-dollar'></i>
+            <div class="step-name">Pagamento</div>
         </div>
     </div>
+</div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
-    <script src="../js/checkout.js"></script>
+<div id="step1">
+    <?php include 'login.php'; ?>
+</div>
+
+<div id="step2" style="display:none;">
+    <?php include 'payment.php'; ?>
+</div>
+
+<div id="step3" style="display:none;">
+    <?php include 'review.php'; ?>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
+<script src="../js/checkout.js"></script>
 </body>
 </html>
