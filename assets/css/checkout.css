@@ -234,35 +234,47 @@ label {
   justify-content: center;
 }
 
-.discount-message {
-  padding: 12px 15px;
-  border-radius: 4px;
-  margin: 10px 0;
-  font-size: 1.2rem;
-  transition: all 0.3s ease;
+.discount-input:disabled,
+.discount-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
-.discount-alert {
-  background-color: var(--white);
-  color: var(--red);
-  border: 1px solid var(--red);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 20px;
-  min-height: 30px;
-  padding: 8px 16px;
-  font-size: 1.25rem;
-  width: 100%;
-  max-width: 600px;
-  margin-top: 2rem;
+.discount-btn:not(:disabled):hover {
+  opacity: 0.9;
 }
 
-.discount-input.error {
-  border-color: var(--blue2);
-  background-color: #fff8f8;
-  animation: shake 0.5s ease-in-out;
+.discount-input,
+.discount-btn {
+  transition: opacity 0.5s ease;
 }
+
+/* Estilos gerais para as mensagens */
+#discount-success-message, #discount-error-message {
+  display: none;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Estilo para mensagem de sucesso */
+#discount-success-message {
+  color:var(--green);
+font-size:1.5rem;
+animation: shake 0.5s; /* Aplica a animação de trepidação */
+}
+
+/* Estilo para mensagem de erro */
+#discount-error-message {
+  color:var(--red);
+  font-size:1.5rem;
+  font-weight:500;
+  animation: shake 0.5s; /* Aplica a animação de trepidação */
+}
+
 
 @keyframes shake {
   0%,
@@ -282,22 +294,6 @@ label {
   80% {
     transform: translateX(5px);
   }
-}
-
-.discount-input:disabled,
-.discount-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-
-.discount-btn:not(:disabled):hover {
-  opacity: 0.9;
-}
-
-.discount-input,
-.discount-btn {
-  transition: opacity 0.5s ease;
 }
 
 #confirmation-message {

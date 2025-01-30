@@ -4,7 +4,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Funções de validação e cálculo
+// Valida se o código de desconto é válido
 function validateDiscountCode($code) {
     return $code === 'DESCONTO10';
 }
@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['discount_code'])) {
 
 $finalTotal = $total - $discount;
 $installmentValues = calculateInstallments($finalTotal);
+$finalTotalFormatted = number_format($finalTotal, 2, ',', '.');
 
 // Verificar se o usuário está logado antes de exibir o login
 $isLoggedIn = isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0;
@@ -100,59 +101,60 @@ if (isset($_POST['signin'])) {
 <body>
 <div class="main-container">
     <div class="checkout-container">
-        <div class="cart-summary">
-            <?php
-            $cartItems = $_SESSION['cart_items'] ?? [];
-            $cartImages = $_SESSION['cart_images'] ?? [];
-            $quantities = $_SESSION['quantities'] ?? [];
+    <div class="cart-summary">
+    <?php
+    $cartItems = $_SESSION['cart_items'] ?? [];
+    $cartImages = $_SESSION['cart_images'] ?? [];
+    $quantities = $_SESSION['quantities'] ?? [];
 
-            if ($total > 0) : ?>
-                <h2 class="form-title">Resumo do Carrinho</h2>
-                <div class="cart-summary-container">
-                    <div class="total-title"><strong>Total:</strong> R$ <?= number_format($total, 2, ',', '.') ?></div>
-                    <div class="cart-items" id="cart-items">
-                        <?php foreach ($cartItems as $index => $item) :
-                            $imageSrc = $cartImages[$index] ?? '';
-                            $quantity = $quantities[$index] ?? 0;
-                            $quantityDisplay = ($quantity == 1) ? "x1" : "x" . htmlspecialchars($quantity);
-                        ?>
-                            <div class="cart-item" data-item-id="<?= $index ?>" style="display: flex; align-items: center; margin-bottom: 8px;">
-                                <?php if ($imageSrc) : ?>
-                                    <div style="flex: 0 0 auto; margin-right: 5px;">
-                                        <img src="<?= htmlspecialchars($imageSrc) ?>" alt="Imagem do Carrinho" style="max-width: 70px; height: auto;" />
-                                    </div>
-                                <?php endif; ?>
-                                <div class="qtd-item" style="flex: 1;"><?= nl2br(htmlspecialchars($item)) ?> <?= $quantityDisplay ?></div>
-                                <button type="button" class="remove-btn" onclick="removeItem(<?= $index ?>)" aria-label="Remover item">
-                                    <i class="bx bxs-trash"></i>
-                                </button>
+    if ($total > 0) : ?>
+        <h2 class="form-title">Resumo do Carrinho</h2>
+        <div class="cart-summary-container">
+            <div class="total-title"><strong>Total:</strong> R$ <?= number_format($total, 2, ',', '.') ?></div>
+            <div class="cart-items" id="cart-items">
+                <?php foreach ($cartItems as $index => $item) :
+                    $imageSrc = $cartImages[$index] ?? '';
+                    $quantity = $quantities[$index] ?? 0;
+                    $quantityDisplay = ($quantity == 1) ? "x1" : "x" . htmlspecialchars($quantity);
+                ?>
+                    <div class="cart-item" data-item-id="<?= $index ?>" style="display: flex; align-items: center; margin-bottom: 8px;">
+                        <?php if ($imageSrc) : ?>
+                            <div style="flex: 0 0 auto; margin-right: 5px;">
+                                <img src="<?= htmlspecialchars($imageSrc) ?>" alt="Imagem do Carrinho" style="max-width: 70px; height: auto;" />
                             </div>
-                        <?php endforeach; ?>
+                        <?php endif; ?>
+                        <div class="qtd-item" style="flex: 1;"><?= nl2br(htmlspecialchars($item)) ?> <?= $quantityDisplay ?></div>
+                        <button type="button" class="remove-btn" onclick="removeItem(<?= $index ?>)" aria-label="Remover item">
+                            <i class="bx bxs-trash"></i>
+                        </button>
                     </div>
-                    <div class="discount-form-container">
-                        <form class="discount-form" method="POST" action="">
-                            <input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required autocomplete="off">
-                            <button class="discount-btn" type="submit">Aplicar</button>
-                        </form>
-                    </div>
-                    <div class="discount-message"></div>
-                    <div id="confirmation-message">
-                        <p>Confirma a compra?</p>
-                        <div class="button-container">
-                            <form method="POST" action="">
-                                <button type="submit" name="confirmar_compra" value="sim" id="confirm-yes">Sim</button>
-                                <button type="button" id="confirm-no" onclick="window.location.href='cart.php'">Não</button>
-                            </form>
-                        </div>
-                    </div>
+                <?php endforeach; ?>
+            </div>
+            <div class="discount-form-container">
+                <form class="discount-form" method="POST" action="">
+                    <input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required autocomplete="off">
+                    <button class="discount-btn" type="submit">Aplicar</button>
+                </form>
+            </div>
+            <div class="discount-message-container">
+            <div id="discount-success-message" class="discount-message" style="display: none;"></div>
+            <div id="discount-error-message" class="discount-message" style="display: none;"></div>
+            </div>
+            <div id="confirmation-message">
+                <p>Confirma a compra?</p>
+                <div class="button-container">
+                    <form method="POST" action="">
+                        <button type="submit" name="confirmar_compra" value="sim" id="confirm-yes">Sim</button>
+                        <button type="button" id="confirm-no" onclick="window.location.href='#'">Não</button>
+                    </form>
                 </div>
-            <?php else : ?>
-                <div class="cart-summary-container">
-                    <p>Seu carrinho está vazio.</p>
-                </div>
-            <?php endif; ?>
+            </div>
         </div>
-    </div>
+    <?php else : ?>
+        <div class="cart-summary-container">
+            <p>Seu carrinho está vazio.</p>
+        </div>
+    <?php endif; ?>
 </div>
 
 <div class="container-steps">
