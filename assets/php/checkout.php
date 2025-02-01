@@ -9,6 +9,17 @@ function validateDiscountCode($code) {
     return $code === 'DESCONTO10';
 }
 
+function formatMoney($value) {
+    return number_format($value, 2, ',', '.');
+}
+
+function convertToFloat($value) {
+    if (is_string($value)) {
+        return (float) str_replace(['.', ','], ['', '.'], $value);
+    }
+    return (float) $value;
+}
+
 function calculateInstallments($total, $maxInstallments = 6) {
     $installments = [];
     for ($i = 1; $i <= $maxInstallments; $i++) {
@@ -19,25 +30,25 @@ function calculateInstallments($total, $maxInstallments = 6) {
 }
 
 // Inicialização de variáveis
-$total = $_SESSION['cart_total'] ?? 0;
+$total = isset($_SESSION['cart_total']) ? convertToFloat($_SESSION['cart_total']) : 0;
 $discount = 0;
 $isDiscountApplied = false;
 
 // Processar desconto
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['discount_code'])) {
     if (validateDiscountCode($_POST['discount_code'])) {
-        $discount = $total * 0.1;
+        $discount = round($total * 0.1, 2); // Arredonda para 2 casas decimais
         $_SESSION['discount'] = $discount;
         $isDiscountApplied = true;
     }
 } elseif (isset($_SESSION['discount'])) {
-    $discount = $_SESSION['discount'];
+    $discount = (float) $_SESSION['discount'];
     $isDiscountApplied = true;
 }
 
-$finalTotal = $total - $discount;
+$finalTotal = round($total - $discount, 2); // Arredonda para 2 casas decimais
 $installmentValues = calculateInstallments($finalTotal);
-$finalTotalFormatted = number_format($finalTotal, 2, ',', '.');
+$finalTotalFormatted = formatMoney($finalTotal);
 
 // Verificar se o usuário está logado antes de exibir o login
 $isLoggedIn = isset($_SESSION['user_id']) && $_SESSION['user_id'] > 0;

@@ -262,19 +262,18 @@ label {
 
 /* Estilo para mensagem de sucesso */
 #discount-success-message {
-  color:var(--green);
-font-size:1.5rem;
-animation: shake 0.5s; /* Aplica a animação de trepidação */
+  color: var(--green);
+  font-size: 1.5rem;
+  animation: shake 0.5s; /* Aplica a animação de trepidação */
 }
 
 /* Estilo para mensagem de erro */
 #discount-error-message {
-  color:var(--red);
-  font-size:1.5rem;
-  font-weight:500;
+  color: var(--red);
+  font-size: 1.5rem;
+  font-weight: 500;
   animation: shake 0.5s; /* Aplica a animação de trepidação */
 }
-
 
 @keyframes shake {
   0%,

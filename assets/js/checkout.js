@@ -1,11 +1,19 @@
-// Declaração de variáveis globais com verificação de existência prévia
+/**
+ * checkout.js - Sistema de checkout com desconto
+ * Data: 2025-02-01 11:01:07
+ * Usuário: x-gyba
+ */
+
+// Declaração de variáveis globais
 window.isPurchaseConfirmed = window.isPurchaseConfirmed || false;
 window.confirmationInProgress = window.confirmationInProgress || false;
 window.isDiscountApplied = window.isDiscountApplied || false;
 window.discountCode = "DESCONTO10";
 window.discountPercentage = 0.1;
+window.currentUser = "x-gyba";
+window.currentDateTime = "2025-02-01 11:01:07";
 
-// Função para alternar entre os formulários de login e registro
+// Funções de manipulação de formulário
 function toggleForm(formType) {
     const signinForm = document.getElementById('signin');
     const signupForm = document.getElementById('signup');
@@ -14,17 +22,11 @@ function toggleForm(formType) {
     signupForm.style.display = formType === 'signup' ? 'block' : 'none';
 }
 
-// Event listeners para alternar entre os formulários
-document.getElementById('signup-btn').addEventListener('click', () => toggleForm('signup'));
-document.getElementById('signin-btn').addEventListener('click', () => toggleForm('signin'));
-
-// Função para alternar entre os campos de Pessoa Física e Jurídica
 function togglePessoa(tipo) {
     document.getElementById('pessoa-fisica').style.display = tipo === 'fisica' ? 'block' : 'none';
     document.getElementById('pessoa-juridica').style.display = tipo === 'juridica' ? 'block' : 'none';
 }
 
-// Função para mostrar/esconder a senha
 function togglePasswordVisibility(formType) {
     const passwordInput = document.getElementById(`senha_${formType}`);
     const eyeIconShow = document.getElementById(`eyeicon-show-senha_${formType}`);
@@ -36,7 +38,6 @@ function togglePasswordVisibility(formType) {
     eyeIconHide.style.display = isPassword ? 'block' : 'none';
 }
 
-// Função para mostrar/esconder a confirmação de senha
 function toggleConfirmPasswordVisibility() {
     const confirmPasswordInput = document.getElementById('confirmar_senha_signup');
     const eyeIconShow = document.getElementById('eyeicon-show-confirmar_senha_signup');
@@ -48,76 +49,119 @@ function toggleConfirmPasswordVisibility() {
     eyeIconHide.style.display = isPassword ? 'block' : 'none';
 }
 
-// Função para aplicar desconto
+// Funções de formatação e cálculo
+function convertToFloat(value) {
+    if (typeof value === 'string') {
+        return parseFloat(value.replace(/[^\d,.-]/g, '').replace('.', '').replace(',', '.'));
+    }
+    return parseFloat(value);
+}
+
+function formatMoney(value) {
+    return value.toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+// Função para mostrar mensagens com animação
+function showMessage(message, type) {
+    const successMessage = document.getElementById('discount-success-message');
+    const errorMessage = document.getElementById('discount-error-message');
+
+    // Primeiro, esconde ambas as mensagens
+    successMessage.style.display = 'none';
+    errorMessage.style.display = 'none';
+
+    // Depois, mostra a mensagem apropriada
+    if (type === 'success') {
+        successMessage.textContent = message;
+        successMessage.style.display = 'block';
+        // Reinicia a animação
+        successMessage.style.animation = 'none';
+        successMessage.offsetHeight; // Força um reflow
+        successMessage.style.animation = 'shake 0.5s';
+    } else {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+        // Reinicia a animação
+        errorMessage.style.animation = 'none';
+        errorMessage.offsetHeight; // Força um reflow
+        errorMessage.style.animation = 'shake 0.5s';
+    }
+}
+
+// Função principal de desconto
 function applyDiscount(event) {
     event.preventDefault();
 
     if (window.isPurchaseConfirmed) {
-        showErrorMessage("Desconto Bloqueado.");
+        showMessage("Desconto Bloqueado.", "error");
         return;
     }
 
     if (window.isDiscountApplied) {
+        showMessage("Você ganhou 10% de desconto!.", "error");
         return;
     }
 
     const discountInput = document.querySelector(".discount-input");
+    const totalElement = document.querySelector(".total-title");
+    const code = discountInput.value.trim();
 
-    if (discountInput.value === window.discountCode) {
-        const totalElement = document.querySelector(".total-title");
+    if (code !== window.discountCode) {
+        showMessage("Código de desconto inválido.", "error");
+        return;
+    }
+
+    try {
         const totalText = totalElement.textContent;
-        const totalMatch = totalText.match(/R\$ (\d+,\d{2})/);
+        const currentTotal = convertToFloat(totalText);
 
-        if (totalMatch) {
-            let total = parseFloat(totalMatch[1].replace('.', '').replace(',', '.'));
-            const discountedTotal = total * (1 - window.discountPercentage);
-            totalElement.innerHTML = `<strong>Total com desconto:</strong> R$ ${discountedTotal.toFixed(2).replace('.', ',')}`;
-            showSuccessMessage("Você ganhou 10% de desconto!");
-            window.isDiscountApplied = true;
-        } else {
-            showErrorMessage("Erro ao calcular o total.");
+        if (isNaN(currentTotal) || currentTotal <= 0) {
+            throw new Error("Valor total inválido");
         }
-    } else {
-        showErrorMessage("Desconto Inválido");
+
+        const discountAmount = Math.round(currentTotal * window.discountPercentage * 100) / 100;
+        const totalAfterDiscount = Math.round((currentTotal - discountAmount) * 100) / 100;
+
+        totalElement.innerHTML = `<strong>Total com desconto:</strong> R$ ${formatMoney(totalAfterDiscount)}`;
+        
+        window.isDiscountApplied = true;
+        showMessage("Você ganhou 10% de desconto!", "success");
+
+        console.log({
+            originalValue: currentTotal,
+            discountAmount: discountAmount,
+            finalValue: totalAfterDiscount,
+            formattedFinal: formatMoney(totalAfterDiscount)
+        });
+
+    } catch (error) {
+        console.error("Erro ao calcular desconto:", error);
+        showMessage("Erro ao calcular o total.", "error");
     }
 }
 
-// Função para exibir mensagens de sucesso
-function showSuccessMessage(message) {
-    const successMessageElement = document.getElementById("discount-success-message");
-    successMessageElement.textContent = message;
-    successMessageElement.style.display = "block";
-    const errorMessageElement = document.getElementById("discount-error-message");
-    if (errorMessageElement) {
-        errorMessageElement.style.display = "none";
+// Event Listeners
+function initializeEventListeners() {
+    document.getElementById('signup-btn')?.addEventListener('click', () => toggleForm('signup'));
+    document.getElementById('signin-btn')?.addEventListener('click', () => toggleForm('signin'));
+    document.querySelector(".discount-form")?.addEventListener("submit", applyDiscount);
+
+    window.confirmYesButton = document.getElementById("confirm-yes");
+    window.confirmNoButton = document.getElementById("confirm-no");
+
+    if (window.confirmYesButton) {
+        window.confirmYesButton.addEventListener("click", handleConfirmYes);
+    }
+
+    if (window.confirmNoButton) {
+        window.confirmNoButton.addEventListener("click", handleConfirmNo);
     }
 }
 
-// Função para exibir mensagens de erro
-function showErrorMessage(message) {
-    const errorMessageElement = document.getElementById("discount-error-message");
-    errorMessageElement.textContent = message;
-    errorMessageElement.style.display = "block";
-    const successMessageElement = document.getElementById("discount-success-message");
-    if (successMessageElement) {
-        successMessageElement.style.display = "none";
-    }
-}
-
-// Event listener para o botão de aplicar desconto
-document.querySelector(".discount-form").addEventListener("submit", applyDiscount);
-
-// Função para desabilitar os ícones de lixeira
-function disableTrashIcons() {
-    const trashIcons = document.querySelectorAll(".remove-btn");
-    trashIcons.forEach((icon) => {
-        icon.disabled = true;
-        icon.style.opacity = "0.5";
-        icon.style.cursor = "not-allowed";
-    });
-}
-
-// Função chamada quando o botão "Sim" for pressionado
+// Funções de manipulação do carrinho
 function handleConfirmYes(event) {
     event.preventDefault();
 
@@ -127,7 +171,6 @@ function handleConfirmYes(event) {
         disableTrashIcons();
         window.isPurchaseConfirmed = true;
 
-        // Logging para confirmação da compra
         console.log(`Compra confirmada por ${window.currentUser} em ${window.currentDateTime}`);
 
         setTimeout(() => {
@@ -137,23 +180,18 @@ function handleConfirmYes(event) {
     }
 }
 
-// Função chamada quando o botão "Não" for pressionado
 function handleConfirmNo() {
     window.location.href = "../../index.html";
 }
 
-// Adiciona os event listeners aos botões
-function initializeEventListeners() {
-    window.confirmYesButton = window.confirmYesButton || document.getElementById("confirm-yes");
-    window.confirmNoButton = window.confirmNoButton || document.getElementById("confirm-no");
-
-    if (window.confirmYesButton) {
-        window.confirmYesButton.addEventListener("click", handleConfirmYes);
-    }
-
-    if (window.confirmNoButton) {
-        window.confirmNoButton.addEventListener("click", handleConfirmNo);
-    }
+// Função para desabilitar os ícones de lixeira
+function disableTrashIcons() {
+    const trashIcons = document.querySelectorAll(".remove-btn");
+    trashIcons.forEach((icon) => {
+        icon.disabled = true;
+        icon.style.opacity = "0.5";
+        icon.style.cursor = "not-allowed";
+    });
 }
 
 // Função para remover itens
@@ -311,7 +349,6 @@ function updateProgressBarAndIcons(step) {
         });
     }
 }
-
 
 // Inicialização
 initializeEventListeners();
