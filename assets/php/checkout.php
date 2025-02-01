@@ -150,11 +150,17 @@ if (isset($_POST['signin'])) {
                 </div>
             </div>
         </div>
-    <?php else : ?>
-        <div class="cart-summary-container">
-            <p>Seu carrinho está vazio.</p>
-        </div>
-    <?php endif; ?>
+        <?php else: ?>
+    <div>
+    <h3>Você será redirecionado para a página inicial em breve...</h3>
+        <script>
+            // Redireciona para index.html após 2 segundos
+            setTimeout(function() {
+                window.location.href = '../../index.html'; // Ajuste o caminho se necessário
+            }, 2000); // 2000 milissegundos = 2 segundos
+        </script>
+    </div>
+<?php endif; ?>
 </div>
 
 <div class="container-steps">

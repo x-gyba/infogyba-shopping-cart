@@ -1,104 +1,107 @@
 // Declaração de variáveis globais com verificação de existência prévia
 window.isPurchaseConfirmed = window.isPurchaseConfirmed || false;
 window.confirmationInProgress = window.confirmationInProgress || false;
-window.confirmYesButton = window.confirmYesButton || document.getElementById("confirm-yes");
-window.confirmNoButton = window.confirmNoButton || document.getElementById("confirm-no");
 window.isDiscountApplied = window.isDiscountApplied || false;
 window.discountCode = "DESCONTO10";
 window.discountPercentage = 0.1;
 
-// Função para alternar a visibilidade da senha
-function togglePasswordVisibility(type) {
-    const passwordField = document.getElementById(`senha_${type}`);
-    const eyeIconShow = document.getElementById(`eyeicon-show-senha_${type}`);
-    const eyeIconHide = document.getElementById(`eyeicon-hide-senha_${type}`);
-
-    const isPassword = passwordField.type === "password";
-    passwordField.type = isPassword ? "text" : "password";
-    eyeIconShow.style.display = isPassword ? "none" : "inline";
-    eyeIconHide.style.display = isPassword ? "inline" : "none";
+// Função para alternar entre os formulários de login e registro
+function toggleForm(formType) {
+    const signinForm = document.getElementById('signin');
+    const signupForm = document.getElementById('signup');
+    
+    signinForm.style.display = formType === 'signin' ? 'block' : 'none';
+    signupForm.style.display = formType === 'signup' ? 'block' : 'none';
 }
 
-function toggleConfirmPasswordVisibility(type) {
-    const confirmPasswordField = document.getElementById(`confirmar_senha_${type}`);
-    const eyeIconShowConfirm = document.getElementById(`eyeicon-show-confirmar_senha_${type}`);
-    const eyeIconHideConfirm = document.getElementById(`eyeicon-hide-confirmar_senha_${type}`);
+// Event listeners para alternar entre os formulários
+document.getElementById('signup-btn').addEventListener('click', () => toggleForm('signup'));
+document.getElementById('signin-btn').addEventListener('click', () => toggleForm('signin'));
 
-    const isPassword = confirmPasswordField.type === "password";
-    confirmPasswordField.type = isPassword ? "text" : "password";
-    eyeIconShowConfirm.style.display = isPassword ? "none" : "inline";
-    eyeIconHideConfirm.style.display = isPassword ? "inline" : "none";
+// Função para alternar entre os campos de Pessoa Física e Jurídica
+function togglePessoa(tipo) {
+    document.getElementById('pessoa-fisica').style.display = tipo === 'fisica' ? 'block' : 'none';
+    document.getElementById('pessoa-juridica').style.display = tipo === 'juridica' ? 'block' : 'none';
 }
 
-// Adiciona a funcionalidade de mostrar/esconder senha
-function initializePasswordToggle() {
-    const passwordToggles = document.querySelectorAll(".password-toggle");
-    passwordToggles.forEach((toggle) => {
-        toggle.addEventListener("click", (e) => {
-            const type = e.target.dataset.type;
-            if (e.target.id.includes("confirmar")) {
-                toggleConfirmPasswordVisibility(type);
-            } else {
-                togglePasswordVisibility(type);
-            }
-        });
-    });
+// Função para mostrar/esconder a senha
+function togglePasswordVisibility(formType) {
+    const passwordInput = document.getElementById(`senha_${formType}`);
+    const eyeIconShow = document.getElementById(`eyeicon-show-senha_${formType}`);
+    const eyeIconHide = document.getElementById(`eyeicon-hide-senha_${formType}`);
+    
+    const isPassword = passwordInput.type === 'password';
+    passwordInput.type = isPassword ? 'text' : 'password';
+    eyeIconShow.style.display = isPassword ? 'none' : 'block';
+    eyeIconHide.style.display = isPassword ? 'block' : 'none';
+}
+
+// Função para mostrar/esconder a confirmação de senha
+function toggleConfirmPasswordVisibility() {
+    const confirmPasswordInput = document.getElementById('confirmar_senha_signup');
+    const eyeIconShow = document.getElementById('eyeicon-show-confirmar_senha_signup');
+    const eyeIconHide = document.getElementById('eyeicon-hide-confirmar_senha_signup');
+    
+    const isPassword = confirmPasswordInput.type === 'password';
+    confirmPasswordInput.type = isPassword ? 'text' : 'password';
+    eyeIconShow.style.display = isPassword ? 'none' : 'block';
+    eyeIconHide.style.display = isPassword ? 'block' : 'none';
 }
 
 // Função para aplicar desconto
 function applyDiscount(event) {
-  event.preventDefault();
+    event.preventDefault();
 
-  if (window.isPurchaseConfirmed) {
-      showErrorMessage("Desconto Bloqueado.");
-      return;
-  }
+    if (window.isPurchaseConfirmed) {
+        showErrorMessage("Desconto Bloqueado.");
+        return;
+    }
 
-  if (window.isDiscountApplied) {
-      return;
-  }
+    if (window.isDiscountApplied) {
+        return;
+    }
 
-  const discountInput = document.querySelector(".discount-input");
+    const discountInput = document.querySelector(".discount-input");
 
-  if (discountInput.value === window.discountCode) {
-      const totalElement = document.querySelector(".total-title");
-      const totalText = totalElement.textContent;
-      const totalMatch = totalText.match(/R\$ (\d+,\d{2})/);
+    if (discountInput.value === window.discountCode) {
+        const totalElement = document.querySelector(".total-title");
+        const totalText = totalElement.textContent;
+        const totalMatch = totalText.match(/R\$ (\d+,\d{2})/);
 
-      if (totalMatch) {
-          let total = parseFloat(totalMatch[1].replace('.', '').replace(',', '.'));
-          const discountedTotal = total * (1 - window.discountPercentage);
-          totalElement.innerHTML = `<strong>Total com desconto:</strong> R$ ${discountedTotal.toFixed(2).replace('.', ',')}`;
-          showSuccessMessage("Você ganhou 10% de desconto!");
-          window.isDiscountApplied = true;
-      } else {
-          showErrorMessage("Erro ao calcular o total.");
-      }
-  } else {
-      showErrorMessage("Desconto Inválido");
-  }
+        if (totalMatch) {
+            let total = parseFloat(totalMatch[1].replace('.', '').replace(',', '.'));
+            const discountedTotal = total * (1 - window.discountPercentage);
+            totalElement.innerHTML = `<strong>Total com desconto:</strong> R$ ${discountedTotal.toFixed(2).replace('.', ',')}`;
+            showSuccessMessage("Você ganhou 10% de desconto!");
+            window.isDiscountApplied = true;
+        } else {
+            showErrorMessage("Erro ao calcular o total.");
+        }
+    } else {
+        showErrorMessage("Desconto Inválido");
+    }
 }
 
 // Função para exibir mensagens de sucesso
 function showSuccessMessage(message) {
-  const successMessageElement = document.getElementById("discount-success-message");
-  successMessageElement.textContent = message;
-  successMessageElement.style.display = "block";
-  const errorMessageElement = document.getElementById("discount-error-message");
-  if (errorMessageElement) {
-      errorMessageElement.style.display = "none";
-  }
+    const successMessageElement = document.getElementById("discount-success-message");
+    successMessageElement.textContent = message;
+    successMessageElement.style.display = "block";
+    const errorMessageElement = document.getElementById("discount-error-message");
+    if (errorMessageElement) {
+        errorMessageElement.style.display = "none";
+    }
 }
 
 // Função para exibir mensagens de erro
 function showErrorMessage(message) {
-  const errorMessageElement = document.getElementById("discount-error-message");
-  errorMessageElement.textContent = message;
-  errorMessageElement.style.display = "block";
-  const successMessageElement = document.getElementById("discount-success-message");
-  if (successMessageElement) {
-      successMessageElement.style.display = "none";
-  }
+    const errorMessageElement = document.getElementById("discount-error-message");
+    errorMessageElement.textContent = message;
+    errorMessageElement.style.display = "block";
+    const successMessageElement = document.getElementById("discount-success-message");
+    if (successMessageElement) {
+        successMessageElement.style.display = "none";
+    }
 }
 
 // Event listener para o botão de aplicar desconto
@@ -141,6 +144,9 @@ function handleConfirmNo() {
 
 // Adiciona os event listeners aos botões
 function initializeEventListeners() {
+    window.confirmYesButton = window.confirmYesButton || document.getElementById("confirm-yes");
+    window.confirmNoButton = window.confirmNoButton || document.getElementById("confirm-no");
+
     if (window.confirmYesButton) {
         window.confirmYesButton.addEventListener("click", handleConfirmYes);
     }
@@ -231,17 +237,16 @@ function updateCartCounter(data) {
 
 // Função para mostrar mensagem de carrinho vazio
 function showEmptyCartMessage() {
-  const elementsToHide = [
-    "cart-items",
-    "discount-form-container",
-    "#confirmation-message",
-    ".button-container",
-    ".discount-form",
-    ".discount-info",
-    ".discount-success",
-    ".discount-amount",
-    ".discount-title",
-  ];
+    const elementsToHide = [
+        "cart-items",
+        "discount-form-container",
+        "#confirmation-message",
+        ".button-container",
+        ".discount-form",
+        ".discount-info",
+        ".discount-success",
+        ".discount-amount",
+     ];
 
     elementsToHide.forEach((elementId) => {
         const element = document.getElementById(elementId) || document.querySelector(elementId);
@@ -307,9 +312,9 @@ function updateProgressBarAndIcons(step) {
     }
 }
 
+
 // Inicialização
 initializeEventListeners();
-initializePasswordToggle();
 updateProgressBarAndIcons(1);
 
 console.log(`Página inicializada para ${window.currentUser} em ${window.currentDateTime}`);

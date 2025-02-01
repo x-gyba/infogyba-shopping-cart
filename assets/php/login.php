@@ -246,15 +246,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <i class='bx bx-lock-alt'></i>
                 <input type="password" id="confirmar_senha_signup" name="confirmar_senha" placeholder="Confirme sua senha" required>
                 <label for="confirmar_senha_signup">Confirmar Senha</label>
-                <i class='bx bx-show eye-icon' id="eyeicon-show-confirmar_senha_signup" onclick="toggleConfirmPasswordVisibility('signup')"></i>
-                <i class='bx bx-hide eye-icon' id="eyeicon-hide-confirmar_senha_signup" onclick="toggleConfirmPasswordVisibility('signup')" style="display: none;"></i>
+                <i class='bx bx-show eye-icon' id="eyeicon-show-confirmar_senha_signup" onclick="toggleConfirmPasswordVisibility()"></i>
+                <i class='bx bx-hide eye-icon' id="eyeicon-hide-confirmar_senha_signup" onclick="toggleConfirmPasswordVisibility()" style="display: none;"></i>
             </div>
 
             <input type="submit" class="auth-btn" value="Cadastre-se" name="signup">
         </form>
         <div class="links">
             <p>Já tem uma conta?</p>
-            <button type="button" class="auth-buttons" id="sign-btn">Entrar</button>
+            <button type="button" class="auth-buttons" id="signin-btn">Entrar</button>
         </div>
     </div>
 
