@@ -23,9 +23,117 @@ function toggleForm(formType) {
 }
 
 function togglePessoa(tipo) {
-    document.getElementById('pessoa-fisica').style.display = tipo === 'fisica' ? 'block' : 'none';
-    document.getElementById('pessoa-juridica').style.display = tipo === 'juridica' ? 'block' : 'none';
+    const pessoaFisica = document.getElementById('pessoa-fisica');
+    const pessoaJuridica = document.getElementById('pessoa-juridica');
+    
+    if (tipo === 'fisica') {
+        pessoaFisica.style.display = 'block';
+        pessoaJuridica.style.display = 'none';
+        // Limpar campos e erros de pessoa jurídica
+        juridicaFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            const error = document.getElementById(`${fieldId}-error`);
+            if (field) field.value = '';
+            if (error) error.textContent = '';
+        });
+    } else {
+        pessoaFisica.style.display = 'none';
+        pessoaJuridica.style.display = 'block';
+        // Limpar campos e erros de pessoa física
+        ['nome_completo', 'cpf', 'celular'].forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            const error = document.getElementById(`${fieldId}-error`);
+            if (field) field.value = '';
+            if (error) error.textContent = '';
+        });
+    }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Função para validar campos
+    function validateField(field) {
+        if (field) {
+            const errorElement = document.getElementById(`${field.id}-error`);
+            if (!field.value.trim()) {
+                if (errorElement) {
+                    errorElement.textContent = `${field.getAttribute('placeholder')} é obrigatório.`;
+                    errorElement.style.display = 'block';
+                }
+                return false;
+            } else {
+                if (errorElement) {
+                    errorElement.textContent = '';
+                    errorElement.style.display = 'none';
+                }
+                return true;
+            }
+        }
+        return true;
+    }
+
+    // Função para remover mensagens de erro ao digitar
+    function setupFieldValidation(fieldId) {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.addEventListener('input', function() {
+                validateField(field);
+            });
+
+            field.addEventListener('blur', function() {
+                validateField(field);
+            });
+
+            // Prevenir o foco automático em campos inválidos
+            field.addEventListener('invalid', function(e) {
+                e.preventDefault();
+                validateField(field);
+            });
+        }
+    }
+
+    // Configurar validação para campos de pessoa jurídica
+    const juridicaFields = [
+        'cnpj',
+        'inscricao_estadual',
+        'razao_social',
+        'nome_responsavel',
+        'celular_responsavel'
+    ];
+
+    juridicaFields.forEach(setupFieldValidation);
+
+    // Validação do formulário no envio
+    const form = document.getElementById('signup-form');
+    if (form) {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            let isValid = true;
+            const tipoPessoa = document.querySelector('input[name="tipo_pessoa"]:checked').value;
+
+            if (tipoPessoa === 'juridica') {
+                juridicaFields.forEach(fieldId => {
+                    const field = document.getElementById(fieldId);
+                    if (!validateField(field)) {
+                        isValid = false;
+                    }
+                });
+            }
+
+            // Se todos os campos forem válidos, envie o formulário
+            if (isValid) {
+                form.submit();
+            }
+        });
+    }
+
+    // Aplicar máscaras aos campos
+    if (window.Inputmask) {
+        Inputmask("99.999.999/9999-99").mask("#cnpj");
+        Inputmask("999.999.999.999").mask("#inscricao_estadual");
+        Inputmask("(99) 99999-9999").mask("#celular_responsavel");
+    }
+});
 
 function togglePasswordVisibility(formType) {
     const passwordInput = document.getElementById(`senha_${formType}`);
@@ -125,7 +233,7 @@ function applyDiscount(event) {
         const discountAmount = Math.round(currentTotal * window.discountPercentage * 100) / 100;
         const totalAfterDiscount = Math.round((currentTotal - discountAmount) * 100) / 100;
 
-        totalElement.innerHTML = `<strong>Total com desconto:</strong> R$ ${formatMoney(totalAfterDiscount)}`;
+        totalElement.innerHTML = `<strong>Total com desconto:&nbsp;</strong> R$ ${formatMoney(totalAfterDiscount)}`;
         
         window.isDiscountApplied = true;
         showMessage("Você ganhou 10% de desconto!", "success");

@@ -4,7 +4,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Valida se o código de desconto é válido
+// Funções auxiliares
 function validateDiscountCode($code) {
     return $code === 'DESCONTO10';
 }
@@ -112,98 +112,101 @@ if (isset($_POST['signin'])) {
 <body>
 <div class="main-container">
     <div class="checkout-container">
-    <div class="cart-summary">
-    <?php
-    $cartItems = $_SESSION['cart_items'] ?? [];
-    $cartImages = $_SESSION['cart_images'] ?? [];
-    $quantities = $_SESSION['quantities'] ?? [];
+        <div class="cart-summary">
+            <?php
+            $cartItems = $_SESSION['cart_items'] ?? [];
+            $cartImages = $_SESSION['cart_images'] ?? [];
+            $quantities = $_SESSION['quantities'] ?? [];
 
-    if ($total > 0) : ?>
-        <h2 class="form-title">Resumo do Carrinho</h2>
-        <div class="cart-summary-container">
-            <div class="total-title"><strong>Total:</strong> R$ <?= number_format($total, 2, ',', '.') ?></div>
-            <div class="cart-items" id="cart-items">
-                <?php foreach ($cartItems as $index => $item) :
-                    $imageSrc = $cartImages[$index] ?? '';
-                    $quantity = $quantities[$index] ?? 0;
-                    $quantityDisplay = ($quantity == 1) ? "x1" : "x" . htmlspecialchars($quantity);
-                ?>
-                    <div class="cart-item" data-item-id="<?= $index ?>" style="display: flex; align-items: center; margin-bottom: 8px;">
-                        <?php if ($imageSrc) : ?>
-                            <div style="flex: 0 0 auto; margin-right: 5px;">
-                                <img src="<?= htmlspecialchars($imageSrc) ?>" alt="Imagem do Carrinho" style="max-width: 70px; height: auto;" />
+            if ($total > 0) : ?>
+                <h2 class="form-title">Resumo do Carrinho</h2>
+                <div class="cart-summary-container">
+                    <div class="total-title"><strong>Total:&nbsp;</strong> R$ <?= number_format($total, 2, ',', '.') ?></div>
+                    <div class="cart-items" id="cart-items">
+                        <?php foreach ($cartItems as $index => $item) :
+                            $imageSrc = $cartImages[$index] ?? '';
+                            $quantity = $quantities[$index] ?? 0;
+                            $quantityDisplay = ($quantity == 1) ? "x1" : "x" . htmlspecialchars($quantity);
+                        ?>
+                            <div class="cart-item" data-item-id="<?= $index ?>" style="display: flex; align-items: center; margin-bottom: 8px;">
+                                <?php if ($imageSrc) : ?>
+                                    <div style="flex: 0 0 auto; margin-right: 5px;">
+                                        <img src="<?= htmlspecialchars($imageSrc) ?>" alt="Imagem do Carrinho" style="max-width: 70px; height: auto;" />
+                                    </div>
+                                <?php endif; ?>
+                                <div class="qtd-item" style="flex: 1;"><?= nl2br(htmlspecialchars($item)) ?> <?= $quantityDisplay ?></div>
+                                <button type="button" class="remove-btn" onclick="removeItem(<?= $index ?>)" aria-label="Remover item">
+                                    <i class="bx bxs-trash"></i>
+                                </button>
                             </div>
-                        <?php endif; ?>
-                        <div class="qtd-item" style="flex: 1;"><?= nl2br(htmlspecialchars($item)) ?> <?= $quantityDisplay ?></div>
-                        <button type="button" class="remove-btn" onclick="removeItem(<?= $index ?>)" aria-label="Remover item">
-                            <i class="bx bxs-trash"></i>
-                        </button>
+                        <?php endforeach; ?>
                     </div>
-                <?php endforeach; ?>
-            </div>
-            <div class="discount-form-container">
-                <form class="discount-form" method="POST" action="">
-                    <input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required autocomplete="off">
-                    <button class="discount-btn" type="submit">Aplicar</button>
-                </form>
-            </div>
-            <div class="discount-message-container">
-            <div id="discount-success-message" class="discount-message" style="display: none;"></div>
-            <div id="discount-error-message" class="discount-message" style="display: none;"></div>
-            </div>
-            <div id="confirmation-message">
-                <p>Confirma a compra?</p>
-                <div class="button-container">
-                    <form method="POST" action="">
-                        <button type="submit" name="confirmar_compra" value="sim" id="confirm-yes">Sim</button>
-                        <button type="button" id="confirm-no" onclick="window.location.href='#'">Não</button>
-                    </form>
+                    <div class="discount-form-container">
+                        <form class="discount-form" method="POST" action="">
+                            <input type="text" name="discount_code" class="discount-input" placeholder="Código de desconto" required autocomplete="off">
+                            <button class="discount-btn" type="submit">Aplicar</button>
+                        </form>
+                    </div>
+                    <div class="discount-message-container">
+                        <div id="discount-success-message" class="discount-message" style="display: none;"></div>
+                        <div id="discount-error-message" class="discount-message" style="display: none;"></div>
+                    </div>
+                    <div id="confirmation-message">
+                        <p>Confirma a compra?</p>
+                        <div class="button-container">
+                            <form method="POST" action="">
+                                <button type="submit" name="confirmar_compra" value="sim" id="confirm-yes">Sim</button>
+                                <button type="button" id="confirm-no" onclick="window.location.href='#'">Não</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div>
+                    <h3>Você será redirecionado para a página inicial em breve...</h3>
+                    <script>
+                        // Redireciona para index.html após 2 segundos
+                        setTimeout(function() {
+                            window.location.href = '../../index.html'; // Ajuste o caminho se necessário
+                        }, 2000); // 2000 milissegundos = 2 segundos
+                    </script>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <div class="container-steps">
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-bar-inner"></div>
+                </div>
+                <div class="circle active" id="step1-icon">
+                    <i class='bx bx-male-female'></i>
+                    <div class="step-name">Login</div>
+                </div>
+                <div class="circle" id="step2-icon">
+                    <i class='bx bx-home'></i>
+                    <div class="step-name">Entrega</div>
+                </div>
+                <div class="circle" id="step3-icon">
+                    <i class='bx bx-dollar'></i>
+                    <div class="step-name">Pagamento</div>
                 </div>
             </div>
         </div>
-        <?php else: ?>
-    <div>
-    <h3>Você será redirecionado para a página inicial em breve...</h3>
-        <script>
-            // Redireciona para index.html após 2 segundos
-            setTimeout(function() {
-                window.location.href = '../../index.html'; // Ajuste o caminho se necessário
-            }, 2000); // 2000 milissegundos = 2 segundos
-        </script>
+
+        <div id="step1">
+            <?php include 'login.php'; ?>
+        </div>
+
+        <div id="step2" style="display:none;">
+            <?php include 'payment.php'; ?>
+        </div>
+
+        <div id="step3" style="display:none;">
+            <?php include 'review.php'; ?>
+        </div>
+
     </div>
-<?php endif; ?>
-</div>
-
-<div class="container-steps">
-    <div class="progress-container">
-        <div class="progress-bar">
-            <div class="progress-bar-inner"></div>
-        </div>
-        <div class="circle active" id="step1-icon">
-            <i class='bx bx-male-female'></i>
-            <div class="step-name">Login</div>
-        </div>
-        <div class="circle" id="step2-icon">
-            <i class='bx bx-home'></i>
-            <div class="step-name">Entrega</div>
-        </div>
-        <div class="circle" id="step3-icon">
-            <i class='bx bx-dollar'></i>
-            <div class="step-name">Pagamento</div>
-        </div>
-    </div>
-</div>
-
-<div id="step1">
-    <?php include 'login.php'; ?>
-</div>
-
-<div id="step2" style="display:none;">
-    <?php include 'payment.php'; ?>
-</div>
-
-<div id="step3" style="display:none;">
-    <?php include 'review.php'; ?>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

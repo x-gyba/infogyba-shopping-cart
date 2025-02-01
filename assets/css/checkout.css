@@ -76,9 +76,15 @@ label {
   overflow-y: auto;
 }
 
-.cart-summary .form-title {
-  font-size: 1.8rem;
+.cart-summary .form-title,
+.empty-cart-message, .discount-title, .total-discount, .discount-amount {
+  font-size: 1.6rem;
   font-weight: 500;
+  display: flex;
+  justify-content: left;
+}
+
+.cart-summary .form-title {
   margin-bottom: 1.2rem;
   padding: 0.5rem;
   color: var(--black);
@@ -94,10 +100,10 @@ label {
 }
 
 .total-title {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 500;
-  margin-bottom: 1.5rem;
-  display: flex;
+  margin-bottom: 1.4rem;
+  display:flex;
   justify-content: center;
 }
 
@@ -120,16 +126,10 @@ label {
 #cart-items::-webkit-scrollbar {
   width: 6px;
 }
-
-#cart-items::-webkit-scrollbar-track {
-  background: var(--white);
-}
-
-#cart-items::-webkit-scrollbar-thumb {
+#cart-items::-webkit-scrollbar-track, #cart-items::-webkit-scrollbar-thumb {
   background: var(--white);
   border-radius: 3px;
 }
-
 #cart-items::-webkit-scrollbar-thumb:hover {
   background: var(--white);
 }
@@ -142,13 +142,6 @@ label {
   margin-bottom: 0.3rem;
   margin-right: 0.85rem;
   display: flex;
-}
-
-.empty-cart-message {
-  font-size: 1.6rem;
-  font-weight: 500;
-  display: flex;
-  justify-content: center;
 }
 
 .discount-form-container {
@@ -166,27 +159,48 @@ label {
   max-width: 400px;
 }
 
-.discount-input {
+.discount-input,
+.discount-btn {
   font-size: 1rem;
+  height: 32px;
+  transition: border-color 0.3s ease, opacity 0.5s ease;
+}
+
+.discount-input {
   padding: 0 0.5rem;
   border: 1px solid var(--grey);
   border-radius: 4px 0 0 4px;
   outline: none;
-  transition: border-color 0.3s ease;
-  height: 32px;
   flex: 1;
   min-width: 100px;
 }
-
 .discount-input:focus {
   border-color: var(--blue2);
 }
-
 .discount-input::placeholder {
   color: var(--grey);
-  font-size: 1.2rem;
   font-weight: 500;
   font-style: italic;
+}
+
+.discount-btn {
+  background-color: var(--blue2);
+  color: var(--white);
+  font-weight: 600;
+  padding: 0 1rem;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: -1px;
+}
+.discount-btn:hover {
+  color: var(--white);
+}
+.discount-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0;
 }
 
 .discount-info {
@@ -196,58 +210,6 @@ label {
   background-color: #f8f9fa;
   margin-top: 4rem;
   animation: fadeIn 0.3s ease-in-out;
-}
-
-.discount-btn {
-  background-color: var(--blue2);
-  color: var(--white);
-  font-size: 1.2rem;
-  font-weight: 600;
-  padding: 0 1rem;
-  border: none;
-  border-radius: 0 4px 4px 0;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  height: 32px;
-  white-space: nowrap;
-  flex-shrink: 0;
-  margin-left: -1px;
-}
-
-.discount-btn:hover {
-  color: var(--white);
-}
-
-.discount-title {
-  font-size: 1.2rem;
-  color: var(--red);
-  display: flex;
-  justify-content: center;
-}
-
-.total-discount,
-.discount-amount {
-  color: var(--black);
-  margin-top: 1rem;
-  font-size: 1.2rem;
-  display: flex;
-  justify-content: center;
-}
-
-.discount-input:disabled,
-.discount-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-
-.discount-btn:not(:disabled):hover {
-  opacity: 0.9;
-}
-
-.discount-input,
-.discount-btn {
-  transition: opacity 0.5s ease;
 }
 
 /* Estilos gerais para as mensagens */
@@ -276,21 +238,13 @@ label {
 }
 
 @keyframes shake {
-  0%,
-  100% {
+  0%, 100% {
     transform: translateX(0);
   }
-  10%,
-  30%,
-  50%,
-  70%,
-  90% {
+  10%, 30%, 50%, 70%, 90% {
     transform: translateX(-5px);
   }
-  20%,
-  40%,
-  60%,
-  80% {
+  20%, 40%, 60%, 80% {
     transform: translateX(5px);
   }
 }
@@ -333,21 +287,11 @@ label {
   transition: background-color 0.3s ease;
 }
 
-#confirmation-message #confirm-yes {
+#confirmation-message #confirm-yes, #confirmation-message #confirm-no {
   background-color: var(--blue2);
   color: var(--white);
 }
-
-#confirmation-message #confirm-yes:hover {
-  background-color: var(--green);
-}
-
-#confirmation-message #confirm-no {
-  background-color: var(--blue2);
-  color: var(--white);
-}
-
-#confirmation-message #confirm-no:hover {
+#confirmation-message #confirm-yes:hover, #confirmation-message #confirm-no:hover {
   background-color: var(--green);
 }
 
@@ -472,7 +416,6 @@ label {
   border-radius: 5px;
   box-sizing: border-box;
   font-size: 1.5rem;
-  transition: border-color 0.3s ease;
 }
 
 .input-group label {
@@ -481,7 +424,6 @@ label {
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  font-size: 1rem;
   color: var(--grey);
 }
 
@@ -524,13 +466,8 @@ label {
   z-index: 2;
   margin-left: 33rem;
 }
-
 .eye-icon:hover {
   color: var(--blue2);
-}
-
-.eye-icon-hide {
-  display: none;
 }
 
 .radio-container {
@@ -539,10 +476,6 @@ label {
 
 .radio-container .input-group {
   margin-top: 0;
-}
-
-.radio-container .input-group {
-  position: static;
   font-size: 1.2rem;
   font-weight: 500;
   color: var(--black);
@@ -606,7 +539,6 @@ label {
   font-size: 1.3rem;
   font-weight: 500;
 }
-
 .auth-buttons:hover {
   color: var(--blue);
   text-decoration: underline;
@@ -627,12 +559,10 @@ label {
   text-align: center;
   margin-top: 15px;
 }
-
 .auth-btn:hover {
   background: hsl(135, 83%, 34%);
   transform: scale(1.05);
 }
-
 .auth-btn:active {
   transform: scale(0.98);
   background: hsl(135, 83%, 30%);
