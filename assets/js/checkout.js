@@ -1,53 +1,21 @@
 /**
  * checkout.js - Sistema de checkout com desconto
- * Data: 2025-02-01 11:01:07
+ * Data: 2025-02-01 10:32:46
  * Usuário: x-gyba
  */
 
-// Declaração de variáveis globais
+// Verifica se 'window.juridicaFields' já foi definida para evitar redeclaração
+if (!window.juridicaFields) {
+    window.juridicaFields = ['cnpj', 'inscricao_estadual', 'razao_social', 'nome_responsavel', 'celular_responsavel'];
+}
+
 window.isPurchaseConfirmed = window.isPurchaseConfirmed || false;
 window.confirmationInProgress = window.confirmationInProgress || false;
 window.isDiscountApplied = window.isDiscountApplied || false;
 window.discountCode = "DESCONTO10";
 window.discountPercentage = 0.1;
-window.currentUser = "x-gyba";
-window.currentDateTime = "2025-02-01 11:01:07";
-
-// Funções de manipulação de formulário
-function toggleForm(formType) {
-    const signinForm = document.getElementById('signin');
-    const signupForm = document.getElementById('signup');
-    
-    signinForm.style.display = formType === 'signin' ? 'block' : 'none';
-    signupForm.style.display = formType === 'signup' ? 'block' : 'none';
-}
-
-function togglePessoa(tipo) {
-    const pessoaFisica = document.getElementById('pessoa-fisica');
-    const pessoaJuridica = document.getElementById('pessoa-juridica');
-    
-    if (tipo === 'fisica') {
-        pessoaFisica.style.display = 'block';
-        pessoaJuridica.style.display = 'none';
-        // Limpar campos e erros de pessoa jurídica
-        juridicaFields.forEach(fieldId => {
-            const field = document.getElementById(fieldId);
-            const error = document.getElementById(`${fieldId}-error`);
-            if (field) field.value = '';
-            if (error) error.textContent = '';
-        });
-    } else {
-        pessoaFisica.style.display = 'none';
-        pessoaJuridica.style.display = 'block';
-        // Limpar campos e erros de pessoa física
-        ['nome_completo', 'cpf', 'celular'].forEach(fieldId => {
-            const field = document.getElementById(fieldId);
-            const error = document.getElementById(`${fieldId}-error`);
-            if (field) field.value = '';
-            if (error) error.textContent = '';
-        });
-    }
-}
+window.currentUser  = "x-gyba";
+window.currentDateTime = "2025-02-01 16:23:25"; // Atualizado para o horário atual
 
 document.addEventListener('DOMContentLoaded', function() {
     // Função para validar campos
@@ -92,15 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Configurar validação para campos de pessoa jurídica
-    const juridicaFields = [
-        'cnpj',
-        'inscricao_estadual',
-        'razao_social',
-        'nome_responsavel',
-        'celular_responsavel'
-    ];
-
-    juridicaFields.forEach(setupFieldValidation);
+    window.juridicaFields.forEach(setupFieldValidation);
 
     // Validação do formulário no envio
     const form = document.getElementById('signup-form');
@@ -112,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const tipoPessoa = document.querySelector('input[name="tipo_pessoa"]:checked').value;
 
             if (tipoPessoa === 'juridica') {
-                juridicaFields.forEach(fieldId => {
+                window.juridicaFields.forEach(fieldId => {
                     const field = document.getElementById(fieldId);
                     if (!validateField(field)) {
                         isValid = false;
@@ -134,6 +94,20 @@ document.addEventListener('DOMContentLoaded', function() {
         Inputmask("(99) 99999-9999").mask("#celular_responsavel");
     }
 });
+
+// Funções de manipulação de formulário
+function toggleForm(formType) {
+    const signinForm = document.getElementById('signin');
+    const signupForm = document.getElementById('signup');
+    
+    signinForm.style.display = formType === 'signin' ? 'block' : 'none';
+    signupForm.style.display = formType === 'signup' ? 'block' : 'none';
+}
+
+function togglePessoa(tipo) {
+    document.getElementById('pessoa-fisica').style.display = tipo === 'fisica' ? 'block' : 'none';
+    document.getElementById('pessoa-juridica').style.display = tipo === 'juridica' ? 'block' : 'none';
+}
 
 function togglePasswordVisibility(formType) {
     const passwordInput = document.getElementById(`senha_${formType}`);
@@ -172,33 +146,6 @@ function formatMoney(value) {
     });
 }
 
-// Função para mostrar mensagens com animação
-function showMessage(message, type) {
-    const successMessage = document.getElementById('discount-success-message');
-    const errorMessage = document.getElementById('discount-error-message');
-
-    // Primeiro, esconde ambas as mensagens
-    successMessage.style.display = 'none';
-    errorMessage.style.display = 'none';
-
-    // Depois, mostra a mensagem apropriada
-    if (type === 'success') {
-        successMessage.textContent = message;
-        successMessage.style.display = 'block';
-        // Reinicia a animação
-        successMessage.style.animation = 'none';
-        successMessage.offsetHeight; // Força um reflow
-        successMessage.style.animation = 'shake 0.5s';
-    } else {
-        errorMessage.textContent = message;
-        errorMessage.style.display = 'block';
-        // Reinicia a animação
-        errorMessage.style.animation = 'none';
-        errorMessage.offsetHeight; // Força um reflow
-        errorMessage.style.animation = 'shake 0.5s';
-    }
-}
-
 // Função principal de desconto
 function applyDiscount(event) {
     event.preventDefault();
@@ -209,7 +156,7 @@ function applyDiscount(event) {
     }
 
     if (window.isDiscountApplied) {
-        showMessage("Você ganhou 10% de desconto!.", "error");
+        showMessage("Desconto já aplicado.", "error");
         return;
     }
 
@@ -233,7 +180,7 @@ function applyDiscount(event) {
         const discountAmount = Math.round(currentTotal * window.discountPercentage * 100) / 100;
         const totalAfterDiscount = Math.round((currentTotal - discountAmount) * 100) / 100;
 
-        totalElement.innerHTML = `<strong>Total com desconto:&nbsp;</strong> R$ ${formatMoney(totalAfterDiscount)}`;
+        totalElement.innerHTML = `<strong>Total com desconto:</strong> R$ ${formatMoney(totalAfterDiscount)}`;
         
         window.isDiscountApplied = true;
         showMessage("Você ganhou 10% de desconto!", "success");
@@ -251,22 +198,41 @@ function applyDiscount(event) {
     }
 }
 
-// Event Listeners
-function initializeEventListeners() {
-    document.getElementById('signup-btn')?.addEventListener('click', () => toggleForm('signup'));
-    document.getElementById('signin-btn')?.addEventListener('click', () => toggleForm('signin'));
-    document.querySelector(".discount-form")?.addEventListener("submit", applyDiscount);
+// Função de mensagens
+function showMessage(message, type) {
+    const successMessageElement = document.getElementById('discount-success-message');
+    const errorMessageElement = document.getElementById('discount-error-message');
 
-    window.confirmYesButton = document.getElementById("confirm-yes");
-    window.confirmNoButton = document.getElementById("confirm-no");
+    // Esconder ambas as mensagens antes de exibir a nova
+    successMessageElement.style.display = 'none';
+    errorMessageElement.style.display = 'none';
 
-    if (window.confirmYesButton) {
-        window.confirmYesButton.addEventListener("click", handleConfirmYes);
+    // Definir o texto da mensagem
+    if (type === "success") {
+        successMessageElement.textContent = message;
+        successMessageElement.style.display = 'block';
+    } else if (type === "error") {
+        errorMessageElement.textContent = message;
+        errorMessageElement.style.display = 'block';
     }
 
-    if (window.confirmNoButton) {
-        window.confirmNoButton.addEventListener("click", handleConfirmNo);
-    }
+    // Remover a mensagem após 3 segundos
+    setTimeout(() => {
+        successMessageElement.style.display = 'none';
+        errorMessageElement.style.display = 'none';
+    }, 3000);
+}
+
+// Função para desabilitar os ícones de lixo
+function disableTrashIcons() {
+    const trashIcons = document.querySelectorAll('.trash-icon'); // Supondo que os ícones de lixo tenham essa classe
+
+    trashIcons.forEach(icon => {
+        icon.style.pointerEvents = 'none'; // Desabilita a interação com os ícones
+        icon.style.opacity = '0.5'; // Torna os ícones semi-transparentes
+    });
+
+    console.log("Ícones de lixo desabilitados.");
 }
 
 // Funções de manipulação do carrinho
@@ -276,7 +242,10 @@ function handleConfirmYes(event) {
     if (!window.confirmationInProgress) {
         window.confirmationInProgress = true;
         alert("Seu pedido foi realizado com sucesso.");
-        disableTrashIcons();
+        
+        // Desabilita os ícones de lixo
+        disableTrashIcons(); 
+        
         window.isPurchaseConfirmed = true;
 
         console.log(`Compra confirmada por ${window.currentUser} em ${window.currentDateTime}`);
@@ -291,7 +260,6 @@ function handleConfirmYes(event) {
 function handleConfirmNo() {
     window.location.href = "../../index.html";
 }
-
 // Função para desabilitar os ícones de lixeira
 function disableTrashIcons() {
     const trashIcons = document.querySelectorAll(".remove-btn");
@@ -437,29 +405,33 @@ function updateTotalPrice(data) {
     }
 }
 
-// Função para atualizar a barra de progresso e os ícones dos passos
-function updateProgressBarAndIcons(step) {
-    $(".circle").removeClass("active");
-    $(".progress-bar-inner").removeClass("active").css("width", "0%");
+// Event Listeners
+function initializeEventListeners() {
+    document.getElementById('signup-btn').addEventListener('click', () => toggleForm('signup'));
+    document.getElementById('signin-btn').addEventListener('click', () => toggleForm('signin'));
+    document.querySelector(".discount-form").addEventListener("submit", applyDiscount);
 
-    const progressConfig = {
-        1: { width: "33%", color: "var(--violet)", icons: ["step1-icon"] },
-        2: { width: "50%", color: "var(--green)", icons: ["step1-icon", "step2-icon"] },
-        3: { width: "50%", color: "var(--violet)", icons: ["step1-icon", "step2-icon", "step3-icon"] },
-    };
+    window.confirmYesButton = document.getElementById("confirm-yes");
+    window.confirmNoButton = document.getElementById("confirm-no");
 
-    const config = progressConfig[step];
-    if (config) {
-        config.icons.forEach((iconId) => $(`#${iconId}`).addClass("active"));
-        $(".progress-bar-inner").css({
-            width: config.width,
-            "background-color": config.color,
-        });
+    if (window.confirmYesButton) {
+        window.confirmYesButton.addEventListener("click", handleConfirmYes);
     }
+
+    if (window.confirmNoButton) {
+        window.confirmNoButton.addEventListener("click", handleConfirmNo);
+    }
+}
+
+// Função para atualizar a barra de progresso e ícones
+function updateProgressBarAndIcons(step) {
+    // Lógica para atualizar a barra de progresso e ícones
+    console.log(`Atualizando a barra de progresso para o passo: ${step}`);
+    // Aqui você pode adicionar a lógica para atualizar a interface do usuário
 }
 
 // Inicialização
 initializeEventListeners();
-updateProgressBarAndIcons(1);
+updateProgressBarAndIcons(1); // Chamada da função agora definida
 
 console.log(`Página inicializada para ${window.currentUser} em ${window.currentDateTime}`);
