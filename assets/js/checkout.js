@@ -255,6 +255,8 @@ function handleConfirmYes(event) {
             window.confirmationInProgress = false;
         }, 500);
     }
+     // Enviar dados para process.php em segundo plano via AJAX
+     sendToProcess();
 }
 
 function handleConfirmNo() {
@@ -338,6 +340,31 @@ function handleFailedRemoval(itemElement, errorMessage) {
     if (itemElement) {
         itemElement.style.opacity = "1";
     }
+}
+
+// Função para enviar os dados para process.php em segundo plano (AJAX)
+function sendToProcess() {
+    const data = {
+        user: window.currentUser,  // Exemplo de dados para enviar
+        purchaseConfirmed: window.isPurchaseConfirmed,
+        timestamp: window.currentDateTime
+    };
+
+    fetch('process.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Resposta do servidor:', data);
+        // Aqui você pode lidar com a resposta, se necessário
+    })
+    .catch(error => {
+        console.error('Erro ao enviar dados para process.php:', error);
+    });
 }
 
 // Função para atualizar o contador do carrinho
